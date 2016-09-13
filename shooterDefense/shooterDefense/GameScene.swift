@@ -58,6 +58,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let numToLose = 5
     var monstersEscaped = 0
     
+    let defaults = NSUserDefaults.standardUserDefaults()
+    var playerLevel = 1
+    var playerXP = 0
+    var xpToNext = 0
+    
     let destroyedLabel = SKLabelNode(fontNamed: "Georgia")
     let escapedLabel = SKLabelNode(fontNamed: "Georgia")
     
@@ -65,7 +70,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Setup your scene here */
         backgroundColor = SKColor.whiteColor()
         
-        player.position = CGPoint(x: size.width * 0.1, y: size.height * 0.5)
+        player.position = CGPoint(x: size.width / 2, y: 0 + player.size.height)
+        
+        // JHAT: Determine player xp and level
+        let level = defaults.objectForKey("level")
+        let xp = defaults.objectForKey("xp")
+        
+        playerLevel = level != nil ? level!.integerValue : 1
+        playerXP = xp != nil ? xp!.integerValue : 0
+        xpToNext = xpToNextLevel(playerLevel) - (playerXP - xpToCurrentLevel(playerLevel)) // JHAT: accurately determine player progession
+        
         
         self.addChild(player)
         
@@ -128,11 +142,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         monster.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile
         monster.physicsBody?.collisionBitMask = PhysicsCategory.None
         
-        // determine where to spawn the monster on the Y axis
-        let actualY = random(min: monster.size.height / 2, max: size.height - monster.size.height / 2)
+        // determine where to spawn the monster on the X and Y axis
+        let actualY = size.height + monster.size.height
+        
+        // TODO: Determine level number and select preset spawn point (separate function)
+        let actualX = random(min: monster.size.width / 2, max: size.width - monster.size.width / 2)
         
         // position the monster slightly off screen on the right edge and along a random position along the yAxis
-        monster.position = CGPoint(x: size.width + monster.size.width / 2, y: actualY)
+        monster.position = CGPoint(x: actualX, y: actualY)
         
         // add monster to the scene
         addChild(monster)
@@ -141,7 +158,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0))
         
         // create the actions
-        let actionMove = SKAction.moveTo(CGPoint(x: -monster.size.width / 2, y: actualY), duration: NSTimeInterval(actualDuration))
+        // TODO: Determine level and create preset path based on spawn point above (separate function)
+        let actionMove = SKAction.moveTo(CGPoint(x: actualX, y: -monster.size.height / 2), duration: NSTimeInterval(actualDuration))
         
         let actionMoveDone = SKAction.removeFromParent()
         
@@ -159,8 +177,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        // trigger sound effect
-        runAction(SKAction.playSoundFileNamed("pew-pew-lei.caf", waitForCompletion: false))
+        // TODO: Compare against fire rate timer
         
         // Choose a touch to work with
         guard let touch = touches.first else { return };
@@ -182,13 +199,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // determine offset of location of projectile
         let offset = touchLocation - projectile.position;
         
-        // do not allow down or backwards shooting
-        if (offset.x < 0) { return }
+        // do not allow down shooting
+        if (offset.y < 0) { return }
+        
+        // TODO: determine if touch is within fire range (Field of View)
         
         // add particle emitter to projectiles
-        let emitter = SKEmitterNode(fileNamed: "trail")!
-        emitter.position = CGPointMake(player.position.x - 5, player.position.y)
-        addChild(emitter)
+        //let emitter = SKEmitterNode(fileNamed: "trail")!
+        //emitter.position = CGPointMake(player.position.x - 5, player.position.y)
+        //addChild(emitter)
+        
+        // trigger sound effect
+        runAction(SKAction.playSoundFileNamed("pew-pew-lei.caf", waitForCompletion: false))
         
         // add projectile
         addChild(projectile)
@@ -206,7 +228,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let actionMove = SKAction.moveTo(target, duration: 2.0)
         let actionMoveDone = SKAction.removeFromParent()
         projectile.runAction(SKAction.sequence([actionMove, actionMoveDone]))
-        emitter.runAction(SKAction.sequence([actionMove, actionMoveDone]))
+        //emitter.runAction(SKAction.sequence([actionMove, actionMoveDone]))
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
@@ -240,4 +262,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         projectile.removeFromParent()
         monster.removeFromParent()
     }
+    
+    // Utility functions
+    func getSpawnPoint(level: Int) -> CGFloat {
+        switch(level) { // JHAT: return x spawn based on level
+            default:
+                return 0
+        }
+    }
+    
+    func getPath(level: Int) -> [SKAction] {
+        switch (level) { // JHAT: return array defining path for specific level
+            default:
+                return []
+        }
+    }
+    
+    func xpToNextLevel(currentLevel: Int) -> Int {
+        return (25 * (currentLevel - 1) + 50) // JHAT: function to determine xp for each level
+    }
+    
+    func xpToCurrentLevel(currentLevel: Int) -> Int { // JHAT: function to determine the xp earned already to accurately get current level progress
+        var level = currentLevel
+        var totalXP = 0
+        while (level > 1) {
+            totalXP += xpToNextLevel(level)
+            level -= 1
+        }
+        return totalXP
+    }
+    
+    // TODO: save progress between levels and when user quits or puts app in background
+    func saveProgress() { // JHAT: save player progression to userdefaults
+        defaults.setInteger(playerLevel, forKey: "level")
+        defaults.setInteger(playerXP, forKey: "xp")
+    }
 }
+
