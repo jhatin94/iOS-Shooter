@@ -52,7 +52,7 @@ struct PhysicsCategory {
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    let player = SKSpriteNode(imageNamed: "player")
+    let player = SKSpriteNode(imageNamed: "ship")
     var monstersKilled = 0
     let numToWin = 30
     let numToLose = 5
@@ -133,7 +133,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func addMonster() {
         // create sprite
-        let monster = SKSpriteNode(imageNamed: "monster")
+        let monster = SKSpriteNode(imageNamed: "enemy")
         
         // apply physics body to the sprite
         monster.physicsBody = SKPhysicsBody(rectangleOfSize: monster.size)
@@ -185,7 +185,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let touchLocation = touch.locationInNode(self)
         
         // set up initial location of projectile
-        let projectile = SKSpriteNode(imageNamed: "projectile")
+        let projectile = SKSpriteNode(imageNamed: "bullet")
         projectile.position = player.position
         
         // apply physics body to prjectile sprite
