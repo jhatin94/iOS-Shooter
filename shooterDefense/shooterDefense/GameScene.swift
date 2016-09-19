@@ -58,7 +58,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let numToLose = 5
     var monstersEscaped = 0
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     var playerLevel = 1
     var playerXP = 0
     var xpToNext = 0
@@ -66,41 +66,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let destroyedLabel = SKLabelNode(fontNamed: "Georgia")
     let escapedLabel = SKLabelNode(fontNamed: "Georgia")
     
-    override func didMoveToView(view: SKView) {
+    
+    override func didMove(to view: SKView) {
         /* Setup your scene here */
-        backgroundColor = SKColor.whiteColor()
+        backgroundColor = SKColor.white
         
+       
         player.position = CGPoint(x: size.width / 2, y: 0 + player.size.height)
         
         // JHAT: Determine player xp and level
-        let level = defaults.objectForKey("level")
-        let xp = defaults.objectForKey("xp")
+        let level = defaults.object(forKey: "level")
+        let xp = defaults.object(forKey: "xp")
         
-        playerLevel = level != nil ? level!.integerValue : 1
-        playerXP = xp != nil ? xp!.integerValue : 0
+        playerLevel = level != nil ? (level! as AnyObject).intValue : 1
+        playerXP = xp != nil ? (xp! as AnyObject).intValue : 0
         xpToNext = xpToNextLevel(playerLevel) - (playerXP - xpToCurrentLevel(playerLevel)) // JHAT: accurately determine player progession
         
         
         self.addChild(player)
         
         // set up physics world
-        physicsWorld.gravity = CGVectorMake(0, 0) // no gravity
+        physicsWorld.gravity = CGVector(dx: 0, dy: 0) // no gravity
         physicsWorld.contactDelegate = self
         
         // create labels
         destroyedLabel.name = "desLab"
-        destroyedLabel.position = CGPointMake(5, self.frame.height-5)
-        destroyedLabel.verticalAlignmentMode = .Top
-        destroyedLabel.horizontalAlignmentMode = .Left
+        destroyedLabel.position = CGPoint(x: 5, y: self.frame.height-5)
+        destroyedLabel.verticalAlignmentMode = .top
+        destroyedLabel.horizontalAlignmentMode = .left
         destroyedLabel.text = "Killed: \(monstersKilled)"
         destroyedLabel.fontColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         destroyedLabel.fontSize = 30
         self.addChild(destroyedLabel)
         
         escapedLabel.name = "esLab"
-        escapedLabel.position = CGPointMake(self.frame.width - 5, self.frame.height - 5)
-        escapedLabel.verticalAlignmentMode = .Top
-        escapedLabel.horizontalAlignmentMode = .Right
+        escapedLabel.position = CGPoint(x: self.frame.width - 5, y: self.frame.height - 5)
+        escapedLabel.verticalAlignmentMode = .top
+        escapedLabel.horizontalAlignmentMode = .right
         escapedLabel.text = "Escaped: \(monstersEscaped)"
         escapedLabel.fontColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         escapedLabel.fontSize = 30
@@ -111,10 +113,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundMusic.autoplayLooped = true
         addChild(backgroundMusic)
         
-        runAction(SKAction.repeatActionForever(
+        run(SKAction.repeatForever(
             SKAction.sequence([
-                SKAction.runBlock(addMonster),
-                SKAction.waitForDuration(1.0)
+                SKAction.run(addMonster),
+                SKAction.wait(forDuration: 1.0)
                 ])
             ))
     }
@@ -123,11 +125,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         return CGFloat(Float(arc4random()) / 0xFFFFFFFF)
     }
     
-    func random(min min: CGFloat, max: CGFloat) -> CGFloat {
+    func random(min: CGFloat, max: CGFloat) -> CGFloat {
         return random() * (max - min) + min
     }
     
-    func updateLabel(label: SKLabelNode) {
+    func updateLabel(_ label: SKLabelNode) {
         label.name == "desLab" ? (label.text = "Killed: \(monstersKilled)") : (label.text = "Escaped: \(monstersEscaped)")
     }
     
@@ -136,8 +138,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let monster = SKSpriteNode(imageNamed: "enemy")
         
         // apply physics body to the sprite
-        monster.physicsBody = SKPhysicsBody(rectangleOfSize: monster.size)
-        monster.physicsBody?.dynamic = true
+        monster.physicsBody = SKPhysicsBody(rectangleOf: monster.size)
+        monster.physicsBody?.isDynamic = true
         monster.physicsBody?.categoryBitMask = PhysicsCategory.Monster
         monster.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile
         monster.physicsBody?.collisionBitMask = PhysicsCategory.None
@@ -159,30 +161,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // create the actions
         // TODO: Determine level and create preset path based on spawn point above (separate function)
-        let actionMove = SKAction.moveTo(CGPoint(x: actualX, y: -monster.size.height / 2), duration: NSTimeInterval(actualDuration))
+        let actionMove = SKAction.move(to: CGPoint(x: actualX, y: -monster.size.height / 2), duration: TimeInterval(actualDuration))
         
         let actionMoveDone = SKAction.removeFromParent()
         
-        let loseAction = SKAction.runBlock() {
+        let loseAction = SKAction.run() {
             self.monstersEscaped += 1
             self.updateLabel(self.escapedLabel)
             if (self.monstersEscaped >= self.numToLose) {
-                let reveal = SKTransition.flipHorizontalWithDuration(0.5)
+                let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
                 let gameOverScene = GameOverScene(size: self.size, won: false)
                 self.view?.presentScene(gameOverScene, transition: reveal)
             }
         }
         
-        monster.runAction(SKAction.sequence([actionMove, loseAction, actionMoveDone]))
+        monster.run(SKAction.sequence([actionMove, loseAction, actionMoveDone]))
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // TODO: Compare against fire rate timer
         
         // Choose a touch to work with
         guard let touch = touches.first else { return };
         
-        let touchLocation = touch.locationInNode(self)
+        let touchLocation = touch.location(in: self)
         
         // set up initial location of projectile
         let projectile = SKSpriteNode(imageNamed: "bullet")
@@ -190,7 +192,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // apply physics body to prjectile sprite
         projectile.physicsBody = SKPhysicsBody(circleOfRadius: projectile.size.width / 2)
-        projectile.physicsBody?.dynamic = true
+        projectile.physicsBody?.isDynamic = true
         projectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
         projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Monster
         projectile.physicsBody?.collisionBitMask = PhysicsCategory.None
@@ -210,7 +212,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //addChild(emitter)
         
         // trigger sound effect
-        runAction(SKAction.playSoundFileNamed("pew-pew-lei.caf", waitForCompletion: false))
+        run(SKAction.playSoundFileNamed("pew-pew-lei.caf", waitForCompletion: false))
         
         // add projectile
         addChild(projectile)
@@ -225,13 +227,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let target = range + projectile.position;
         
         // create the actions
-        let actionMove = SKAction.moveTo(target, duration: 2.0)
+        let actionMove = SKAction.move(to: target, duration: 2.0)
         let actionMoveDone = SKAction.removeFromParent()
-        projectile.runAction(SKAction.sequence([actionMove, actionMoveDone]))
+        projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
         //emitter.runAction(SKAction.sequence([actionMove, actionMoveDone]))
     }
     
-    func didBeginContact(contact: SKPhysicsContact) {
+    func didBegin(_ contact: SKPhysicsContact) {
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
         
@@ -251,11 +253,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func projectileDidCollideWithMonster(projectile: SKSpriteNode, monster: SKSpriteNode) {
+    func projectileDidCollideWithMonster(_ projectile: SKSpriteNode, monster: SKSpriteNode) {
         monstersKilled += 1
         self.updateLabel(self.destroyedLabel)
         if (monstersKilled >= numToWin) {
-            let reveal = SKTransition.flipHorizontalWithDuration(0.5)
+            let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
             let gameOverScene = GameOverScene(size: self.size, won: true)
             self.view?.presentScene(gameOverScene, transition: reveal)
         }
@@ -264,25 +266,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // Utility functions
-    func getSpawnPoint(level: Int) -> CGFloat {
+    func getSpawnPoint(_ level: Int) -> CGFloat {
         switch(level) { // JHAT: return x spawn based on level
             default:
                 return 0
         }
     }
     
-    func getPath(level: Int) -> [SKAction] {
+    func getPath(_ level: Int) -> [SKAction] {
         switch (level) { // JHAT: return array defining path for specific level
             default:
                 return []
         }
     }
     
-    func xpToNextLevel(currentLevel: Int) -> Int {
+    func xpToNextLevel(_ currentLevel: Int) -> Int {
         return (25 * (currentLevel - 1) + 50) // JHAT: function to determine xp for each level
     }
     
-    func xpToCurrentLevel(currentLevel: Int) -> Int { // JHAT: function to determine the xp earned already to accurately get current level progress
+    func xpToCurrentLevel(_ currentLevel: Int) -> Int { // JHAT: function to determine the xp earned already to accurately get current level progress
         var level = currentLevel
         var totalXP = 0
         while (level > 1) {
@@ -294,8 +296,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // TODO: save progress between levels and when user quits or puts app in background
     func saveProgress() { // JHAT: save player progression to userdefaults
-        defaults.setInteger(playerLevel, forKey: "level")
-        defaults.setInteger(playerXP, forKey: "xp")
+        defaults.set(playerLevel, forKey: "level")
+        defaults.set(playerXP, forKey: "xp")
     }
 }
 

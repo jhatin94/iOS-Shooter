@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1334ABCF1D908AFC009A6D22 /* ship.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABCE1D908AFC009A6D22 /* ship.png */; };
+		1334ABD11D908B02009A6D22 /* enemy.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABD01D908B02009A6D22 /* enemy.png */; };
+		1334ABD31D908B07009A6D22 /* bullet.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABD21D908B07009A6D22 /* bullet.png */; };
+		1334ABD51D908B41009A6D22 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABD41D908B41009A6D22 /* background.png */; };
 		20EE8BC21D8717C200C85288 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EE8BC11D8717C200C85288 /* AppDelegate.swift */; };
 		20EE8BC41D8717C200C85288 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BC31D8717C200C85288 /* GameScene.sks */; };
 		20EE8BC61D8717C300C85288 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EE8BC51D8717C300C85288 /* GameScene.swift */; };
@@ -28,6 +32,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1334ABCE1D908AFC009A6D22 /* ship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ship.png; sourceTree = "<group>"; };
+		1334ABD01D908B02009A6D22 /* enemy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemy.png; sourceTree = "<group>"; };
+		1334ABD21D908B07009A6D22 /* bullet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bullet.png; sourceTree = "<group>"; };
+		1334ABD41D908B41009A6D22 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		20EE8BBE1D8717C200C85288 /* shooterDefense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = shooterDefense.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20EE8BC11D8717C200C85288 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		20EE8BC31D8717C200C85288 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -88,7 +96,11 @@
 				20EE8BDD1D8718F400C85288 /* player@2x.png */,
 				20EE8BDE1D8718F400C85288 /* projectile.png */,
 				20EE8BDF1D8718F400C85288 /* projectile@2x.png */,
+				1334ABD21D908B07009A6D22 /* bullet.png */,
 				20EE8BE01D8718F400C85288 /* spark.png */,
+				1334ABD01D908B02009A6D22 /* enemy.png */,
+				1334ABD41D908B41009A6D22 /* background.png */,
+				1334ABCE1D908AFC009A6D22 /* ship.png */,
 				20EE8BE11D8718F400C85288 /* trail.sks */,
 				20EE8BC11D8717C200C85288 /* AppDelegate.swift */,
 				20EE8BC31D8717C200C85288 /* GameScene.sks */,
@@ -136,6 +148,7 @@
 					20EE8BBD1D8717C200C85288 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = KT6L3A8T5R;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -163,16 +176,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				20EE8BEC1D8718F400C85288 /* trail.sks in Resources */,
+				1334ABD31D908B07009A6D22 /* bullet.png in Resources */,
 				20EE8BE21D8718F400C85288 /* background-music-aac.caf in Resources */,
 				20EE8BC41D8717C200C85288 /* GameScene.sks in Resources */,
 				20EE8BE71D8718F400C85288 /* player.png in Resources */,
 				20EE8BEA1D8718F400C85288 /* projectile@2x.png in Resources */,
 				20EE8BE81D8718F400C85288 /* player@2x.png in Resources */,
+				1334ABD51D908B41009A6D22 /* background.png in Resources */,
 				20EE8BEB1D8718F400C85288 /* spark.png in Resources */,
 				20EE8BE91D8718F400C85288 /* projectile.png in Resources */,
 				20EE8BE41D8718F400C85288 /* monster.png in Resources */,
 				20EE8BE61D8718F400C85288 /* pew-pew-lei.caf in Resources */,
+				1334ABD11D908B02009A6D22 /* enemy.png in Resources */,
 				20EE8BD01D8717C700C85288 /* LaunchScreen.storyboard in Resources */,
+				1334ABCF1D908AFC009A6D22 /* ship.png in Resources */,
 				20EE8BCD1D8717C700C85288 /* Assets.xcassets in Resources */,
 				20EE8BCB1D8717C300C85288 /* Main.storyboard in Resources */,
 				20EE8BE51D8718F400C85288 /* monster@2x.png in Resources */,
@@ -309,6 +326,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -321,6 +339,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
