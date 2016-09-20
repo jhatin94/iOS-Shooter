@@ -11,6 +11,7 @@
 		1334ABD11D908B02009A6D22 /* enemy.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABD01D908B02009A6D22 /* enemy.png */; };
 		1334ABD31D908B07009A6D22 /* bullet.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABD21D908B07009A6D22 /* bullet.png */; };
 		1334ABD51D908B41009A6D22 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABD41D908B41009A6D22 /* background.png */; };
+		13A0B7851D918DBC00B134D2 /* Pixeled.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13A0B7841D918DBC00B134D2 /* Pixeled.ttf */; };
 		20EE8BC21D8717C200C85288 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EE8BC11D8717C200C85288 /* AppDelegate.swift */; };
 		20EE8BC41D8717C200C85288 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BC31D8717C200C85288 /* GameScene.sks */; };
 		20EE8BC61D8717C300C85288 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EE8BC51D8717C300C85288 /* GameScene.swift */; };
@@ -36,6 +37,7 @@
 		1334ABD01D908B02009A6D22 /* enemy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemy.png; sourceTree = "<group>"; };
 		1334ABD21D908B07009A6D22 /* bullet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bullet.png; sourceTree = "<group>"; };
 		1334ABD41D908B41009A6D22 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
+		13A0B7841D918DBC00B134D2 /* Pixeled.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pixeled.ttf; sourceTree = "<group>"; };
 		20EE8BBE1D8717C200C85288 /* shooterDefense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = shooterDefense.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20EE8BC11D8717C200C85288 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		20EE8BC31D8717C200C85288 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				20EE8BD81D8718F400C85288 /* GameOverScene.swift */,
 				20EE8BC71D8717C300C85288 /* GameViewController.swift */,
 				20EE8BC91D8717C300C85288 /* Main.storyboard */,
+				13A0B7841D918DBC00B134D2 /* Pixeled.ttf */,
 				20EE8BCC1D8717C700C85288 /* Assets.xcassets */,
 				20EE8BCE1D8717C700C85288 /* LaunchScreen.storyboard */,
 				20EE8BD11D8717C800C85288 /* Info.plist */,
@@ -183,6 +186,7 @@
 				20EE8BEA1D8718F400C85288 /* projectile@2x.png in Resources */,
 				20EE8BE81D8718F400C85288 /* player@2x.png in Resources */,
 				1334ABD51D908B41009A6D22 /* background.png in Resources */,
+				13A0B7851D918DBC00B134D2 /* Pixeled.ttf in Resources */,
 				20EE8BEB1D8718F400C85288 /* spark.png in Resources */,
 				20EE8BE91D8718F400C85288 /* projectile.png in Resources */,
 				20EE8BE41D8718F400C85288 /* monster.png in Resources */,

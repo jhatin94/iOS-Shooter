@@ -97,6 +97,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         destroyedLabel.text = "Killed: \(monstersKilled)"
         destroyedLabel.fontColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         destroyedLabel.fontSize = 30
+        destroyedLabel.fontName = "Pixeled"
         self.addChild(destroyedLabel)
         
         escapedLabel.name = "esLab"
@@ -106,6 +107,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         escapedLabel.text = "Escaped: \(monstersEscaped)"
         escapedLabel.fontColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         escapedLabel.fontSize = 30
+        escapedLabel.fontName = "Pixeled"
         self.addChild(escapedLabel)
         
         // add BGM

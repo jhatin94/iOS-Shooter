@@ -22,7 +22,7 @@ class GameOverScene: SKScene {
         let message = won ? "You Won!" : "You Lose :["
         
         // create message label
-        let label = SKLabelNode(fontNamed: "Chalkduster")
+        let label = SKLabelNode(fontNamed: "Pixeled")
         label.text = message
         label.fontSize = 40
         label.fontColor = SKColor.black
