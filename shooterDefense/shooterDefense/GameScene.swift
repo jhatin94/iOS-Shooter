@@ -63,8 +63,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerXP = 0
     var xpToNext = 0
     
-    let destroyedLabel = SKLabelNode(fontNamed: "Georgia")
-    let escapedLabel = SKLabelNode(fontNamed: "Georgia")
+    let destroyedLabel = SKLabelNode(fontNamed: "Pixeled")
+    let escapedLabel = SKLabelNode(fontNamed: "Pixeled")
     
     
     override func didMove(to view: SKView) {

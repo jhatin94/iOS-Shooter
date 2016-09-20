@@ -30,6 +30,7 @@
 		20EE8BEA1D8718F400C85288 /* projectile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BDF1D8718F400C85288 /* projectile@2x.png */; };
 		20EE8BEB1D8718F400C85288 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BE01D8718F400C85288 /* spark.png */; };
 		20EE8BEC1D8718F400C85288 /* trail.sks in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BE11D8718F400C85288 /* trail.sks */; };
+		3F572D911D91DEAA00BA4099 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F572D901D91DEAA00BA4099 /* MenuScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		20EE8BDF1D8718F400C85288 /* projectile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "projectile@2x.png"; sourceTree = "<group>"; };
 		20EE8BE01D8718F400C85288 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		20EE8BE11D8718F400C85288 /* trail.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = trail.sks; sourceTree = "<group>"; };
+		3F572D901D91DEAA00BA4099 /* MenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,25 @@
 		20EE8BC01D8717C200C85288 /* shooterDefense */ = {
 			isa = PBXGroup;
 			children = (
+				20EE8BE11D8718F400C85288 /* trail.sks */,
+				20EE8BC11D8717C200C85288 /* AppDelegate.swift */,
+				20EE8BC31D8717C200C85288 /* GameScene.sks */,
+				3F572D8B1D91DA3700BA4099 /* Model */,
+				3F572D8A1D91D9D800BA4099 /* Scenes */,
+				3F572D891D91D9CF00BA4099 /* ViewController */,
+				3F572D881D91D9BF00BA4099 /* Assets */,
+				20EE8BC91D8717C300C85288 /* Main.storyboard */,
+				20EE8BCC1D8717C700C85288 /* Assets.xcassets */,
+				20EE8BCE1D8717C700C85288 /* LaunchScreen.storyboard */,
+				20EE8BD11D8717C800C85288 /* Info.plist */,
+			);
+			path = shooterDefense;
+			sourceTree = "<group>";
+		};
+		3F572D881D91D9BF00BA4099 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				13A0B7841D918DBC00B134D2 /* Pixeled.ttf */,
 				20EE8BD71D8718F400C85288 /* background-music-aac.caf */,
 				20EE8BD91D8718F400C85288 /* monster.png */,
 				20EE8BDA1D8718F400C85288 /* monster@2x.png */,
@@ -103,19 +124,33 @@
 				1334ABD01D908B02009A6D22 /* enemy.png */,
 				1334ABD41D908B41009A6D22 /* background.png */,
 				1334ABCE1D908AFC009A6D22 /* ship.png */,
-				20EE8BE11D8718F400C85288 /* trail.sks */,
-				20EE8BC11D8717C200C85288 /* AppDelegate.swift */,
-				20EE8BC31D8717C200C85288 /* GameScene.sks */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		3F572D891D91D9CF00BA4099 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				20EE8BC71D8717C300C85288 /* GameViewController.swift */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
+		3F572D8A1D91D9D800BA4099 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				3F572D901D91DEAA00BA4099 /* MenuScene.swift */,
 				20EE8BC51D8717C300C85288 /* GameScene.swift */,
 				20EE8BD81D8718F400C85288 /* GameOverScene.swift */,
-				20EE8BC71D8717C300C85288 /* GameViewController.swift */,
-				20EE8BC91D8717C300C85288 /* Main.storyboard */,
-				13A0B7841D918DBC00B134D2 /* Pixeled.ttf */,
-				20EE8BCC1D8717C700C85288 /* Assets.xcassets */,
-				20EE8BCE1D8717C700C85288 /* LaunchScreen.storyboard */,
-				20EE8BD11D8717C800C85288 /* Info.plist */,
 			);
-			path = shooterDefense;
+			name = Scenes;
+			sourceTree = "<group>";
+		};
+		3F572D8B1D91DA3700BA4099 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,6 +244,7 @@
 			files = (
 				20EE8BC61D8717C300C85288 /* GameScene.swift in Sources */,
 				20EE8BC81D8717C300C85288 /* GameViewController.swift in Sources */,
+				3F572D911D91DEAA00BA4099 /* MenuScene.swift in Sources */,
 				20EE8BE31D8718F400C85288 /* GameOverScene.swift in Sources */,
 				20EE8BC21D8717C200C85288 /* AppDelegate.swift in Sources */,
 			);

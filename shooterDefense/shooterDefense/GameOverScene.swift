@@ -29,16 +29,15 @@ class GameOverScene: SKScene {
         label.position = CGPoint(x: size.width/2, y: size.height/2)
         addChild(label)
         
-        // run transition and display
-        run(SKAction.sequence([
-            SKAction.wait(forDuration: 3.0),
-            SKAction.run() {
-                let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-                let scene = GameScene(size: size)
-                self.view?.presentScene(scene, transition:reveal)
-            }
-            ]))
-        
+        // run transition and display -- JHAT: this code redisplayed the GameScene after 3 seconds
+//        run(SKAction.sequence([
+//            SKAction.wait(forDuration: 3.0),
+//            SKAction.run() {
+//                let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+//                let scene = GameScene(size: size)
+//                self.view?.presentScene(scene, transition:reveal)
+//            }
+//            ]))
     }
     
     // override init for scene
