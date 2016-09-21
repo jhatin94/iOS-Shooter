@@ -67,9 +67,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let escapedLabel = SKLabelNode(fontNamed: "Pixeled")
     
     
+    
     override func didMove(to view: SKView) {
         /* Setup your scene here */
-        backgroundColor = SKColor.white
+        backgroundColor = SKColor.black
+        
+        let backgroundMenu = SKSpriteNode(imageNamed: "background")
+        backgroundMenu.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+        backgroundMenu.zPosition = -1
+        addChild(backgroundMenu)
         
        
         player.position = CGPoint(x: size.width / 2, y: 0 + player.size.height)

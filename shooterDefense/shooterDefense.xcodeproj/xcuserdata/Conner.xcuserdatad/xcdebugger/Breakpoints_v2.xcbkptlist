@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "shooterDefense/GameScene.swift"
-            timestampString = "496013092.264414"
+            timestampString = "496170674.615655"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "didMove(to:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "shooterDefense/MenuScene.swift"
-            timestampString = "496168710.283556"
+            timestampString = "496170476.753474"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
-            landmarkName = "drawMainMenu()"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "touchesBegan(_:with:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,13 +42,75 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "shooterDefense/MenuScene.swift"
-            timestampString = "496168710.283556"
+            timestampString = "496170476.753474"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
-            landmarkName = "touchesBegan(_:with:)"
-            landmarkType = "7">
+            startingLineNumber = "14"
+            endingLineNumber = "14"
+            landmarkName = "MenuScene"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "shooterDefense.MenuScene.transition.getter : __ObjC.SKTransition"
+                  moduleName = "shooterDefense"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Conner/Documents/swift/iOS-Shooter/shooterDefense/shooterDefense/MenuScene.swift"
+                  timestampString = "496168931.764272"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "16"
+                  endingLineNumber = "16"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "shooterDefense.MenuScene.transition.setter : __ObjC.SKTransition"
+                  moduleName = "shooterDefense"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Conner/Documents/swift/iOS-Shooter/shooterDefense/shooterDefense/MenuScene.swift"
+                  timestampString = "496168931.766586"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "16"
+                  endingLineNumber = "16"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "shooterDefense.MenuScene.init (size : __C.CGSize, menuToDisplay : shooterDefense.MenuScene.MenuType, sceneManager : shooterDefense.GameViewController) -&gt; shooterDefense.MenuScene"
+                  moduleName = "shooterDefense"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Conner/Documents/swift/iOS-Shooter/shooterDefense/shooterDefense/MenuScene.swift"
+                  timestampString = "496168931.768886"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "16"
+                  endingLineNumber = "16"
+                  offsetFromSymbolStart = "132">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "shooterDefense.MenuScene.init (coder : __ObjC.NSCoder) -&gt; shooterDefense.MenuScene"
+                  moduleName = "shooterDefense"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Conner/Documents/swift/iOS-Shooter/shooterDefense/shooterDefense/MenuScene.swift"
+                  timestampString = "496168931.771029"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "16"
+                  endingLineNumber = "16"
+                  offsetFromSymbolStart = "96">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

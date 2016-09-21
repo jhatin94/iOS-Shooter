@@ -11,8 +11,7 @@ import SpriteKit
 
 class MenuScene: SKScene {
     let sceneManager: GameViewController
-
-    var background = SKSpriteNode(imageNamed: "background")
+    var transition:SKTransition = SKTransition.fade(withDuration: 1)
     
     enum MenuType {
         case main
@@ -61,6 +60,8 @@ class MenuScene: SKScene {
             sceneManager.loadMenu(menuToLoad: MenuType.story)
             break
         case "game"?:
+             var scene:SKScene = GameScene(size: self.size)
+             self.view?.presentScene(scene, transition: transition)
             break
         case "stats"?:
             break
@@ -76,21 +77,10 @@ class MenuScene: SKScene {
         
         // set background color and image
         backgroundColor = SKColor.black
-        background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
-        addChild(background)
-
-        
-        
-        
-        
-        // JHAT: Test menu option
-        let storyOption = SKLabelNode(fontNamed: "Pixeled")
-        storyOption.position = CGPoint(x: size.width/2, y: size.height/2)
-        storyOption.fontSize = 65
-        storyOption.text = "Briefing"
-        storyOption.name = "story"
-        storyOption.fontColor = SKColor.white
-        addChild(storyOption)
+        var backgroundMenu = SKSpriteNode(imageNamed: "background")
+        backgroundMenu.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+        backgroundMenu.zPosition = -1
+        addChild(backgroundMenu)
         
         
         
@@ -111,6 +101,17 @@ class MenuScene: SKScene {
          gameOption.name = "game"
          gameOption.fontColor = SKColor.white
          addChild(gameOption)
+        
+        // JHAT: Test menu option
+        let storyOption = SKLabelNode(fontNamed: "Pixeled")
+        storyOption.position = CGPoint(x: size.width/2, y: size.height/2)
+        storyOption.fontSize = 65
+        storyOption.text = "Briefing"
+        storyOption.name = "story"
+        storyOption.fontColor = SKColor.white
+        addChild(storyOption)
+        
+        
     }
     
     func drawStoryMenu() {
@@ -123,6 +124,7 @@ class MenuScene: SKScene {
         storyLabel.text = "The Story So Far..."
         storyLabel.fontColor = SKColor.white
         addChild(storyLabel)
+        
         
         
     }
