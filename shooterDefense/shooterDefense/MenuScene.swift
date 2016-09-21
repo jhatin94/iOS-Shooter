@@ -31,13 +31,16 @@ class MenuScene: SKScene {
             drawMainMenu()
                break
         case MenuType.stats:
+            drawStatsMenu()
             break
         case MenuType.story:
             drawStoryMenu()
             break
         case MenuType.settings:
+            drawSettingsMenu()
             break
         case MenuType.instructions:
+            drawInstrMenu()
             break
         case MenuType.levelSelect:
             drawLevelSelect()
@@ -59,17 +62,37 @@ class MenuScene: SKScene {
         let node = self.atPoint(touchLocation)
         
         switch (node.name) {
-        case "story"?:
+        case "story"?: // Main menu clickable nodes
             sceneManager.loadMenu(menuToLoad: MenuType.story)
             break
         case "levelSelect"?:
             sceneManager.loadMenu(menuToLoad: MenuType.levelSelect)
             break
         case "stats"?:
+            sceneManager.loadMenu(menuToLoad: MenuType.stats)
             break
         case "settings"?:
+            sceneManager.loadMenu(menuToLoad: MenuType.settings)
             break
-        case "level1"?:
+        case "instructions"?:
+            sceneManager.loadMenu(menuToLoad: MenuType.instructions)
+            break
+        case "storyToMain"?: // story clickable nodes
+            sceneManager.loadMenu(menuToLoad: MenuType.main)
+            break
+        case "statsToMain"?: // stats clickable nodes
+            sceneManager.loadMenu(menuToLoad: MenuType.main)
+            break
+        case "settingsToMain"?: // settings clickable nodes
+            sceneManager.loadMenu(menuToLoad: MenuType.main)
+            break
+        case "instToMain"?: // instructions clickable nodes
+            sceneManager.loadMenu(menuToLoad: MenuType.main)
+            break
+        case "levelSelectToMain"?: // level select clickable nodes
+            sceneManager.loadMenu(menuToLoad: MenuType.main)
+            break
+        case "level1"?: 
             sceneManager.loadGameScene(lvl: 1)
             break
         default:
@@ -79,7 +102,6 @@ class MenuScene: SKScene {
     
     // JHAT: methods to draw each MenuType
     func drawMainMenu() {
-        
         // set background color and image
         backgroundColor = SKColor.black
         let backgroundMenu = SKSpriteNode(imageNamed: "background")
@@ -87,34 +109,59 @@ class MenuScene: SKScene {
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)
         
-        // JHAT: create and add a test main menu label
+        // JHAT: create and add main menu title label
         let titleLabel = SKLabelNode(fontNamed: "Pixeled")
-        titleLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 400)
+        titleLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 500)
         titleLabel.fontSize = 108
         titleLabel.text = "Galaxia"
         titleLabel.name = "title"
         titleLabel.fontColor = SKColor.white
         addChild(titleLabel)
         
-        // JHAT: Transition to game
-         let gameOption = SKLabelNode(fontNamed: "Pixeled")
-         gameOption.position = CGPoint(x: size.width/2, y: size.height/2-300)
-         gameOption.fontSize = 65
-         gameOption.text = "Play"
-         gameOption.name = "levelSelect"
-         gameOption.fontColor = SKColor.white
-         addChild(gameOption)
-        
-        // JHAT: Test menu option
+        // JHAT: story menu option
         let storyOption = SKLabelNode(fontNamed: "Pixeled")
-        storyOption.position = CGPoint(x: size.width/2, y: size.height/2)
+        storyOption.position = CGPoint(x: size.width/2, y: size.height/2 + 300)
         storyOption.fontSize = 65
         storyOption.text = "Briefing"
         storyOption.name = "story"
         storyOption.fontColor = SKColor.white
         addChild(storyOption)
         
+        // JHAT: instructions menu option
+        let instructionsOption = SKLabelNode(fontNamed: "Pixeled")
+        instructionsOption.position = CGPoint(x: size.width/2, y: size.height/2 + 100)
+        instructionsOption.fontSize = 65
+        instructionsOption.text = "How To Play"
+        instructionsOption.name = "instructions"
+        instructionsOption.fontColor = SKColor.white
+        addChild(instructionsOption)
         
+        // JHAT: settings menu option
+        let settingsOption = SKLabelNode(fontNamed: "Pixeled")
+        settingsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 100)
+        settingsOption.fontSize = 65
+        settingsOption.text = "Settings"
+        settingsOption.name = "settings"
+        settingsOption.fontColor = SKColor.white
+        addChild(settingsOption)
+        
+        // JHAT: stats menu option
+        let statsOption = SKLabelNode(fontNamed: "Pixeled")
+        statsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 300)
+        statsOption.fontSize = 65
+        statsOption.text = "Stats"
+        statsOption.name = "stats"
+        statsOption.fontColor = SKColor.white
+        addChild(statsOption)
+        
+        // JHAT: Transition to level select
+        let gameOption = SKLabelNode(fontNamed: "Pixeled")
+        gameOption.position = CGPoint(x: size.width/2, y: size.height/2 - 500)
+        gameOption.fontSize = 65
+        gameOption.text = "Play"
+        gameOption.name = "levelSelect"
+        gameOption.fontColor = SKColor.white
+        addChild(gameOption)
     }
     
     func drawStoryMenu() {
@@ -122,26 +169,117 @@ class MenuScene: SKScene {
         backgroundColor = SKColor.black
         
         let storyLabel = SKLabelNode(fontNamed: "Pixeled")
-        storyLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 400)
+        storyLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
         storyLabel.fontSize = 72
         storyLabel.text = "The Story So Far..."
+        storyLabel.name = "storyTitle"
         storyLabel.fontColor = SKColor.white
         addChild(storyLabel)
+        
+        // return to main menu
+        let toMainFromStory = SKLabelNode(fontNamed: "Pixeled")
+        toMainFromStory.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
+        toMainFromStory.fontColor = SKColor.white
+        toMainFromStory.fontSize = 32
+        toMainFromStory.text = "Return To Main Menu"
+        toMainFromStory.name = "storyToMain"
+        addChild(toMainFromStory)
     }
     
     func drawLevelSelect() {
-        // get player progress from Model
+        // get player progress from Model to determine which levels are unlocked
         
         // set background color
         backgroundColor = SKColor.black
         
+        // title label
+        let levelSelectTitle = SKLabelNode(fontNamed: "Pixeled")
+        levelSelectTitle.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
+        levelSelectTitle.fontSize = 72
+        levelSelectTitle.text = "Level Select"
+        levelSelectTitle.name = "levelSelectTitle"
+        levelSelectTitle.fontColor = SKColor.white
+        addChild(levelSelectTitle)
+        
+        // return to main menu
+        let toMainFromLevelSelect = SKLabelNode(fontNamed: "Pixeled")
+        toMainFromLevelSelect.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
+        toMainFromLevelSelect.fontColor = SKColor.white
+        toMainFromLevelSelect.fontSize = 32
+        toMainFromLevelSelect.text = "Return To Main Menu"
+        toMainFromLevelSelect.name = "levelSelectToMain"
+        addChild(toMainFromLevelSelect)
+        
         // first level always unlocked
         let level01 = SKLabelNode(fontNamed: "Pixeled")
         level01.position = CGPoint(x: size.width/2, y: size.height/2 + 400)
-        level01.fontSize = 72
+        level01.fontSize = 60
         level01.text = "Level 1"
         level01.name = "level1"
         level01.fontColor = SKColor.white
         addChild(level01)
+    }
+    
+    func drawSettingsMenu() {
+        backgroundColor = SKColor.black
+        
+        let settingsTitle = SKLabelNode(fontNamed: "Pixeled")
+        settingsTitle.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
+        settingsTitle.fontSize = 72
+        settingsTitle.text = "Settings"
+        settingsTitle.name = "settingsTitle"
+        settingsTitle.fontColor = SKColor.white
+        addChild(settingsTitle)
+        
+        // return to main menu
+        let toMainFromSettings = SKLabelNode(fontNamed: "Pixeled")
+        toMainFromSettings.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
+        toMainFromSettings.fontColor = SKColor.white
+        toMainFromSettings.fontSize = 32
+        toMainFromSettings.text = "Return To Main Menu"
+        toMainFromSettings.name = "settingsToMain"
+        addChild(toMainFromSettings)
+    }
+    
+    func drawStatsMenu() {
+        backgroundColor = SKColor.black
+        
+        let statsTitle = SKLabelNode(fontNamed: "Pixeled")
+        statsTitle.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
+        statsTitle.fontSize = 72
+        statsTitle.text = "Statistics"
+        statsTitle.name = "statsTitle"
+        statsTitle.fontColor = SKColor.white
+        addChild(statsTitle)
+        
+        // return to main menu
+        let toMainFromStats = SKLabelNode(fontNamed: "Pixeled")
+        toMainFromStats.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
+        toMainFromStats.fontColor = SKColor.white
+        toMainFromStats.fontSize = 32
+        toMainFromStats.text = "Return To Main Menu"
+        toMainFromStats.name = "statsToMain"
+        addChild(toMainFromStats)
+    }
+    
+    func drawInstrMenu() {
+        backgroundColor = SKColor.black
+        
+        let instrTitle = SKLabelNode(fontNamed: "Pixeled")
+        instrTitle.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
+        instrTitle.fontSize = 72
+        instrTitle.text = "How To Play"
+        instrTitle.name = "intructionsTitle"
+        instrTitle.fontColor = SKColor.white
+        addChild(instrTitle)
+        
+        // return to main menu
+        let toMainFromInstr = SKLabelNode(fontNamed: "Pixeled")
+        toMainFromInstr.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
+        toMainFromInstr.fontColor = SKColor.white
+        toMainFromInstr.fontSize = 32
+        toMainFromInstr.text = "Return To Main Menu"
+        toMainFromInstr.name = "instToMain"
+        addChild(toMainFromInstr)
     }
 }

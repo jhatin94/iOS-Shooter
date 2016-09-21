@@ -51,7 +51,8 @@ struct PhysicsCategory {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    
+    let sceneManager: GameViewController
+    var currentGameLevel: Int
     let player = SKSpriteNode(imageNamed: "ship")
     var enemiesKilled = 0
     let numToWin = 30
@@ -68,9 +69,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var enemySpawns: [CGPoint] = []
     let ENEMY_HEIGHT_WIDTH: CGFloat = 42.0
     
-    init(size: CGSize, level:Int) {
+    init(size: CGSize, level:Int, sceneManager:GameViewController) {
+        self.sceneManager = sceneManager
+        self.currentGameLevel = level
         super.init(size: size)
         enemySpawns = getSpawnPoints(level)
+        // TODO: Read player progression from model
     }
     
     // override init for scene
@@ -182,9 +186,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.enemiesEscaped += 1
             self.updateLabel(self.escapedLabel)
             if (self.enemiesEscaped >= self.numToLose) {
-                let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-                let gameOverScene = GameOverScene(size: self.size, won: false)
-                self.view?.presentScene(gameOverScene, transition: reveal)
+                self.sceneManager.loadLevelFinishedScene(lvl: self.currentGameLevel, success: false)
             }
         }
         
@@ -233,8 +235,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // get the direction to shoot it
         let direction = offset.normalized();
         
+        // TODO: have range be dependent on level
         // have distance be off screen
-        let range = direction * 1000
+        let range = direction * 2000
         
         // add range to current position
         let target = range + projectile.position;
@@ -269,10 +272,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func projectileDidCollideWithEnemy(_ projectile: SKSpriteNode, enemy: SKSpriteNode) {
         enemiesKilled += 1
         self.updateLabel(self.destroyedLabel)
-        if (enemiesKilled >= numToWin) {
-            let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-            let gameOverScene = GameOverScene(size: self.size, won: true)
-            self.view?.presentScene(gameOverScene, transition: reveal)
+        if (enemiesKilled >= numToWin && currentGameLevel > 0) { // JHAT: Skip check on endless mode (level 0)
+            // TODO: if last level, show GameOver screen instead
+            sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true)
         }
         projectile.removeFromParent()
         enemy.removeFromParent()

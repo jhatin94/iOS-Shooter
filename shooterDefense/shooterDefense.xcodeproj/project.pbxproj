@@ -20,7 +20,7 @@
 		20EE8BCD1D8717C700C85288 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BCC1D8717C700C85288 /* Assets.xcassets */; };
 		20EE8BD01D8717C700C85288 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BCE1D8717C700C85288 /* LaunchScreen.storyboard */; };
 		20EE8BE21D8718F400C85288 /* background-music-aac.caf in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BD71D8718F400C85288 /* background-music-aac.caf */; };
-		20EE8BE31D8718F400C85288 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EE8BD81D8718F400C85288 /* GameOverScene.swift */; };
+		20EE8BE31D8718F400C85288 /* LevelFinishedScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EE8BD81D8718F400C85288 /* LevelFinishedScene.swift */; };
 		20EE8BE41D8718F400C85288 /* monster.png in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BD91D8718F400C85288 /* monster.png */; };
 		20EE8BE51D8718F400C85288 /* monster@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BDA1D8718F400C85288 /* monster@2x.png */; };
 		20EE8BE61D8718F400C85288 /* pew-pew-lei.caf in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BDB1D8718F400C85288 /* pew-pew-lei.caf */; };
@@ -49,7 +49,7 @@
 		20EE8BCF1D8717C700C85288 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20EE8BD11D8717C800C85288 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20EE8BD71D8718F400C85288 /* background-music-aac.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "background-music-aac.caf"; sourceTree = "<group>"; };
-		20EE8BD81D8718F400C85288 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		20EE8BD81D8718F400C85288 /* LevelFinishedScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelFinishedScene.swift; sourceTree = "<group>"; };
 		20EE8BD91D8718F400C85288 /* monster.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monster.png; sourceTree = "<group>"; };
 		20EE8BDA1D8718F400C85288 /* monster@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "monster@2x.png"; sourceTree = "<group>"; };
 		20EE8BDB1D8718F400C85288 /* pew-pew-lei.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "pew-pew-lei.caf"; sourceTree = "<group>"; };
@@ -141,7 +141,7 @@
 			children = (
 				3F572D901D91DEAA00BA4099 /* MenuScene.swift */,
 				20EE8BC51D8717C300C85288 /* GameScene.swift */,
-				20EE8BD81D8718F400C85288 /* GameOverScene.swift */,
+				20EE8BD81D8718F400C85288 /* LevelFinishedScene.swift */,
 			);
 			name = Scenes;
 			sourceTree = "<group>";
@@ -245,7 +245,7 @@
 				20EE8BC61D8717C300C85288 /* GameScene.swift in Sources */,
 				20EE8BC81D8717C300C85288 /* GameViewController.swift in Sources */,
 				3F572D911D91DEAA00BA4099 /* MenuScene.swift in Sources */,
-				20EE8BE31D8718F400C85288 /* GameOverScene.swift in Sources */,
+				20EE8BE31D8718F400C85288 /* LevelFinishedScene.swift in Sources */,
 				20EE8BC21D8717C200C85288 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

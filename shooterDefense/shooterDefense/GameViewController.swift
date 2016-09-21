@@ -13,6 +13,8 @@ class GameViewController: UIViewController {
     let screenSize = CGSize(width: 1080, height: 1920)
     let scaleMode = SKSceneScaleMode.aspectFill
     var gameScene: GameScene?
+    var menuScene: MenuScene?
+    var levelFinishedScene: LevelFinishedScene?
     var skView: SKView!
     
     override func viewDidLoad() {
@@ -31,29 +33,48 @@ class GameViewController: UIViewController {
     
     // JHAT: scene management methods
     func loadMenu(menuToLoad: MenuScene.MenuType) { // JHAT: displays all game menus
-        clearGameStateFromMemory()
-        let scene = MenuScene(size: screenSize, menuToDisplay: menuToLoad, sceneManager: self)
+        clearGameSceneFromMemory()
+        clearLevelFinishedSceneFromMemory()
+        menuScene = MenuScene(size: screenSize, menuToDisplay: menuToLoad, sceneManager: self)
         let reveal = SKTransition.fade(withDuration: 2)
-        skView.presentScene(scene, transition: reveal)
+        skView.presentScene(menuScene!, transition: reveal)
     }
     
     func loadGameScene(lvl:Int) { // JHAT: displays game state
-        gameScene = GameScene(size: screenSize, level: lvl)
+        clearMenuSceneFromMemory()
+        clearLevelFinishedSceneFromMemory()
+        gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         skView.presentScene(gameScene!, transition: transition)
     }
     
-    func loadLevelFinishedScene() { // JHAT: displays success or fail
-        clearGameStateFromMemory()
+    func loadLevelFinishedScene(lvl:Int, success:Bool) { // JHAT: displays success or fail
+        clearGameSceneFromMemory()
+        clearMenuSceneFromMemory()
+        let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+        levelFinishedScene = LevelFinishedScene(size: screenSize, won: success, level: lvl, sceneManager: self)
+        skView.presentScene(levelFinishedScene!, transition: reveal)
     }
     
     func loadGameOverScene() { // JHAT: display story mode finished or Endless mode fail
-        clearGameStateFromMemory()
+        clearGameSceneFromMemory()
+        clearMenuSceneFromMemory()
+        clearLevelFinishedSceneFromMemory()
     }
     
-    private func clearGameStateFromMemory() {
+    private func clearGameSceneFromMemory() {
         if (gameScene != nil) { // clear out gameScene if it's in memory
             gameScene = nil
+        }
+    }
+    private func clearMenuSceneFromMemory() {
+        if (menuScene != nil) {
+            menuScene = nil
+        }
+    }
+    private func clearLevelFinishedSceneFromMemory() {
+        if (levelFinishedScene != nil) {
+            levelFinishedScene = nil
         }
     }
     
