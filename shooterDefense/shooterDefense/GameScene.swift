@@ -46,17 +46,17 @@ extension CGPoint {
 struct PhysicsCategory {
     static let None      : UInt32 = 0
     static let All       : UInt32 = UInt32.max
-    static let Monster   : UInt32 = 0b1       // 1
+    static let Enemy   : UInt32 = 0b1       // 1
     static let Projectile: UInt32 = 0b10      // 2
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let player = SKSpriteNode(imageNamed: "ship")
-    var monstersKilled = 0
+    var enemiesKilled = 0
     let numToWin = 30
     let numToLose = 5
-    var monstersEscaped = 0
+    var enemiesEscaped = 0
     
     let defaults = UserDefaults.standard
     var playerLevel = 1
@@ -65,8 +65,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let destroyedLabel = SKLabelNode(fontNamed: "Pixeled")
     let escapedLabel = SKLabelNode(fontNamed: "Pixeled")
+    var enemySpawns: [CGPoint] = []
+    let ENEMY_HEIGHT_WIDTH: CGFloat = 42.0
     
+    init(size: CGSize, level:Int) {
+        super.init(size: size)
+        enemySpawns = getSpawnPoints(level)
+    }
     
+    // override init for scene
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func didMove(to view: SKView) {
         /* Setup your scene here */
@@ -100,7 +110,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         destroyedLabel.position = CGPoint(x: 5, y: self.frame.height-5)
         destroyedLabel.verticalAlignmentMode = .top
         destroyedLabel.horizontalAlignmentMode = .left
-        destroyedLabel.text = "Killed: \(monstersKilled)"
+        destroyedLabel.text = "Killed: \(enemiesKilled)"
         destroyedLabel.fontColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         destroyedLabel.fontSize = 30
         destroyedLabel.fontName = "Pixeled"
@@ -110,7 +120,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         escapedLabel.position = CGPoint(x: self.frame.width - 5, y: self.frame.height - 5)
         escapedLabel.verticalAlignmentMode = .top
         escapedLabel.horizontalAlignmentMode = .right
-        escapedLabel.text = "Escaped: \(monstersEscaped)"
+        escapedLabel.text = "Escaped: \(enemiesEscaped)"
         escapedLabel.fontColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         escapedLabel.fontSize = 30
         escapedLabel.fontName = "Pixeled"
@@ -123,7 +133,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         run(SKAction.repeatForever(
             SKAction.sequence([
-                SKAction.run(addMonster),
+                SKAction.run(addEnemy),
                 SKAction.wait(forDuration: 1.0)
                 ])
             ))
@@ -138,52 +148,47 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateLabel(_ label: SKLabelNode) {
-        label.name == "desLab" ? (label.text = "Killed: \(monstersKilled)") : (label.text = "Escaped: \(monstersEscaped)")
+        label.name == "desLab" ? (label.text = "Killed: \(enemiesKilled)") : (label.text = "Escaped: \(enemiesEscaped)")
     }
     
-    func addMonster() {
+    func addEnemy() {
         // create sprite
-        let monster = SKSpriteNode(imageNamed: "enemy")
+        let enemy = SKSpriteNode(imageNamed: "enemy")
         
         // apply physics body to the sprite
-        monster.physicsBody = SKPhysicsBody(rectangleOf: monster.size)
-        monster.physicsBody?.isDynamic = true
-        monster.physicsBody?.categoryBitMask = PhysicsCategory.Monster
-        monster.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile
-        monster.physicsBody?.collisionBitMask = PhysicsCategory.None
+        enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+        enemy.physicsBody?.isDynamic = true
+        enemy.physicsBody?.categoryBitMask = PhysicsCategory.Enemy
+        enemy.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile
+        enemy.physicsBody?.collisionBitMask = PhysicsCategory.None
         
-        // determine where to spawn the monster on the X and Y axis
-        let actualY = size.height + monster.size.height
+        // set enemy position to spawn based on level
+        let spawnPoint:Int = Int(random(min: 0, max: CGFloat(enemySpawns.count)))
+        enemy.position = enemySpawns[spawnPoint]
         
-        // TODO: Determine level number and select preset spawn point (separate function)
-        let actualX = random(min: monster.size.width / 2, max: size.width - monster.size.width / 2)
+        // add enemy to the scene
+        addChild(enemy)
         
-        // position the monster slightly off screen on the right edge and along a random position along the yAxis
-        monster.position = CGPoint(x: actualX, y: actualY)
-        
-        // add monster to the scene
-        addChild(monster)
-        
-        // determine speed of the monster
+        // determine speed of the enemy
         let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0))
         
         // create the actions
         // TODO: Determine level and create preset path based on spawn point above (separate function)
-        let actionMove = SKAction.move(to: CGPoint(x: actualX, y: -monster.size.height / 2), duration: TimeInterval(actualDuration))
+        let actionMove = SKAction.move(to: CGPoint(x: enemy.position.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(actualDuration))
         
         let actionMoveDone = SKAction.removeFromParent()
         
         let loseAction = SKAction.run() {
-            self.monstersEscaped += 1
+            self.enemiesEscaped += 1
             self.updateLabel(self.escapedLabel)
-            if (self.monstersEscaped >= self.numToLose) {
+            if (self.enemiesEscaped >= self.numToLose) {
                 let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
                 let gameOverScene = GameOverScene(size: self.size, won: false)
                 self.view?.presentScene(gameOverScene, transition: reveal)
             }
         }
         
-        monster.run(SKAction.sequence([actionMove, loseAction, actionMoveDone]))
+        enemy.run(SKAction.sequence([actionMove, loseAction, actionMoveDone]))
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -202,7 +207,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         projectile.physicsBody = SKPhysicsBody(circleOfRadius: projectile.size.width / 2)
         projectile.physicsBody?.isDynamic = true
         projectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
-        projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Monster
+        projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Enemy
         projectile.physicsBody?.collisionBitMask = PhysicsCategory.None
         projectile.physicsBody?.usesPreciseCollisionDetection = true
         
@@ -255,33 +260,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        // check if projectile and monster collided
-        if ((firstBody.categoryBitMask & PhysicsCategory.Monster != 0) && (secondBody.categoryBitMask & PhysicsCategory.Projectile != 0)) {
-            projectileDidCollideWithMonster(firstBody.node as! SKSpriteNode, monster: secondBody.node as! SKSpriteNode)
+        // check if projectile and enemy collided
+        if ((firstBody.categoryBitMask & PhysicsCategory.Enemy != 0) && (secondBody.categoryBitMask & PhysicsCategory.Projectile != 0)) {
+            projectileDidCollideWithEnemy(firstBody.node as! SKSpriteNode, enemy: secondBody.node as! SKSpriteNode)
         }
     }
     
-    func projectileDidCollideWithMonster(_ projectile: SKSpriteNode, monster: SKSpriteNode) {
-        monstersKilled += 1
+    func projectileDidCollideWithEnemy(_ projectile: SKSpriteNode, enemy: SKSpriteNode) {
+        enemiesKilled += 1
         self.updateLabel(self.destroyedLabel)
-        if (monstersKilled >= numToWin) {
+        if (enemiesKilled >= numToWin) {
             let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
             let gameOverScene = GameOverScene(size: self.size, won: true)
             self.view?.presentScene(gameOverScene, transition: reveal)
         }
         projectile.removeFromParent()
-        monster.removeFromParent()
+        enemy.removeFromParent()
     }
     
     // Utility functions
-    func getSpawnPoint(_ level: Int) -> CGFloat {
-        switch(level) { // JHAT: return x spawn based on level
-            default:
-                return 0
+    func getSpawnPoints(_ level: Int) -> [CGPoint] {
+        switch(level) { // JHAT: return spawn based on level
+        case 1: // determine where to spawn the enemy on the X and Y axis
+            let actualY = size.height + ENEMY_HEIGHT_WIDTH
+            let actualX = size.width / 2
+            return [CGPoint(x: actualX, y: actualY)]
+        default:
+            return [CGPoint(x: 0, y: 0)]
         }
     }
     
-    func getPath(_ level: Int) -> [SKAction] {
+    func getPath(_ level: Int, spawn: CGPoint) -> [SKAction] {
         switch (level) { // JHAT: return array defining path for specific level
             default:
                 return []

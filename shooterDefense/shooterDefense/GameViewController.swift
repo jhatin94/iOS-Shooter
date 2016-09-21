@@ -31,21 +31,30 @@ class GameViewController: UIViewController {
     
     // JHAT: scene management methods
     func loadMenu(menuToLoad: MenuScene.MenuType) { // JHAT: displays all game menus
+        clearGameStateFromMemory()
         let scene = MenuScene(size: screenSize, menuToDisplay: menuToLoad, sceneManager: self)
         let reveal = SKTransition.fade(withDuration: 2)
         skView.presentScene(scene, transition: reveal)
     }
     
-    func loadGameScene() { // JHAT: displays game state
-        
+    func loadGameScene(lvl:Int) { // JHAT: displays game state
+        gameScene = GameScene(size: screenSize, level: lvl)
+        let transition:SKTransition = SKTransition.fade(withDuration: 1)
+        skView.presentScene(gameScene!, transition: transition)
     }
     
     func loadLevelFinishedScene() { // JHAT: displays success or fail
-        
+        clearGameStateFromMemory()
     }
     
     func loadGameOverScene() { // JHAT: display story mode finished or Endless mode fail
-        
+        clearGameStateFromMemory()
+    }
+    
+    private func clearGameStateFromMemory() {
+        if (gameScene != nil) { // clear out gameScene if it's in memory
+            gameScene = nil
+        }
     }
     
     override var prefersStatusBarHidden : Bool {

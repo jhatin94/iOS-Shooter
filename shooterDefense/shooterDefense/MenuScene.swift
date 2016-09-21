@@ -11,7 +11,6 @@ import SpriteKit
 
 class MenuScene: SKScene {
     let sceneManager: GameViewController
-    var transition:SKTransition = SKTransition.fade(withDuration: 1)
     
     enum MenuType {
         case main
@@ -19,6 +18,7 @@ class MenuScene: SKScene {
         case settings
         case instructions
         case stats
+        case levelSelect
     }
     
     init(size: CGSize, menuToDisplay: MenuType, sceneManager:GameViewController) {
@@ -38,6 +38,9 @@ class MenuScene: SKScene {
         case MenuType.settings:
             break
         case MenuType.instructions:
+            break
+        case MenuType.levelSelect:
+            drawLevelSelect()
             break
         }
         
@@ -59,13 +62,15 @@ class MenuScene: SKScene {
         case "story"?:
             sceneManager.loadMenu(menuToLoad: MenuType.story)
             break
-        case "game"?:
-             var scene:SKScene = GameScene(size: self.size)
-             self.view?.presentScene(scene, transition: transition)
+        case "levelSelect"?:
+            sceneManager.loadMenu(menuToLoad: MenuType.levelSelect)
             break
         case "stats"?:
             break
         case "settings"?:
+            break
+        case "level1"?:
+            sceneManager.loadGameScene(lvl: 1)
             break
         default:
             break
@@ -77,12 +82,10 @@ class MenuScene: SKScene {
         
         // set background color and image
         backgroundColor = SKColor.black
-        var backgroundMenu = SKSpriteNode(imageNamed: "background")
+        let backgroundMenu = SKSpriteNode(imageNamed: "background")
         backgroundMenu.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)
-        
-        
         
         // JHAT: create and add a test main menu label
         let titleLabel = SKLabelNode(fontNamed: "Pixeled")
@@ -98,7 +101,7 @@ class MenuScene: SKScene {
          gameOption.position = CGPoint(x: size.width/2, y: size.height/2-300)
          gameOption.fontSize = 65
          gameOption.text = "Play"
-         gameOption.name = "game"
+         gameOption.name = "levelSelect"
          gameOption.fontColor = SKColor.white
          addChild(gameOption)
         
@@ -124,8 +127,21 @@ class MenuScene: SKScene {
         storyLabel.text = "The Story So Far..."
         storyLabel.fontColor = SKColor.white
         addChild(storyLabel)
+    }
+    
+    func drawLevelSelect() {
+        // get player progress from Model
         
+        // set background color
+        backgroundColor = SKColor.black
         
-        
+        // first level always unlocked
+        let level01 = SKLabelNode(fontNamed: "Pixeled")
+        level01.position = CGPoint(x: size.width/2, y: size.height/2 + 400)
+        level01.fontSize = 72
+        level01.text = "Level 1"
+        level01.name = "level1"
+        level01.fontColor = SKColor.white
+        addChild(level01)
     }
 }

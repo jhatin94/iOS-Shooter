@@ -12,11 +12,7 @@ import SpriteKit
 class GameOverScene: SKScene {
     
     init(size: CGSize, won:Bool) {
-        
         super.init(size: size)
-        
-        let transition:SKTransition = SKTransition.fade(withDuration: 1)
-        
         
         // set background color & background iamge
         backgroundColor = SKColor.black
