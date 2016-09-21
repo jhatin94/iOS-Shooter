@@ -58,23 +58,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let numToWin = 30
     let numToLose = 5
     var enemiesEscaped = 0
-    
-    let defaults = UserDefaults.standard
-    var playerLevel = 1
-    var playerXP = 0
-    var xpToNext = 0
+    let playerProfile: PlayerProfile
     
     let destroyedLabel = SKLabelNode(fontNamed: "Pixeled")
     let escapedLabel = SKLabelNode(fontNamed: "Pixeled")
+    let playerLvlLabel = SKLabelNode(fontNamed: "Pixeled")
+    let playerXPToNextLabel = SKLabelNode(fontNamed: "Pixeled")
     var enemySpawns: [CGPoint] = []
     let ENEMY_HEIGHT_WIDTH: CGFloat = 42.0
     
-    init(size: CGSize, level:Int, sceneManager:GameViewController) {
+    init(size:CGSize, level:Int, sceneManager:GameViewController, playerProgress:PlayerProfile) {
         self.sceneManager = sceneManager
         self.currentGameLevel = level
+        self.playerProfile = playerProgress
         super.init(size: size)
         enemySpawns = getSpawnPoints(level)
-        // TODO: Read player progression from model
     }
     
     // override init for scene
@@ -91,17 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)
         
-       
         player.position = CGPoint(x: size.width / 2, y: 0 + player.size.height)
-        
-        // JHAT: Determine player xp and level
-        let level = defaults.object(forKey: "level")
-        let xp = defaults.object(forKey: "xp")
-        
-        playerLevel = level != nil ? (level! as AnyObject).intValue : 1
-        playerXP = xp != nil ? (xp! as AnyObject).intValue : 0
-        xpToNext = xpToNextLevel(playerLevel) - (playerXP - xpToCurrentLevel(playerLevel)) // JHAT: accurately determine player progession
-        
         
         self.addChild(player)
         
@@ -115,7 +103,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         destroyedLabel.verticalAlignmentMode = .top
         destroyedLabel.horizontalAlignmentMode = .left
         destroyedLabel.text = "Killed: \(enemiesKilled)"
-        destroyedLabel.fontColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        destroyedLabel.fontColor = SKColor.white
         destroyedLabel.fontSize = 30
         destroyedLabel.fontName = "Pixeled"
         self.addChild(destroyedLabel)
@@ -125,10 +113,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         escapedLabel.verticalAlignmentMode = .top
         escapedLabel.horizontalAlignmentMode = .right
         escapedLabel.text = "Escaped: \(enemiesEscaped)"
-        escapedLabel.fontColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        escapedLabel.fontColor = SKColor.white
         escapedLabel.fontSize = 30
         escapedLabel.fontName = "Pixeled"
         self.addChild(escapedLabel)
+        
+        // xp levels
+        playerLvlLabel.name = "lvlLab"
+        playerLvlLabel.position = CGPoint(x: 5, y: self.frame.height - 50)
+        playerLvlLabel.verticalAlignmentMode = .top
+        playerLvlLabel.horizontalAlignmentMode = .left
+        playerLvlLabel.text = "XP Level: \(playerProfile.playerLevel)"
+        playerLvlLabel.fontColor = SKColor.white
+        playerLvlLabel.fontSize = 30
+        playerLvlLabel.fontName = "Pixeled"
+        self.addChild(playerLvlLabel)
+        
+        playerXPToNextLabel.name = "xpLab"
+        playerXPToNextLabel.position = CGPoint(x: self.frame.width - 5, y: self.frame.height - 50)
+        playerXPToNextLabel.verticalAlignmentMode = .top
+        playerXPToNextLabel.horizontalAlignmentMode = .right
+        playerXPToNextLabel.text = "XP To Next Level: \(playerProfile.xpToNext)"
+        playerXPToNextLabel.fontColor = SKColor.white
+        playerXPToNextLabel.fontSize = 30
+        playerXPToNextLabel.fontName = "Pixeled"
+        self.addChild(playerXPToNextLabel)
         
         // add BGM
         let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
@@ -152,7 +161,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateLabel(_ label: SKLabelNode) {
-        label.name == "desLab" ? (label.text = "Killed: \(enemiesKilled)") : (label.text = "Escaped: \(enemiesEscaped)")
+        switch (label.name) {
+        case "desLab"?:
+            label.text = "Killed: \(enemiesKilled)"
+            break
+        case "esLab"?:
+            label.text = "Escaped: \(enemiesEscaped)"
+            break
+        case "xpLab"?:
+            label.text = "XP To Next Level: \(playerProfile.xpToNext)"
+            break
+        case "lvlLab"?:
+            label.text = "XP Level: \(playerProfile.playerLevel)"
+            break
+        default:
+            break
+        }
     }
     
     func addEnemy() {
@@ -272,6 +296,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func projectileDidCollideWithEnemy(_ projectile: SKSpriteNode, enemy: SKSpriteNode) {
         enemiesKilled += 1
         self.updateLabel(self.destroyedLabel)
+        sceneManager.gainXP(xpGained: 15, playerProfile: playerProfile)
+        self.updateLabel(self.playerXPToNextLabel)
+        self.updateLabel(self.playerLvlLabel)
         if (enemiesKilled >= numToWin && currentGameLevel > 0) { // JHAT: Skip check on endless mode (level 0)
             // TODO: if last level, show GameOver screen instead
             sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true)
@@ -297,26 +324,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             default:
                 return []
         }
-    }
-    
-    func xpToNextLevel(_ currentLevel: Int) -> Int {
-        return (25 * (currentLevel - 1) + 50) // JHAT: function to determine xp for each level
-    }
-    
-    func xpToCurrentLevel(_ currentLevel: Int) -> Int { // JHAT: function to determine the xp earned already to accurately get current level progress
-        var level = currentLevel
-        var totalXP = 0
-        while (level > 1) {
-            totalXP += xpToNextLevel(level)
-            level -= 1
-        }
-        return totalXP
-    }
-    
-    // TODO: save progress between levels and when user quits or puts app in background
-    func saveProgress() { // JHAT: save player progression to userdefaults
-        defaults.set(playerLevel, forKey: "level")
-        defaults.set(playerXP, forKey: "xp")
-    }
+    }    
 }
 

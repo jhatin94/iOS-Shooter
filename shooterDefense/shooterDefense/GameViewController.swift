@@ -15,7 +15,9 @@ class GameViewController: UIViewController {
     var gameScene: GameScene?
     var menuScene: MenuScene?
     var levelFinishedScene: LevelFinishedScene?
-    var skView: SKView!
+    var skView: SKView!    
+    let defaults = UserDefaults.standard
+    var playerProfile: PlayerProfile?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +29,9 @@ class GameViewController: UIViewController {
         
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
+        
+        // load data for player profile
+        loadPlayerProfile()
         
         loadMenu(menuToLoad: MenuScene.MenuType.main)
     }
@@ -43,7 +48,7 @@ class GameViewController: UIViewController {
     func loadGameScene(lvl:Int) { // JHAT: displays game state
         clearMenuSceneFromMemory()
         clearLevelFinishedSceneFromMemory()
-        gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self)
+        gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         skView.presentScene(gameScene!, transition: transition)
     }
@@ -62,8 +67,83 @@ class GameViewController: UIViewController {
         clearLevelFinishedSceneFromMemory()
     }
     
+    // MARK: Model interaction functions
+    private func loadPlayerProfile() {
+        // JHAT: Determine player profile vars from userDefaults
+        let level = defaults.object(forKey: "level")
+        let xp = defaults.object(forKey: "xp")
+        let lvlsCompleted = defaults.object(forKey: "highestLvlComplete")
+        let endlessScore = defaults.object(forKey: "endlessHiScore")
+        
+        // run appropriate calculations to get accurate data
+        let playerLevel = level != nil ? (level! as AnyObject).intValue : 1
+        let playerXP = xp != nil ? (xp! as AnyObject).intValue : 0
+        let highestFinishedLvl = lvlsCompleted != nil ? (lvlsCompleted! as AnyObject).intValue : 0
+        let endlessModeScore = endlessScore != nil ? (endlessScore! as AnyObject).intValue : 0
+        let remainder = playerXP! - xpToCurrentLevel(playerLevel!) // JHAT: Swift can't handle doing this on one line
+        let xpToNext = xpToNextLevel(playerLevel!) - remainder // JHAT: accurately determine player progession
+        
+        playerProfile = PlayerProfile(playerLevel: playerLevel!, playerXP: playerXP!, xpToNextLvl: xpToNext, highestLevelCompleted: highestFinishedLvl!, endlessHiScore: endlessModeScore!)
+    }
+    
+    // save progress when profile is modified and when user quits or puts app in background
+    func saveProgress(profileToSave: PlayerProfile) { // JHAT: save player progression to userdefaults
+        defaults.set(profileToSave.playerLevel, forKey: "level")
+        defaults.set(profileToSave.playerXP, forKey: "xp")
+        defaults.set(profileToSave.highestLevelCompleted, forKey: "highestLvlComplete")
+        defaults.set(profileToSave.endlessHiScore, forKey: "endlessHiScore")
+    }
+    
+    // MARK: XP functions
+    private func xpToNextLevel(_ currentLevel: Int) -> Int {
+        return (25 * (currentLevel - 1) + 50) // JHAT: function to determine xp for each level
+    }
+    
+    private func xpToCurrentLevel(_ currentLevel: Int) -> Int { // JHAT: function to determine the xp earned already to accurately get current level progress
+        var level = currentLevel
+        var totalXP = 0
+        while (level > 1) {
+            totalXP += xpToNextLevel(level)
+            level -= 1
+        }
+        return totalXP
+    }
+    
+    func gainXP(xpGained:Int, playerProfile: PlayerProfile) {
+        playerProfile.playerXP += xpGained // increment XP
+        playerProfile.xpToNext -= xpGained
+        
+        // JHAT: check if player leveled up
+        if (playerProfile.xpToNext <= 0) {
+            playerProfile.playerLevel += 1
+            let overflow = playerProfile.xpToNext * -1 // Make this number positive
+            playerProfile.xpToNext = xpToNextLevel(playerProfile.playerLevel) - overflow
+            
+            // save profile on level up
+            saveProgress(profileToSave: playerProfile)
+        }
+    }
+    
+    func setHighestLevelComplete(lvlComplete:Int, playerProfile: PlayerProfile) {
+        playerProfile.highestLevelCompleted = lvlComplete
+        
+        // save profile
+        saveProgress(profileToSave: playerProfile)
+    }
+    
+    func setEndlessHiScore(endlessScore:Int, playerProfile: PlayerProfile) {
+        if (endlessScore > playerProfile.endlessHiScore) { // JHAT: if endless score beats high score, replace
+            playerProfile.endlessHiScore = endlessScore
+        }
+        
+        // save profile
+        saveProgress(profileToSave: playerProfile)
+    }
+    
+    
+    // MARK: memory functions
     private func clearGameSceneFromMemory() {
-        if (gameScene != nil) { // clear out gameScene if it's in memory
+        if (gameScene != nil) {
             gameScene = nil
         }
     }
