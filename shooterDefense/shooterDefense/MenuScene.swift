@@ -11,6 +11,9 @@ import SpriteKit
 
 class MenuScene: SKScene {
     let sceneManager: GameViewController
+
+    var background = SKSpriteNode(imageNamed: "background")
+    
     enum MenuType {
         case main
         case story
@@ -57,6 +60,8 @@ class MenuScene: SKScene {
         case "story"?:
             sceneManager.loadMenu(menuToLoad: MenuType.story)
             break
+        case "game"?:
+            break
         case "stats"?:
             break
         case "settings"?:
@@ -68,8 +73,26 @@ class MenuScene: SKScene {
     
     // JHAT: methods to draw each MenuType
     func drawMainMenu() {
-        // set background color
-        backgroundColor = SKColor.white
+        
+        // set background color and image
+        backgroundColor = SKColor.black
+        background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+        addChild(background)
+
+        
+        
+        
+        
+        // JHAT: Test menu option
+        let storyOption = SKLabelNode(fontNamed: "Pixeled")
+        storyOption.position = CGPoint(x: size.width/2, y: size.height/2)
+        storyOption.fontSize = 65
+        storyOption.text = "Briefing"
+        storyOption.name = "story"
+        storyOption.fontColor = SKColor.white
+        addChild(storyOption)
+        
+        
         
         // JHAT: create and add a test main menu label
         let titleLabel = SKLabelNode(fontNamed: "Pixeled")
@@ -77,28 +100,30 @@ class MenuScene: SKScene {
         titleLabel.fontSize = 108
         titleLabel.text = "Galaxia"
         titleLabel.name = "title"
-        titleLabel.fontColor = SKColor.black
+        titleLabel.fontColor = SKColor.white
         addChild(titleLabel)
         
-        // JHAT: Test menu option
-        let storyOption = SKLabelNode(fontNamed: "Pixeled")
-        storyOption.position = CGPoint(x: size.width/2, y: size.height/2 + 300)
-        storyOption.fontSize = 72
-        storyOption.text = "Briefing"
-        storyOption.name = "story"
-        storyOption.fontColor = SKColor.black
-        addChild(storyOption)
+        // JHAT: Transition to game
+         let gameOption = SKLabelNode(fontNamed: "Pixeled")
+         gameOption.position = CGPoint(x: size.width/2, y: size.height/2-300)
+         gameOption.fontSize = 65
+         gameOption.text = "Play"
+         gameOption.name = "game"
+         gameOption.fontColor = SKColor.white
+         addChild(gameOption)
     }
     
     func drawStoryMenu() {
         // set background color
-        backgroundColor = SKColor.white
+        backgroundColor = SKColor.black
         
         let storyLabel = SKLabelNode(fontNamed: "Pixeled")
         storyLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 400)
         storyLabel.fontSize = 72
         storyLabel.text = "The Story So Far..."
-        storyLabel.fontColor = SKColor.black
+        storyLabel.fontColor = SKColor.white
         addChild(storyLabel)
+        
+        
     }
 }
