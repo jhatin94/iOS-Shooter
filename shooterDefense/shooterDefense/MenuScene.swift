@@ -11,6 +11,7 @@ import SpriteKit
 
 class MenuScene: SKScene {
     let sceneManager: GameViewController
+    let playerProfile: PlayerProfile
     
     enum MenuType {
         case main
@@ -21,8 +22,9 @@ class MenuScene: SKScene {
         case levelSelect
     }
     
-    init(size: CGSize, menuToDisplay: MenuType, sceneManager:GameViewController) {
+    init(size: CGSize, menuToDisplay: MenuType, sceneManager:GameViewController, playerProfile: PlayerProfile) {
         self.sceneManager = sceneManager
+        self.playerProfile = playerProfile
         super.init(size: size)
         
         // JHAT: populate menu scene based on MenuType
@@ -84,6 +86,10 @@ class MenuScene: SKScene {
             sceneManager.loadMenu(menuToLoad: MenuType.main)
             break
         case "settingsToMain"?: // settings clickable nodes
+            sceneManager.loadMenu(menuToLoad: MenuType.main)
+            break
+        case "resetBtn"?:
+            sceneManager.resetProfile(profileToReset: playerProfile)
             sceneManager.loadMenu(menuToLoad: MenuType.main)
             break
         case "instToMain"?: // instructions clickable nodes
@@ -237,6 +243,8 @@ class MenuScene: SKScene {
     
     func drawLevelSelect() {
         // get player progress from Model to determine which levels are unlocked
+        let maxLevelToDisplay = playerProfile.highestLevelCompleted + 1
+        let endlessUnlocked = playerProfile.xpMultiplier > 1 || playerProfile.highestLevelCompleted > 5 // TODO: Change if max level is not 5
         
         // set background color
         backgroundColor = SKColor.black
@@ -267,6 +275,17 @@ class MenuScene: SKScene {
         level01.name = "level1"
         level01.fontColor = SKColor.white
         addChild(level01)
+        
+        if (maxLevelToDisplay > 1) {
+            // TODO: show level 2 and setup touch event to have scenemanager load GameScene(2)
+        }
+        if (maxLevelToDisplay > 2) {
+            // TODO: show level 3 and setup touch event to have scenemanager load GameScene(3)
+        }
+        
+        if (endlessUnlocked) {
+            // TODO: show endless and setup touch event to have scenemanager load GameScene(0)
+        }
     }
     
     func drawSettingsMenu() {
@@ -279,6 +298,25 @@ class MenuScene: SKScene {
         settingsTitle.name = "settingsTitle"
         settingsTitle.fontColor = SKColor.white
         addChild(settingsTitle)
+        
+        // let player reset after level 25
+        if (playerProfile.playerLevel > 24) {
+            let resetProfile = SKLabelNode(fontNamed: "Pixeled")
+            resetProfile.position = CGPoint(x: size.width/2, y: size.height/2)
+            resetProfile.fontSize = 60
+            resetProfile.text = "Reset Profile"
+            resetProfile.name = "resetBtn"
+            resetProfile.fontColor = SKColor.white
+            addChild(resetProfile)
+            
+            let resetDescr = SKLabelNode(fontNamed: "Pixeled")
+            resetDescr.position = CGPoint(x: resetProfile.position.x, y: resetProfile.position.y - 50)
+            resetDescr.fontSize = 16
+            resetDescr.text = "Keeps Endless Mode + Score and adds an XP Boost"
+            resetDescr.name = "resetDescription"
+            resetDescr.fontColor = SKColor.white
+            addChild(resetDescr)
+        }
         
         // return to main menu
         let toMainFromSettings = SKLabelNode(fontNamed: "Pixeled")

@@ -14,12 +14,14 @@ class PlayerProfile {
     var xpToNext: Int
     var highestLevelCompleted: Int
     var endlessHiScore: Int
+    var xpMultiplier: Int
     
-    init(playerLevel:Int, playerXP:Int, xpToNextLvl:Int, highestLevelCompleted:Int, endlessHiScore:Int) {
+    init(playerLevel:Int, playerXP:Int, xpToNextLvl:Int, highestLevelCompleted:Int, endlessHiScore:Int, xpMulti:Int) {
         self.playerLevel = playerLevel
         self.playerXP = playerXP
         self.xpToNext = xpToNextLvl
         self.highestLevelCompleted = highestLevelCompleted
         self.endlessHiScore = endlessHiScore
+        self.xpMultiplier = xpMulti
     }
 }

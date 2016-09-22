@@ -66,11 +66,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let playerXPToNextLabel = SKLabelNode(fontNamed: "Pixeled")
     var enemySpawns: [CGPoint] = []
     let ENEMY_HEIGHT_WIDTH: CGFloat = 42.0
+    let BASE_XP_PER_KILL = 2
+    var multiplierXP: Int
     
     init(size:CGSize, level:Int, sceneManager:GameViewController, playerProgress:PlayerProfile) {
         self.sceneManager = sceneManager
         self.currentGameLevel = level
         self.playerProfile = playerProgress
+        self.multiplierXP = playerProgress.xpMultiplier
         super.init(size: size)
         enemySpawns = getSpawnPoints(level)
     }
@@ -209,7 +212,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let loseAction = SKAction.run() {
             self.enemiesEscaped += 1
             self.updateLabel(self.escapedLabel)
-            if (self.enemiesEscaped >= self.numToLose) {
+            if (self.enemiesEscaped >= self.numToLose) { // TODO: If endless (level 0), save hiscore with scenemanager
                 self.sceneManager.loadLevelFinishedScene(lvl: self.currentGameLevel, success: false)
             }
         }
@@ -287,7 +290,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        guard firstBody.node != nil && secondBody.node != nil  else { 
+        guard firstBody.node != nil && secondBody.node != nil else { 
             return
         }
         
@@ -300,11 +303,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func projectileDidCollideWithEnemy(_ projectile: SKSpriteNode, enemy: SKSpriteNode) {
         enemiesKilled += 1
         self.updateLabel(self.destroyedLabel)
-        sceneManager.gainXP(xpGained: 15, playerProfile: playerProfile)
+        sceneManager.gainXP(xpGained: (BASE_XP_PER_KILL * multiplierXP), playerProfile: playerProfile)
         self.updateLabel(self.playerXPToNextLabel)
         self.updateLabel(self.playerLvlLabel)
         if (enemiesKilled >= numToWin && currentGameLevel > 0) { // JHAT: Skip check on endless mode (level 0)
             // TODO: if last level, show GameOver screen instead
+            sceneManager.setHighestLevelComplete(lvlComplete: currentGameLevel, playerProfile: playerProfile)
             sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true)
         }
         projectile.removeFromParent()
@@ -314,6 +318,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Utility functions
     func getSpawnPoints(_ level: Int) -> [CGPoint] {
         switch(level) { // JHAT: return spawn based on level
+        case 0: // endless mode spawns
+            return []
         case 1: // determine where to spawn the enemy on the X and Y axis
             let actualY = size.height + ENEMY_HEIGHT_WIDTH
             let actualX = size.width / 2
