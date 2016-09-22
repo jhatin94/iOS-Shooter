@@ -120,7 +120,7 @@ class MenuScene: SKScene {
         
         // JHAT: story menu option
         let storyOption = SKLabelNode(fontNamed: "Pixeled")
-        storyOption.position = CGPoint(x: size.width/2, y: size.height/2 + 300)
+        storyOption.position = CGPoint(x: size.width/2, y: size.height/2 + 200)
         storyOption.fontSize = 65
         storyOption.text = "Briefing"
         storyOption.name = "story"
@@ -129,7 +129,7 @@ class MenuScene: SKScene {
         
         // JHAT: instructions menu option
         let instructionsOption = SKLabelNode(fontNamed: "Pixeled")
-        instructionsOption.position = CGPoint(x: size.width/2, y: size.height/2 + 100)
+        instructionsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 200 )
         instructionsOption.fontSize = 65
         instructionsOption.text = "How To Play"
         instructionsOption.name = "instructions"
@@ -138,7 +138,7 @@ class MenuScene: SKScene {
         
         // JHAT: settings menu option
         let settingsOption = SKLabelNode(fontNamed: "Pixeled")
-        settingsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 100)
+        settingsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 600)
         settingsOption.fontSize = 65
         settingsOption.text = "Settings"
         settingsOption.name = "settings"
@@ -147,7 +147,7 @@ class MenuScene: SKScene {
         
         // JHAT: stats menu option
         let statsOption = SKLabelNode(fontNamed: "Pixeled")
-        statsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 300)
+        statsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 400)
         statsOption.fontSize = 65
         statsOption.text = "Stats"
         statsOption.name = "stats"
@@ -156,7 +156,7 @@ class MenuScene: SKScene {
         
         // JHAT: Transition to level select
         let gameOption = SKLabelNode(fontNamed: "Pixeled")
-        gameOption.position = CGPoint(x: size.width/2, y: size.height/2 - 500)
+        gameOption.position = CGPoint(x: size.width/2, y: size.height/2)
         gameOption.fontSize = 65
         gameOption.text = "Play"
         gameOption.name = "levelSelect"
@@ -170,12 +170,61 @@ class MenuScene: SKScene {
         
         let storyLabel = SKLabelNode(fontNamed: "Pixeled")
         storyLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
-        storyLabel.fontSize = 72
+        storyLabel.fontSize = 60
         storyLabel.text = "The Story So Far..."
         storyLabel.name = "storyTitle"
         storyLabel.fontColor = SKColor.white
         addChild(storyLabel)
         
+        let storyLabel1 = SKLabelNode(fontNamed: "Pixeled")
+        storyLabel1.position = CGPoint(x: size.width/2, y: size.height/2 + 300)
+        storyLabel1.fontSize = 40
+        storyLabel1.text = "The Year is 2400.."
+        storyLabel1.name = "storyTitle"
+        storyLabel1.fontColor = SKColor.white
+        addChild(storyLabel1)
+        
+        let storyLabel2 = SKLabelNode(fontNamed: "Pixeled")
+        storyLabel2.position = CGPoint(x: size.width/2, y: size.height/2 + 100)
+        storyLabel2.fontSize = 40
+        storyLabel2.text = "Humanity is being invaded by "
+        storyLabel2.name = "storyTitle"
+        storyLabel2.fontColor = SKColor.white
+        addChild(storyLabel2)
+        
+        let storyLabel3 = SKLabelNode(fontNamed: "Pixeled")
+        storyLabel3.position = CGPoint(x: size.width/2, y: size.height/2)
+        storyLabel3.fontSize = 40
+        storyLabel3.text = "an unidentified alien race. "
+        storyLabel3.name = "storyTitle"
+        storyLabel3.fontColor = SKColor.white
+        addChild(storyLabel3)
+        
+        let storyLabel4 = SKLabelNode(fontNamed: "Pixeled")
+        storyLabel4.position = CGPoint(x: size.width/2, y: size.height/2 - 100)
+        storyLabel4.fontSize = 40
+        storyLabel4.text = "   As humanitys best pilot, its"
+        storyLabel4.name = "storyTitle"
+        storyLabel4.fontColor = SKColor.white
+        addChild(storyLabel4)
+        
+        let storyLabel5 = SKLabelNode(fontNamed: "Pixeled")
+        storyLabel5.position = CGPoint(x: size.width/2, y: size.height/2 - 200)
+        storyLabel5.fontSize = 40
+        storyLabel5.text = "your duty to defend Earth."
+        storyLabel5.name = "storyTitle"
+        storyLabel5.fontColor = SKColor.white
+        addChild(storyLabel5)
+        
+        let storyLabel6 = SKLabelNode(fontNamed: "Pixeled")
+        storyLabel6.position = CGPoint(x: size.width/2, y: size.height/2 - 400)
+        storyLabel6.fontSize = 40
+        storyLabel6.text = "Give them hell Pilot"
+        storyLabel6.name = "storyTitle"
+        storyLabel6.fontColor = SKColor.white
+        addChild(storyLabel6)
+        
+       
         // return to main menu
         let toMainFromStory = SKLabelNode(fontNamed: "Pixeled")
         toMainFromStory.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
@@ -272,6 +321,56 @@ class MenuScene: SKScene {
         instrTitle.name = "intructionsTitle"
         instrTitle.fontColor = SKColor.white
         addChild(instrTitle)
+        
+        let instrPar = SKLabelNode(fontNamed: "Pixeled")
+        instrPar.position = CGPoint(x: size.width/2, y: size.height/2 + 300)
+        instrPar.fontSize = 40
+        instrPar.text = "Tap to Shoot"
+        instrPar.name = "instructions1"
+        instrPar.fontColor = SKColor.white
+        addChild(instrPar)
+        
+        let instrPar2 = SKLabelNode(fontNamed: "Pixeled")
+        instrPar2.position = CGPoint(x: size.width/2, y: size.height/2 + 200)
+        instrPar2.fontSize = 40
+        instrPar2.text = "Tilt Phone to Move Ship"
+        instrPar2.name = "instructions2"
+        instrPar2.fontColor = SKColor.white
+        addChild(instrPar2)
+        
+        let instrPar3 = SKLabelNode(fontNamed: "Pixeled")
+        instrPar3.position = CGPoint(x: size.width/2, y: size.height/2 )
+        instrPar3.fontSize = 40
+        instrPar3.text = "Destroy all Pesky Aliens "
+        instrPar3.name = "instructions2"
+        instrPar3.fontColor = SKColor.white
+        addChild(instrPar3)
+        
+        let instrPar4 = SKLabelNode(fontNamed: "Pixeled")
+        instrPar4.position = CGPoint(x: size.width/2, y: size.height/2 - 100)
+        instrPar4.fontSize = 40
+        instrPar4.text = "to advance to the Next Level"
+        instrPar4.name = "instructions2"
+        instrPar4.fontColor = SKColor.white
+        addChild(instrPar4)
+        
+        
+        let instrPar5 = SKLabelNode(fontNamed: "Pixeled")
+        instrPar5.position = CGPoint(x: size.width/2, y: size.height/2 - 300)
+        instrPar5.fontSize = 40
+        instrPar5.text = " Dont Let the Aliens get"
+        instrPar5.name = "instructions2"
+        instrPar5.fontColor = SKColor.white
+        addChild(instrPar5)
+        
+        let instrPar6 = SKLabelNode(fontNamed: "Pixeled")
+        instrPar6.position = CGPoint(x: size.width/2, y: size.height/2 - 400)
+        instrPar6.fontSize = 40
+        instrPar6.text = "past you and Destroy Earth"
+        instrPar6.name = "instructions2"
+        instrPar6.fontColor = SKColor.white
+        addChild(instrPar6)
+        
         
         // return to main menu
         let toMainFromInstr = SKLabelNode(fontNamed: "Pixeled")
