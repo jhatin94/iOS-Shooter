@@ -299,8 +299,8 @@ class MenuScene: SKScene {
         settingsTitle.fontColor = SKColor.white
         addChild(settingsTitle)
         
-        // let player reset after level 25
-        if (playerProfile.playerLevel > 24) {
+        // let player reset after level 21
+        if (playerProfile.playerLevel > 20) {
             let resetProfile = SKLabelNode(fontNamed: "Pixeled")
             resetProfile.position = CGPoint(x: size.width/2, y: size.height/2)
             resetProfile.fontSize = 60
@@ -338,6 +338,39 @@ class MenuScene: SKScene {
         statsTitle.name = "statsTitle"
         statsTitle.fontColor = SKColor.white
         addChild(statsTitle)
+        
+        // show playerXP, level, endless score, multiplier, kills
+        let totalXP = SKLabelNode(fontNamed: "Pixeled")
+        totalXP.position = CGPoint(x: size.width/2, y: size.height/2 + 400)
+        totalXP.fontSize = 48
+        totalXP.text = "XP Earned: \(playerProfile.playerXP)"
+        totalXP.name = "xpEarned"
+        totalXP.fontColor = SKColor.white
+        addChild(totalXP)
+        
+        let currentLevel = SKLabelNode(fontNamed: "Pixeled")
+        currentLevel.position = CGPoint(x: size.width/2, y: size.height/2 + 200)
+        currentLevel.fontSize = 48
+        currentLevel.text = "Level: \(playerProfile.playerLevel)"
+        currentLevel.name = "currentLvl"
+        currentLevel.fontColor = SKColor.white
+        addChild(currentLevel)
+        
+        let xpMult = SKLabelNode(fontNamed: "Pixeled")
+        xpMult.position = CGPoint(x: size.width/2, y: size.height/2)
+        xpMult.fontSize = 48
+        xpMult.text = "XP Multiplier: x\(playerProfile.xpMultiplier)"
+        xpMult.name = "multiplier"
+        xpMult.fontColor = SKColor.white
+        addChild(xpMult)
+        
+        let endlessScore = SKLabelNode(fontNamed: "Pixeled")
+        endlessScore.position = CGPoint(x: size.width/2, y: size.height/2 - 200)
+        endlessScore.fontSize = 36
+        endlessScore.text = "Highest Endless Score: \(playerProfile.endlessHiScore)"
+        endlessScore.name = "endlessScorert"
+        endlessScore.fontColor = SKColor.white
+        addChild(endlessScore)
         
         // return to main menu
         let toMainFromStats = SKLabelNode(fontNamed: "Pixeled")

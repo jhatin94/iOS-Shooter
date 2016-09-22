@@ -15,6 +15,7 @@ class PlayerProfile {
     var highestLevelCompleted: Int
     var endlessHiScore: Int
     var xpMultiplier: Int
+    // TODO: Implement kills and tracking -- don't reset!
     
     init(playerLevel:Int, playerXP:Int, xpToNextLvl:Int, highestLevelCompleted:Int, endlessHiScore:Int, xpMulti:Int) {
         self.playerLevel = playerLevel

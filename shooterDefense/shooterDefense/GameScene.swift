@@ -58,6 +58,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let numToWin = 30
     let numToLose = 5
     var enemiesEscaped = 0
+    var canShoot = true
     let playerProfile: PlayerProfile
     
     let destroyedLabel = SKLabelNode(fontNamed: "Pixeled")
@@ -150,7 +151,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.run(addEnemy),
-                SKAction.wait(forDuration: 1.0)
+                SKAction.wait(forDuration: 1.0) // TODO: Scale this based on player level
                 ])
             ))
     }
@@ -200,8 +201,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // add enemy to the scene
         addChild(enemy)
         
-        // determine speed of the enemy
-        let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0))
+        // determine speed of the enemy -- scales up with player level
+        var speedScale:CGFloat = 1.05 - CGFloat(playerProfile.playerLevel) * 0.05
+        speedScale = speedScale < 0 ? 0 : speedScale
+        let actualDuration = random(min: CGFloat(2.0 + (4.0 * speedScale)), max: CGFloat(4.0 + (4.0 * speedScale)))
         
         // create the actions
         // TODO: Determine level and create preset path based on spawn point above (separate function)
@@ -222,6 +225,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // TODO: Compare against fire rate timer
+        if (canShoot) {
+            canShoot = false
+            let fireRate = 2.15 - (TimeInterval(playerProfile.playerLevel) * 0.15)
+            _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowShooting), userInfo: nil, repeats: false)
+        }
+        else {
+            return
+        }
         
         // Choose a touch to work with
         guard let touch = touches.first else { return };
@@ -246,7 +257,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // do not allow down shooting
         if (offset.y < 0) { return }
         
-        // TODO: determine if touch is within fire range (Field of View)
+        // JHAT: calculate touch angle
+        let outerAngle = atan(offset.y/offset.x) * CGFloat(180 / M_PI)
+        let innerAngle = outerAngle > 0 ? 90 - outerAngle : -90 - outerAngle
+        
+        // JHAT: determine if touch is within fire range (Field of View)
+        let currentFOV: CGFloat = CGFloat(playerProfile.playerLevel * 5)
+        if (abs(innerAngle) > currentFOV) {
+            return
+        }
         
         // add particle emitter to projectiles
         //let emitter = SKEmitterNode(fileNamed: "trail")!
@@ -262,9 +281,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // get the direction to shoot it
         let direction = offset.normalized();
         
-        // TODO: have range be dependent on level
-        // have distance be off screen
-        let range = direction * 2000
+        // have distance be off screen, eventually. Distance increases with player level
+        let range = direction * CGFloat(playerProfile.playerLevel * 100)
         
         // add range to current position
         let target = range + projectile.position;
@@ -334,6 +352,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             default:
                 return []
         }
-    }    
+    }
+    
+    func allowShooting() {
+        canShoot = true
+    }
 }
 
