@@ -70,6 +70,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let BASE_XP_PER_KILL = 2
     var multiplierXP: Int
     
+    var playableRect = CGRect.zero
+    var lastUpdateTime: TimeInterval = 0
+    var dt: TimeInterval = 0
+    let marginV = CGFloat(12.0)
+    let marginH = CGFloat(12.0)
+    let shipMaxSpeedPerSecond = CGFloat(800.0)
+    
     init(size:CGSize, level:Int, sceneManager:GameViewController, playerProgress:PlayerProfile) {
         self.sceneManager = sceneManager
         self.currentGameLevel = level
@@ -93,8 +100,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)
         
-        player.position = CGPoint(x: size.width / 2, y: 0 + player.size.height)
-        
+        player.position = CGPoint(x:playableRect.midX , y:playableRect.midY+100)
+        player.name = "ship"
         self.addChild(player)
         
         // set up physics world
@@ -356,6 +363,46 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func allowShooting() {
         canShoot = true
+    }
+    
+    func calculateDeltaTime(currentTime: TimeInterval){
+        if lastUpdateTime > 0 {
+            dt = currentTime - lastUpdateTime
+        } else {
+            dt = 0
+        }
+        lastUpdateTime = currentTime
+    }
+    
+    func movePlayer(dt:CGFloat){
+        let gravityVector = MotionMonitor.sharedMotionMonitor.gravityVectorNormalized
+        var xVelocity = gravityVector.dx
+        xVelocity = xVelocity < -0.33 ? -0.33 : xVelocity // -.33 = 30 degrees left
+        xVelocity = xVelocity > 0.33 ? 0.33 : xVelocity // +0.33 = 30 degrees right
+        
+        xVelocity = xVelocity * 3
+        
+        if abs(xVelocity) < 0.1 {
+            xVelocity = 0
+        }
+        
+        print("xVelocity=\(xVelocity)")
+        
+        
+        if let playerSprite = childNode(withName: "ship"){
+            playerSprite.position.x += xVelocity * shipMaxSpeedPerSecond * dt
+            
+            let xRange = SKRange(lowerLimit:100,upperLimit:size.width - (100))
+            let yRange = SKRange(lowerLimit:0,upperLimit:size.height)
+            //sprite.constraints = [SKConstraint.positionX(xRange,Y:yRange)] // iOS 9
+            playerSprite.constraints = [SKConstraint.positionX(xRange,y:yRange)]
+        }
+    }
+    
+    //Mark Game Loop
+    override func update(_ currentTime: TimeInterval){
+        calculateDeltaTime(currentTime: currentTime)
+        movePlayer(dt: CGFloat(dt))
     }
 }
 

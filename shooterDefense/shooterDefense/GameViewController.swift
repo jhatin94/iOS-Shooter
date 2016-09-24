@@ -54,6 +54,7 @@ class GameViewController: UIViewController {
         gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         skView.presentScene(gameScene!, transition: transition)
+        MotionMonitor.sharedMotionMonitor.startUpdates()
     }
     
     func loadLevelFinishedScene(lvl:Int, success:Bool) { // JHAT: displays success or fail
@@ -62,6 +63,7 @@ class GameViewController: UIViewController {
         let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
         levelFinishedScene = LevelFinishedScene(size: screenSize, won: success, level: lvl, sceneManager: self)
         skView.presentScene(levelFinishedScene!, transition: reveal)
+        MotionMonitor.sharedMotionMonitor.stopUpdates()
     }
     
     func loadGameOverScene() { // JHAT: display story mode finished or Endless mode fail
