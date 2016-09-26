@@ -101,6 +101,9 @@ class MenuScene: SKScene {
         case "level1"?: 
             sceneManager.loadGameScene(lvl: 1)
             break
+        case "level2"?:
+            sceneManager.loadGameScene(lvl: 2)
+            break
         default:
             break
         }
@@ -276,8 +279,14 @@ class MenuScene: SKScene {
         level01.fontColor = SKColor.white
         addChild(level01)
         
-        if (maxLevelToDisplay > 1) {
-            // TODO: show level 2 and setup touch event to have scenemanager load GameScene(2)
+        if (maxLevelToDisplay > 1) {// show level 2 label if unlocked
+            let level02 = SKLabelNode(fontNamed: "Pixeled")
+            level02.position = CGPoint(x: size.width/2, y: size.height/2 + 200)
+            level02.fontSize = 60
+            level02.text = "Level 2"
+            level02.name = "level2"
+            level02.fontColor = SKColor.white
+            addChild(level01)
         }
         if (maxLevelToDisplay > 2) {
             // TODO: show level 3 and setup touch event to have scenemanager load GameScene(3)
