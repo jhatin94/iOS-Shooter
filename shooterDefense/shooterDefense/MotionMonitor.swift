@@ -25,12 +25,10 @@ class MotionMonitor{
     
     func startUpdates(){
         if manager.isDeviceMotionAvailable {
-            print("** starting motion updates **")
             manager.deviceMotionUpdateInterval = 0.1
             manager.startDeviceMotionUpdates(to: OperationQueue.main){ // trailing clsure syntex
                 data, error in
                 guard data != nil else { //guard. bail if no data
-                    print ("There was an error: \(error)")
                     return
                 }
                 
@@ -45,19 +43,12 @@ class MotionMonitor{
                 
                 //affine transforms are commonly used on UIView instance
                 self.transform = CGAffineTransform(rotationAngle: CGFloat(self.rotation))
-                
-                print("self.rotation = \(self.rotation)")
-                print("self.gravityVectorNormalized = \(self.gravityVectorNormalized)")
-                // print("self.gravityVector = \(self.gravityVector)")
-                //print("self.transform = \(self.transform)")
             } // end block
         } else{
-            print("Device Motion is not available! are you on a simulator?")
         }
     }
     
     func stopUpdates(){
-        print("** stopping motion updates **")
         if manager.isDeviceMotionActive{
             manager.stopDeviceMotionUpdates()
         }

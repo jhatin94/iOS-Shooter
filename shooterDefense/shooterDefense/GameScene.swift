@@ -66,10 +66,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let playerLvlLabel = SKLabelNode(fontNamed: "Pixeled")
     let playerXPToNextLabel = SKLabelNode(fontNamed: "Pixeled")
     var enemySpawns: [CGPoint] = []
+    var loseAction: SKAction
+    var finishActionMove: SKAction
+    var ySpawn: CGFloat
     let ENEMY_HEIGHT_WIDTH: CGFloat = 42.0
     let BASE_XP_PER_KILL = 2
     var multiplierXP: Int
     
+    // movement variables
     var playableRect = CGRect.zero
     var lastUpdateTime: TimeInterval = 0
     var dt: TimeInterval = 0
@@ -82,6 +86,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.currentGameLevel = level
         self.playerProfile = playerProgress
         self.multiplierXP = playerProgress.xpMultiplier
+        self.loseAction = SKAction.run {}
+        self.finishActionMove = SKAction.run {}
+        self.ySpawn = size.height + ENEMY_HEIGHT_WIDTH // all enemies will spawn at same yPos
         super.init(size: size)
         enemySpawns = getSpawnPoints(level)
     }
@@ -155,10 +162,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundMusic.autoplayLooped = true
         //addChild(backgroundMusic)
         
+        // all enemies will trigger the same lose and done actions
+        self.loseAction = SKAction.run() {
+            self.enemiesEscaped += 1
+            self.updateLabel(self.escapedLabel)
+            if (self.enemiesEscaped >= self.numToLose) { // TODO: If endless (level 0), save hiscore with scenemanager
+                self.sceneManager.loadLevelFinishedScene(lvl: self.currentGameLevel, success: false)
+            }
+        }
+        self.finishActionMove = SKAction.removeFromParent()
+        
+        // enemy spawn scale based on player level at start of level
+        var levelSpawnTimeScale = 2.0 - Double(playerProfile.playerLevel / 15)
+        levelSpawnTimeScale = levelSpawnTimeScale <= 1 ? 1 : levelSpawnTimeScale
+        
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.run(addEnemy),
-                SKAction.wait(forDuration: 1.0) // TODO: Scale this based on player level
+                SKAction.wait(forDuration: 1.0 * levelSpawnTimeScale)
                 ])
             ))
     }
@@ -214,20 +235,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let actualDuration = random(min: CGFloat(2.0 + (4.0 * speedScale)), max: CGFloat(4.0 + (4.0 * speedScale)))
         
         // create the actions
-        // TODO: Determine level and create preset path based on spawn point above (separate function)
-        let actionMove = SKAction.move(to: CGPoint(x: enemy.position.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(actualDuration))
-        
-        let actionMoveDone = SKAction.removeFromParent()
-        
-        let loseAction = SKAction.run() {
-            self.enemiesEscaped += 1
-            self.updateLabel(self.escapedLabel)
-            if (self.enemiesEscaped >= self.numToLose) { // TODO: If endless (level 0), save hiscore with scenemanager
-                self.sceneManager.loadLevelFinishedScene(lvl: self.currentGameLevel, success: false)
-            }
-        }
-        
-        enemy.run(SKAction.sequence([actionMove, loseAction, actionMoveDone]))
+        // Determine level and create preset path based on spawn point above (separate function)
+        enemy.run(SKAction.sequence(getPath(currentGameLevel, spawn: enemy.position, movementScale: actualDuration)))
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -295,7 +304,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let target = range + projectile.position;
         
         // create the actions
-        let actionMove = SKAction.move(to: target, duration: 2.0)
+        let bulletSpeed = (playerProfile.playerLevel * 100) / 1000 // scale bullet speed based on range
+        let actionMove = SKAction.move(to: target, duration: TimeInterval(bulletSpeed))
         let actionMoveDone = SKAction.removeFromParent()
         projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
         //emitter.runAction(SKAction.sequence([actionMove, actionMoveDone]))
@@ -347,17 +357,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 0: // endless mode spawns
             return []
         case 1: // determine where to spawn the enemy on the X and Y axis
-            let actualY = size.height + ENEMY_HEIGHT_WIDTH
             let actualX = size.width / 2
-            return [CGPoint(x: actualX, y: actualY)]
+            return [CGPoint(x: actualX, y: ySpawn)]
+        case 2:
+            let x1 = size.width / 4
+            let x2 = size.width * 3 / 4
+            return [CGPoint(x: x1, y: ySpawn), CGPoint(x: x2, y: ySpawn)]
         default:
             return [CGPoint(x: 0, y: 0)]
         }
     }
     
-    func getPath(_ level: Int, spawn: CGPoint) -> [SKAction] {
+    func getPath(_ level: Int, spawn: CGPoint, movementScale: CGFloat) -> [SKAction] {
         switch (level) { // JHAT: return array defining path for specific level
-            default:
+        case 0: // endless mode paths
+            return []
+        case 1:
+            let actionMove = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove, loseAction, finishActionMove]
+        case 2:
+            let actionMove1 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2), duration: TimeInterval(movementScale))
+            let actionMove2 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove1, actionMove2, loseAction, finishActionMove]
+        default:
                 return []
         }
     }
@@ -387,13 +409,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             xVelocity = 0
         }
         
-        print("xVelocity=\(xVelocity)")
-        
-        
         if let playerSprite = childNode(withName: "ship"){
             playerSprite.position.x += xVelocity * shipMaxSpeedPerSecond * dt
             
-            let xRange = SKRange(lowerLimit:100,upperLimit:size.width - (100))
+            let xRange = SKRange(lowerLimit:100,upperLimit:size.width - (100)) // TODO: test
             let yRange = SKRange(lowerLimit:0,upperLimit:size.height)
             //sprite.constraints = [SKConstraint.positionX(xRange,Y:yRange)] // iOS 9
             playerSprite.constraints = [SKConstraint.positionX(xRange,y:yRange)]

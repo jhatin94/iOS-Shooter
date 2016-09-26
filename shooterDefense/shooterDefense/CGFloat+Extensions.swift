@@ -2,7 +2,7 @@
 //  CGFloat+Extensions.swift
 //  Shooter
 //
-//  Created by jefferson on 9/18/16.
+//  Created by Conner Hasbrouck on 9/18/16.
 //  Copyright © 2016 tony. All rights reserved.
 //
 

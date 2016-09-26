@@ -53,23 +53,24 @@ class GameViewController: UIViewController {
         clearLevelFinishedSceneFromMemory()
         gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
-        skView.presentScene(gameScene!, transition: transition)
         MotionMonitor.sharedMotionMonitor.startUpdates()
+        skView.presentScene(gameScene!, transition: transition)
     }
     
     func loadLevelFinishedScene(lvl:Int, success:Bool) { // JHAT: displays success or fail
         clearGameSceneFromMemory()
         clearMenuSceneFromMemory()
+        MotionMonitor.sharedMotionMonitor.stopUpdates()
         let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
         levelFinishedScene = LevelFinishedScene(size: screenSize, won: success, level: lvl, sceneManager: self)
         skView.presentScene(levelFinishedScene!, transition: reveal)
-        MotionMonitor.sharedMotionMonitor.stopUpdates()
     }
     
     func loadGameOverScene() { // JHAT: display story mode finished or Endless mode fail
         clearGameSceneFromMemory()
         clearMenuSceneFromMemory()
         clearLevelFinishedSceneFromMemory()
+        MotionMonitor.sharedMotionMonitor.stopUpdates()
     }
     
     // MARK: Model interaction functions
