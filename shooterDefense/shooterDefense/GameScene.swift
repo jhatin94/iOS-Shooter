@@ -153,7 +153,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // add BGM
         let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
         backgroundMusic.autoplayLooped = true
-        addChild(backgroundMusic)
+        //addChild(backgroundMusic)
         
         run(SKAction.repeatForever(
             SKAction.sequence([
@@ -280,7 +280,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //addChild(emitter)
         
         // trigger sound effect
-        run(SKAction.playSoundFileNamed("pew-pew-lei.caf", waitForCompletion: false))
+        run(SKAction.playSoundFileNamed("8-bit-shot.wav", waitForCompletion: false))
         
         // add projectile
         addChild(projectile)
@@ -336,6 +336,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             sceneManager.setHighestLevelComplete(lvlComplete: currentGameLevel, playerProfile: playerProfile)
             sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true)
         }
+        run(SKAction.playSoundFileNamed("8-bit-explosion.wav", waitForCompletion: false))
         projectile.removeFromParent()
         enemy.removeFromParent()
     }
