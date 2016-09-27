@@ -286,7 +286,7 @@ class MenuScene: SKScene {
             level02.text = "Level 2"
             level02.name = "level2"
             level02.fontColor = SKColor.white
-            addChild(level01)
+            addChild(level02)
         }
         if (maxLevelToDisplay > 2) {
             // TODO: show level 3 and setup touch event to have scenemanager load GameScene(3)
