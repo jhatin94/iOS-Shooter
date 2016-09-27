@@ -15,7 +15,7 @@ class GameViewController: UIViewController {
     var gameScene: GameScene?
     var menuScene: MenuScene?
     var levelFinishedScene: LevelFinishedScene?
-    var skView: SKView!    
+    var skView: SKView!
     let defaults = UserDefaults.standard
     var playerProfile: PlayerProfile?
     
@@ -48,29 +48,24 @@ class GameViewController: UIViewController {
         skView.presentScene(menuScene!, transition: reveal)
     }
     
-    func loadGameScene(lvl:Int) { // JHAT: displays game state
-        clearMenuSceneFromMemory()
+    func loadGameScene(lvl:Int) { // JHAT: displays game state         clearMenuSceneFromMemory()
         clearLevelFinishedSceneFromMemory()
         gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
-        MotionMonitor.sharedMotionMonitor.startUpdates()
+        if (lvl != 1) {
+            MotionMonitor.sharedMotionMonitor.startUpdates()
+        }
         skView.presentScene(gameScene!, transition: transition)
     }
     
-    func loadLevelFinishedScene(lvl:Int, success:Bool) { // JHAT: displays success or fail
+    func loadLevelFinishedScene(lvl:Int, success:Bool) { // JHAT: displays success or fail-- TODO:display story mode finished or Endless mode fail
+
         clearGameSceneFromMemory()
         clearMenuSceneFromMemory()
         MotionMonitor.sharedMotionMonitor.stopUpdates()
         let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
         levelFinishedScene = LevelFinishedScene(size: screenSize, won: success, level: lvl, sceneManager: self)
         skView.presentScene(levelFinishedScene!, transition: reveal)
-    }
-    
-    func loadGameOverScene() { // JHAT: display story mode finished or Endless mode fail
-        clearGameSceneFromMemory()
-        clearMenuSceneFromMemory()
-        clearLevelFinishedSceneFromMemory()
-        MotionMonitor.sharedMotionMonitor.stopUpdates()
     }
     
     // MARK: Model interaction functions

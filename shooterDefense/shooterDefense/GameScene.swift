@@ -55,7 +55,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var currentGameLevel: Int
     let player = SKSpriteNode(imageNamed: "ship")
     var enemiesKilled = 0
-    let numToWin = 30
+    var numToWin = 0
     let numToLose = 5
     var enemiesEscaped = 0
     var canShoot = true
@@ -65,6 +65,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let escapedLabel = SKLabelNode(fontNamed: "Pixeled")
     let playerLvlLabel = SKLabelNode(fontNamed: "Pixeled")
     let playerXPToNextLabel = SKLabelNode(fontNamed: "Pixeled")
+    let shotStatus = SKLabelNode(fontNamed: "Pixeled")
     var enemySpawns: [CGPoint] = []
     var loseAction: SKAction
     var finishActionMove: SKAction
@@ -107,7 +108,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)
         
-        player.position = CGPoint(x:playableRect.midX , y:playableRect.midY+100)
+        player.position = CGPoint(x:playableRect.midX + size.width/2, y:playableRect.midY+100)
         player.name = "ship"
         self.addChild(player)
         
@@ -120,7 +121,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         destroyedLabel.position = CGPoint(x: 5, y: self.frame.height-5)
         destroyedLabel.verticalAlignmentMode = .top
         destroyedLabel.horizontalAlignmentMode = .left
-        destroyedLabel.text = "Killed: \(enemiesKilled)"
+        destroyedLabel.text = "Enemies: \((numToWin-enemiesKilled))"
         destroyedLabel.fontColor = SKColor.white
         destroyedLabel.fontSize = 30
         destroyedLabel.fontName = "Pixeled"
@@ -157,6 +158,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         playerXPToNextLabel.fontName = "Pixeled"
         self.addChild(playerXPToNextLabel)
         
+        shotStatus.name = "shotStatus"
+        shotStatus.position = CGPoint(x: self.frame.width - 50, y: 75)
+        shotStatus.verticalAlignmentMode = .bottom
+        shotStatus.horizontalAlignmentMode = .right
+        shotStatus.text = "Fire"
+        shotStatus.fontColor = SKColor.white
+        shotStatus.fontSize = 30
+        shotStatus.fontName = "Pixeled"
+        self.addChild(shotStatus)
+        
         // add BGM
         let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
         backgroundMusic.autoplayLooped = true
@@ -173,7 +184,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.finishActionMove = SKAction.removeFromParent()
         
         // enemy spawn scale based on player level at start of level
-        var levelSpawnTimeScale = 2.0 - Double(playerProfile.playerLevel / 15)
+        var levelSpawnTimeScale = 3.0 - Double(playerProfile.playerLevel / 10)
         levelSpawnTimeScale = levelSpawnTimeScale <= 1 ? 1 : levelSpawnTimeScale
         
         run(SKAction.repeatForever(
@@ -195,7 +206,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func updateLabel(_ label: SKLabelNode) {
         switch (label.name) {
         case "desLab"?:
-            label.text = "Killed: \(enemiesKilled)"
+            label.text = "Enemies: \((numToWin-enemiesKilled))"
             break
         case "esLab"?:
             label.text = "Escaped: \(enemiesEscaped)"
@@ -205,6 +216,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             break
         case "lvlLab"?:
             label.text = "XP Level: \(playerProfile.playerLevel)"
+            break
+        case "shotStatus"?:
+            let status = canShoot ? "Fire" : "Reloading"
+            label.text = "\(status)"
             break
         default:
             break
@@ -240,16 +255,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // TODO: Compare against fire rate timer
-        if (canShoot) {
-            canShoot = false
-            let fireRate = 2.15 - (TimeInterval(playerProfile.playerLevel) * 0.15)
-            _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowShooting), userInfo: nil, repeats: false)
-        }
-        else {
-            return
-        }
-        
         // Choose a touch to work with
         guard let touch = touches.first else { return };
         
@@ -283,6 +288,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
+        // if chost is valid, compare against fire rate timer
+        if (canShoot) {
+            canShoot = false
+            updateLabel(shotStatus)
+            let fireRate = 2.15 - (TimeInterval(playerProfile.playerLevel) * 0.15)
+            _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowShooting), userInfo: nil, repeats: false)
+        }
+        else {
+            return
+        }
+        
         // add particle emitter to projectiles
         //let emitter = SKEmitterNode(fileNamed: "trail")!
         //emitter.position = CGPointMake(player.position.x - 5, player.position.y)
@@ -304,7 +320,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let target = range + projectile.position;
         
         // create the actions
-        let bulletSpeed = (playerProfile.playerLevel * 100) / 1000 // scale bullet speed based on range
+        let bulletSpeed = (playerProfile.playerLevel * 100) > 1000 ? 2.0 : 1.0 // scale bullet speed based on range
         let actionMove = SKAction.move(to: target, duration: TimeInterval(bulletSpeed))
         let actionMoveDone = SKAction.removeFromParent()
         projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
@@ -355,11 +371,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func getSpawnPoints(_ level: Int) -> [CGPoint] {
         switch(level) { // JHAT: return spawn based on level
         case 0: // endless mode spawns
+            numToWin = 9999
             return []
         case 1: // determine where to spawn the enemy on the X and Y axis
+            numToWin = 10
             let actualX = size.width / 2
             return [CGPoint(x: actualX, y: ySpawn)]
         case 2:
+            numToWin = 25
             let x1 = size.width / 4
             let x2 = size.width * 3 / 4
             return [CGPoint(x: x1, y: ySpawn), CGPoint(x: x2, y: ySpawn)]
@@ -386,6 +405,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func allowShooting() {
         canShoot = true
+        updateLabel(shotStatus)
     }
     
     func calculateDeltaTime(currentTime: TimeInterval){
@@ -412,10 +432,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if let playerSprite = childNode(withName: "ship"){
             playerSprite.position.x += xVelocity * shipMaxSpeedPerSecond * dt
             
-            let xRange = SKRange(lowerLimit:100,upperLimit:size.width - (100)) // TODO: test
-            let yRange = SKRange(lowerLimit:0,upperLimit:size.height)
-            //sprite.constraints = [SKConstraint.positionX(xRange,Y:yRange)] // iOS 9
-            playerSprite.constraints = [SKConstraint.positionX(xRange,y:yRange)]
+            if (playerSprite.constraints == nil) {
+                let xRange = SKRange(lowerLimit:100,upperLimit:size.width - (100)) // TODO: test limits
+                let yRange = SKRange(lowerLimit:0,upperLimit:size.height)
+                //sprite.constraints = [SKConstraint.positionX(xRange,Y:yRange)] // iOS 9
+                playerSprite.constraints = [SKConstraint.positionX(xRange,y:yRange)]
+            }
         }
     }
     
