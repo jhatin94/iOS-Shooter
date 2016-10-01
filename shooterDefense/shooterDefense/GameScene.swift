@@ -105,8 +105,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let backgroundMenu = SKSpriteNode(imageNamed: "background")
         backgroundMenu.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
-        backgroundMenu.zPosition = -1
+        backgroundMenu.zPosition = -2
         addChild(backgroundMenu)
+        
+        let earthImg = SKSpriteNode(imageNamed: "earth.png")
+        earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
+        earthImg.zPosition = -1
+        addChild(earthImg)
         
         player.position = CGPoint(x:playableRect.midX + size.width/2, y:playableRect.midY+100)
         player.name = "ship"

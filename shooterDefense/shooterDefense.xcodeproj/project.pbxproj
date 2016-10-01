@@ -17,6 +17,9 @@
 		1347C3231D96E51500A16312 /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1347C3221D96E51500A16312 /* MyUtils.swift */; };
 		1347C3251D96E75100A16312 /* CGVector+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1347C3241D96E75100A16312 /* CGVector+Extensions.swift */; };
 		1347C32A1D96E7B100A16312 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1347C3291D96E7B100A16312 /* CGFloat+Extensions.swift */; };
+		136E59311DA05AB7009581C8 /* enemy2.png in Resources */ = {isa = PBXBuildFile; fileRef = 136E592F1DA05AB7009581C8 /* enemy2.png */; };
+		136E59321DA05AB7009581C8 /* enemy3.png in Resources */ = {isa = PBXBuildFile; fileRef = 136E59301DA05AB7009581C8 /* enemy3.png */; };
+		136E59341DA05D96009581C8 /* earth.png in Resources */ = {isa = PBXBuildFile; fileRef = 136E59331DA05D96009581C8 /* earth.png */; };
 		13A0B7851D918DBC00B134D2 /* Pixeled.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13A0B7841D918DBC00B134D2 /* Pixeled.ttf */; };
 		20EE8BC21D8717C200C85288 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EE8BC11D8717C200C85288 /* AppDelegate.swift */; };
 		20EE8BC41D8717C200C85288 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BC31D8717C200C85288 /* GameScene.sks */; };
@@ -50,6 +53,9 @@
 		1347C3221D96E51500A16312 /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
 		1347C3241D96E75100A16312 /* CGVector+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGVector+Extensions.swift"; sourceTree = "<group>"; };
 		1347C3291D96E7B100A16312 /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
+		136E592F1DA05AB7009581C8 /* enemy2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemy2.png; sourceTree = "<group>"; };
+		136E59301DA05AB7009581C8 /* enemy3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemy3.png; sourceTree = "<group>"; };
+		136E59331DA05D96009581C8 /* earth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = earth.png; sourceTree = "<group>"; };
 		13A0B7841D918DBC00B134D2 /* Pixeled.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Pixeled.ttf; sourceTree = "<group>"; };
 		20EE8BBE1D8717C200C85288 /* shooterDefense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = shooterDefense.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20EE8BC11D8717C200C85288 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -139,12 +145,15 @@
 				20EE8BD91D8718F400C85288 /* monster.png */,
 				20EE8BDA1D8718F400C85288 /* monster@2x.png */,
 				20EE8BDC1D8718F400C85288 /* player.png */,
+				136E592F1DA05AB7009581C8 /* enemy2.png */,
+				136E59301DA05AB7009581C8 /* enemy3.png */,
 				130AF1B11D989EB700D50F45 /* 8-bit-shot.wav */,
 				130AF1B31D989F7A00D50F45 /* 8-bit-explosion.wav */,
 				20EE8BDD1D8718F400C85288 /* player@2x.png */,
 				20EE8BDE1D8718F400C85288 /* projectile.png */,
 				20EE8BDF1D8718F400C85288 /* projectile@2x.png */,
 				1334ABD21D908B07009A6D22 /* bullet.png */,
+				136E59331DA05D96009581C8 /* earth.png */,
 				20EE8BE01D8718F400C85288 /* spark.png */,
 				1334ABD01D908B02009A6D22 /* enemy.png */,
 				1334ABD41D908B41009A6D22 /* background.png */,
@@ -211,7 +220,7 @@
 				TargetAttributes = {
 					20EE8BBD1D8717C200C85288 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = KT6L3A8T5R;
+						DevelopmentTeam = 9Z9L4R4J82;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -239,9 +248,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				136E59321DA05AB7009581C8 /* enemy3.png in Resources */,
 				20EE8BEC1D8718F400C85288 /* trail.sks in Resources */,
 				130AF1B21D989EB700D50F45 /* 8-bit-shot.wav in Resources */,
 				1334ABD31D908B07009A6D22 /* bullet.png in Resources */,
+				136E59311DA05AB7009581C8 /* enemy2.png in Resources */,
 				20EE8BE21D8718F400C85288 /* background-music-aac.caf in Resources */,
 				20EE8BC41D8717C200C85288 /* GameScene.sks in Resources */,
 				20EE8BE71D8718F400C85288 /* player.png in Resources */,
@@ -249,6 +260,7 @@
 				20EE8BE81D8718F400C85288 /* player@2x.png in Resources */,
 				1334ABD51D908B41009A6D22 /* background.png in Resources */,
 				13A0B7851D918DBC00B134D2 /* Pixeled.ttf in Resources */,
+				136E59341DA05D96009581C8 /* earth.png in Resources */,
 				20EE8BEB1D8718F400C85288 /* spark.png in Resources */,
 				20EE8BE91D8718F400C85288 /* projectile.png in Resources */,
 				20EE8BE41D8718F400C85288 /* monster.png in Resources */,
@@ -399,7 +411,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = KT6L3A8T5R;
+				DEVELOPMENT_TEAM = 9Z9L4R4J82;
 				INFOPLIST_FILE = shooterDefense/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
@@ -413,7 +425,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = KT6L3A8T5R;
+				DEVELOPMENT_TEAM = 9Z9L4R4J82;
 				INFOPLIST_FILE = shooterDefense/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
