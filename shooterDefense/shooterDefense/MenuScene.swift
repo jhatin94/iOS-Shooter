@@ -104,6 +104,12 @@ class MenuScene: SKScene {
         case "level2"?:
             sceneManager.loadGameScene(lvl: 2)
             break
+        case "level3"?:
+            sceneManager.loadGameScene(lvl: 3)
+            break
+        case "level4"?:
+            sceneManager.loadGameScene(lvl: 4)
+            break
         default:
             break
         }
@@ -290,6 +296,23 @@ class MenuScene: SKScene {
         }
         if (maxLevelToDisplay > 2) {
             // TODO: show level 3 and setup touch event to have scenemanager load GameScene(3)
+            let level03 = SKLabelNode(fontNamed: "Pixeled")
+            level03.position = CGPoint(x: size.width/2, y: size.height/2)
+            level03.fontSize = 60
+            level03.text = "Level 3"
+            level03.name = "level3"
+            level03.fontColor = SKColor.white
+            addChild(level03)
+        }
+        if (maxLevelToDisplay > 3) {
+            // TODO: show level 3 and setup touch event to have scenemanager load GameScene(3)
+            let level04 = SKLabelNode(fontNamed: "Pixeled")
+            level04.position = CGPoint(x: size.width/2, y: size.height/2 - 200)
+            level04.fontSize = 60
+            level04.text = "Level 4"
+            level04.name = "level4"
+            level04.fontColor = SKColor.white
+            addChild(level04)
         }
         
         if (endlessUnlocked) {

@@ -113,8 +113,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         earthImg.zPosition = -1
         addChild(earthImg)
         
-        player.position = CGPoint(x:playableRect.midX + size.width/2, y:playableRect.midY+100)
+        player.position = CGPoint(x:playableRect.midX + size.width/2, y:playableRect.midY+200)
         player.name = "ship"
+        player.setScale(2)
         self.addChild(player)
         
         // set up physics world
@@ -387,6 +388,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let x1 = size.width / 4
             let x2 = size.width * 3 / 4
             return [CGPoint(x: x1, y: ySpawn), CGPoint(x: x2, y: ySpawn)]
+        case 3:
+            numToWin = 25
+            let x3 = size.width / 4
+            let x4 = size.width * 3 / 4
+            let x5 = size.width * 1 / 4
+            let x6 = size.width * 2 / 4
+            return [CGPoint(x: x3, y: ySpawn), CGPoint(x: x4, y: ySpawn), CGPoint(x: x5, y: ySpawn), CGPoint(x: x6, y: ySpawn)]
+        case 4:
+            numToWin = 25
+            let x7 = size.width / 8
+            let x8 = size.width * 1 / 8
+            let x9 = size.width * 2 / 8
+            let x10 = size.width * 3 / 8
+            let x11 = size.width * 4 / 8
+            let x12 = size.width * 5 / 8
+            let x13 = size.width * 6 / 8
+            let x14 = size.width * 7 / 8
+            return [CGPoint(x: x7, y: ySpawn), CGPoint(x: x8, y: ySpawn), CGPoint(x: x9, y: ySpawn), CGPoint(x: x10, y: ySpawn),CGPoint(x: x11, y: ySpawn), CGPoint(x: x12, y: ySpawn),CGPoint(x: x13, y: ySpawn), CGPoint(x: x14, y: ySpawn)]
         default:
             return [CGPoint(x: 0, y: 0)]
         }
@@ -403,6 +422,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let actionMove1 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2), duration: TimeInterval(movementScale))
             let actionMove2 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
             return [actionMove1, actionMove2, loseAction, finishActionMove]
+        case 3:
+            let actionMove3 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2), duration: TimeInterval(movementScale))
+            let actionMove4 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove3, actionMove4, loseAction, finishActionMove]
+        case 4:
+            let actionMove5 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove5, loseAction, finishActionMove]
         default:
                 return []
         }
