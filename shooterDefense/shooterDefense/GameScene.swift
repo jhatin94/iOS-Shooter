@@ -163,7 +163,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 else { // save profile as is, no update needed
                     self.sceneManager.saveProgress(profileToSave: self.playerProfile)
                 }
-                self.sceneManager.loadLevelFinishedScene(lvl: self.currentGameLevel, success: false)
+                self.sceneManager.loadLevelFinishedScene(lvl: self.currentGameLevel, success: false, score: self.score)
             }
         }
         self.finishActionMove = SKAction.removeFromParent()
@@ -287,7 +287,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
-        // add particle emitter to projectiles
+        // add particle emitter to projectiles -- TODO: implement emitter somewhere!
         //let emitter = SKEmitterNode(fileNamed: "trail")!
         //emitter.position = CGPointMake(player.position.x - 5, player.position.y)
         //addChild(emitter)
@@ -341,6 +341,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func projectileDidCollideWithEnemy(_ projectile: SKSpriteNode, enemy: SKSpriteNode) {
         enemiesKilled += 1
+        numToWin = currentGameLevel < 1 && enemiesKilled % numToWin == 0 ? numToWin + 9999 : numToWin //JHAT: Handle case if player 'clears' endless mode
         self.updateLabel(self.destroyedLabel)
         sceneManager.gainXP(xpGained: (BASE_XP_PER_KILL * multiplierXP), playerProfile: playerProfile)
         self.updateLabel(self.playerXPToNextLabel)
@@ -362,8 +363,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 sceneManager.saveProgress(profileToSave: playerProfile)
             }
             
-            // TODO: if last level, show GameOver screen instead
-            sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true)
+            // if last level GameOver screen is shown
+            sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true, score: score)
         }
         run(SKAction.playSoundFileNamed("8-bit-explosion.wav", waitForCompletion: false))
         projectile.removeFromParent()
@@ -375,13 +376,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switch(level) { // JHAT: return spawn based on level
         case 0: // endless mode spawns
             numToWin = 9999
-            return []
+            // TODO: Add more spawns
+            let xSpawn = size.width / 2
+            return [CGPoint(x: xSpawn, y: ySpawn)]
         case 1: // determine where to spawn the enemy on the X and Y axis
-            numToWin = 10
+            numToWin = 5
             let actualX = size.width / 2
             return [CGPoint(x: actualX, y: ySpawn)]
         case 2:
-            numToWin = 25
+            numToWin = 15
             let x1 = size.width / 4
             let x2 = size.width * 3 / 4
             return [CGPoint(x: x1, y: ySpawn), CGPoint(x: x2, y: ySpawn)]
@@ -392,7 +395,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let x5 = size.width / 2
             return [CGPoint(x: x3, y: ySpawn), CGPoint(x: x4, y: ySpawn), CGPoint(x: x5, y: ySpawn)]
         case 4:
-            numToWin = 25
+            numToWin = 35
             let x7 = size.width / 8
             let x8 = size.width * 2 / 8
             let x9 = size.width * 3 / 8
@@ -401,6 +404,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let x12 = size.width * 6 / 8
             let x13 = size.width * 7 / 8
             return [CGPoint(x: x7, y: ySpawn), CGPoint(x: x8, y: ySpawn), CGPoint(x: x9, y: ySpawn), CGPoint(x: x10, y: ySpawn),CGPoint(x: x11, y: ySpawn), CGPoint(x: x12, y: ySpawn),CGPoint(x: x13, y: ySpawn)]
+        case 5:
+            numToWin = 50
+            // TODO: Create final spawns
+            let xSpawn1 = size.width / 2
+            return [CGPoint(x: xSpawn1, y: ySpawn)]
         default:
             return [CGPoint(x: 0, y: 0)]
         }
@@ -409,7 +417,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func getPath(_ level: Int, spawn: CGPoint, movementScale: CGFloat) -> [SKAction] {
         switch (level) { // JHAT: return array defining path for specific level
         case 0: // endless mode paths
-            return []
+            // TODO: add more paths
+            let actionMove0 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove0, loseAction, finishActionMove]
         case 1:
             let actionMove = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
             return [actionMove, loseAction, finishActionMove]
@@ -424,6 +434,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 4:
             let actionMove5 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
             return [actionMove5, loseAction, finishActionMove]
+        case 5:
+            // TODO: create final paths
+            let actionMove6 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove6, loseAction, finishActionMove]
         default:
                 return []
         }

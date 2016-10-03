@@ -241,7 +241,7 @@ class MenuScene: SKScene {
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 48, text: "XP Multiplier: x\(playerProfile.xpMultiplier)", name: "multiplier"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 48, text: "Highest Endless Score: \(playerProfile.endlessHiScore)", name: "endlessScore"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 48, text: "Endless HiScore: \(playerProfile.endlessHiScore)", name: "endlessScore"))
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 400), fontSize: 48, text: "Enemies Killed: \(playerProfile.totalKills)", name: "kills"))
         

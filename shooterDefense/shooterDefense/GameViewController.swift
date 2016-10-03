@@ -50,6 +50,7 @@ class GameViewController: UIViewController {
     
     func loadGameScene(lvl:Int) { // JHAT: displays game state         clearMenuSceneFromMemory()
         clearLevelFinishedSceneFromMemory()
+        clearMenuSceneFromMemory()
         gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         if (lvl != 1) {
@@ -58,13 +59,12 @@ class GameViewController: UIViewController {
         skView.presentScene(gameScene!, transition: transition)
     }
     
-    func loadLevelFinishedScene(lvl:Int, success:Bool) { // JHAT: displays success or fail-- TODO:display story mode finished or Endless mode fail
-
+    func loadLevelFinishedScene(lvl:Int, success:Bool, score: Int) { // JHAT: displays success or fail
         clearGameSceneFromMemory()
         clearMenuSceneFromMemory()
         MotionMonitor.sharedMotionMonitor.stopUpdates()
         let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-        levelFinishedScene = LevelFinishedScene(size: screenSize, won: success, level: lvl, sceneManager: self)
+        levelFinishedScene = LevelFinishedScene(size: screenSize, won: success, level: lvl, sceneManager: self, playerProfile: playerProfile!, score: score)
         skView.presentScene(levelFinishedScene!, transition: reveal)
     }
     
