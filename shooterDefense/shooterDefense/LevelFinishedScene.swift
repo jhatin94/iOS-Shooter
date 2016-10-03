@@ -24,49 +24,25 @@ class LevelFinishedScene: SKScene {
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)
         
+        //TODO: Handle Endless (0) and end of story (5) cases
         
         // Set message based on flag
         var message = won ? "You completed " : "You failed "
         message += "Level \(levelFinished)"
         
         // create message label
-        let outcomeLabel = SKLabelNode(fontNamed: "Pixeled")
-        outcomeLabel.text = message
-        outcomeLabel.fontSize = 60
-        outcomeLabel.fontColor = SKColor.white
-        outcomeLabel.name = "levelResult"
-        outcomeLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 500)
-        addChild(outcomeLabel)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: message, name: "levelResult"))
         
         // create try again or continue label
         if (won) {
-            let continueLabel = SKLabelNode(fontNamed: "Pixeled")
-            continueLabel.text = "Next Level"
-            continueLabel.fontSize = 40
-            continueLabel.fontColor = SKColor.white
-            continueLabel.position = CGPoint(x: size.width/2, y: size.height/2 - 100)
-            continueLabel.name = "nextLevel"
-            addChild(continueLabel)
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Next Level", name: "nextLevel"))
         }
         else {
-            let tryAgain = SKLabelNode(fontNamed: "Pixeled")
-            tryAgain.text = "Try Again"
-            tryAgain.fontSize = 40
-            tryAgain.fontColor = SKColor.white
-            tryAgain.position = CGPoint(x: size.width/2, y: size.height/2 - 100)
-            tryAgain.name = "replayLevel"
-            addChild(tryAgain)
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Try Again", name: "replayLevel"))
         }
         
-        
         // return to main menu text
-        let toMainFromLevelEnd = SKLabelNode(fontNamed: "Pixeled")
-        toMainFromLevelEnd.text = "Return to Main Menu"
-        toMainFromLevelEnd.fontSize = 40
-        toMainFromLevelEnd.fontColor = SKColor.white
-        toMainFromLevelEnd.position = CGPoint(x: size.width/2, y: size.height/2 - 300)
-        toMainFromLevelEnd.name = "endLevelToMain"
-        addChild(toMainFromLevelEnd)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 300), fontSize: 40, text: "Return to Main Menu", name: "endLevelToMain"))
     }
     
     // override touches began for options
@@ -81,7 +57,7 @@ class LevelFinishedScene: SKScene {
             sceneManager.loadGameScene(lvl: levelFinished)
             break
         case "nextLevel"?:
-            sceneManager.loadGameScene(lvl: levelFinished+1)
+            sceneManager.loadGameScene(lvl: levelFinished + 1)
             break
         case "endLevelToMain"?:
             sceneManager.loadMenu(menuToLoad: MenuScene.MenuType.main)

@@ -9,20 +9,24 @@
 import Foundation
 
 class PlayerProfile {
+    // resettable data
     var playerLevel: Int
     var playerXP: Int
     var xpToNext: Int
     var highestLevelCompleted: Int
+    
+    // constant data
     var endlessHiScore: Int
     var xpMultiplier: Int
-    // TODO: Implement kills and tracking -- don't reset!
+    var totalKills: Int
     
-    init(playerLevel:Int, playerXP:Int, xpToNextLvl:Int, highestLevelCompleted:Int, endlessHiScore:Int, xpMulti:Int) {
+    init(playerLevel:Int, playerXP:Int, xpToNextLvl:Int, highestLevelCompleted:Int, endlessHiScore:Int, xpMulti:Int, kills: Int) {
         self.playerLevel = playerLevel
         self.playerXP = playerXP
         self.xpToNext = xpToNextLvl
         self.highestLevelCompleted = highestLevelCompleted
         self.endlessHiScore = endlessHiScore
         self.xpMultiplier = xpMulti
+        self.totalKills = kills
     }
 }

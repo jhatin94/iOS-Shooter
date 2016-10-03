@@ -76,6 +76,7 @@ class GameViewController: UIViewController {
         let lvlsCompleted = defaults.object(forKey: "highestLvlComplete")
         let endlessScore = defaults.object(forKey: "endlessHiScore")
         let multiplier = defaults.object(forKey: "xpMulti")
+        let kills = defaults.object(forKey: "killTotal")
         
         // run appropriate calculations to get accurate data
         let playerLevel = level != nil ? (level! as AnyObject).intValue : 1
@@ -83,10 +84,11 @@ class GameViewController: UIViewController {
         let highestFinishedLvl = lvlsCompleted != nil ? (lvlsCompleted! as AnyObject).intValue : 0
         let endlessModeScore = endlessScore != nil ? (endlessScore! as AnyObject).intValue : 0
         let xpMultiplier = multiplier != nil ? (multiplier! as AnyObject).intValue : 1
+        let totalKills = kills != nil ? (kills! as AnyObject).intValue : 0
         let remainder = playerXP! - xpToCurrentLevel(playerLevel!) // JHAT: Swift can't handle doing this on one line
         let xpToNext = xpToNextLevel(playerLevel!) - remainder // JHAT: accurately determine player progession
         
-        playerProfile = PlayerProfile(playerLevel: playerLevel!, playerXP: playerXP!, xpToNextLvl: xpToNext, highestLevelCompleted: highestFinishedLvl!, endlessHiScore: endlessModeScore!, xpMulti: xpMultiplier!)
+        playerProfile = PlayerProfile(playerLevel: playerLevel!, playerXP: playerXP!, xpToNextLvl: xpToNext, highestLevelCompleted: highestFinishedLvl!, endlessHiScore: endlessModeScore!, xpMulti: xpMultiplier!, kills: totalKills!)
     }
     
     // save progress when profile is modified and when user quits or puts app in background
@@ -96,6 +98,7 @@ class GameViewController: UIViewController {
         defaults.set(profileToSave.highestLevelCompleted, forKey: "highestLvlComplete")
         defaults.set(profileToSave.endlessHiScore, forKey: "endlessHiScore")
         defaults.set(profileToSave.xpMultiplier, forKey: "xpMulti")
+        defaults.set(profileToSave.totalKills, forKey: "killTotal")
     }
     
     func saveProfile() { // JHAT: parameterless save function for lifecycle saving
@@ -106,7 +109,7 @@ class GameViewController: UIViewController {
     func resetProfile(profileToReset: PlayerProfile) {
         
         // clear everything except endlessHiScore and increment multiplier
-        let newProfile = PlayerProfile(playerLevel: 1, playerXP: 0, xpToNextLvl: xpToNextLevel(1), highestLevelCompleted: 0, endlessHiScore: profileToReset.endlessHiScore, xpMulti: profileToReset.xpMultiplier + 1)
+        let newProfile = PlayerProfile(playerLevel: 1, playerXP: 0, xpToNextLvl: xpToNextLevel(1), highestLevelCompleted: 0, endlessHiScore: profileToReset.endlessHiScore, xpMulti: profileToReset.xpMultiplier + 1, kills: profileToReset.totalKills)
         
         // save new profile over old one
         saveProgress(profileToSave: newProfile)
@@ -143,6 +146,10 @@ class GameViewController: UIViewController {
             // save profile on level up
             saveProgress(profileToSave: playerProfile)
         }
+    }
+    
+    func enemyKilled(playerProfile: PlayerProfile) {
+        playerProfile.totalKills += 1
     }
     
     func setHighestLevelComplete(lvlComplete:Int, playerProfile: PlayerProfile) {

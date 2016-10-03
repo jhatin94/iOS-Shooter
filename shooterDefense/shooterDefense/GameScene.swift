@@ -58,6 +58,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var numToWin = 0
     let numToLose = 5
     var enemiesEscaped = 0
+    var score = 0
     var canShoot = true
     let playerProfile: PlayerProfile
     
@@ -66,6 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let playerLvlLabel = SKLabelNode(fontNamed: "Pixeled")
     let playerXPToNextLabel = SKLabelNode(fontNamed: "Pixeled")
     let shotStatus = SKLabelNode(fontNamed: "Pixeled")
+    let endlessScore = SKLabelNode(fontNamed: "Pixeled")
     var enemySpawns: [CGPoint] = []
     var loseAction: SKAction
     var finishActionMove: SKAction
@@ -134,16 +136,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(updateLabelProperties(labelToModify: shotStatus, pos: CGPoint(x: self.frame.width - 50, y: 75), vAl: .bottom, hAl: .right, text: "Fire", fontSize: 30, name: "shotStatus"))
         
-        // add BGM
-        let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
-        backgroundMusic.autoplayLooped = true
+        // update endless label if in endless
+        if (currentGameLevel < 1) {
+            self.addChild(updateLabelProperties(labelToModify: endlessScore, pos: CGPoint(x: self.frame.width/2, y: 50), vAl: .bottom, hAl: .center, text: "Score: \(score)", fontSize: 30, name: "scoreLab"))
+        }
+        
+        // TODO: add BGM
+        //let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
+        //backgroundMusic.autoplayLooped = true
         //addChild(backgroundMusic)
+        
+        // JHAT: Display tutorial pop-up based on level
+        if (playerProfile.highestLevelCompleted < currentGameLevel || currentGameLevel == 0) {
+            // only show hint if not finished level or endless
+            showHint()
+        }
         
         // all enemies will trigger the same lose and done actions
         self.loseAction = SKAction.run() {
             self.enemiesEscaped += 1
             self.updateLabel(self.escapedLabel)
-            if (self.enemiesEscaped >= self.numToLose) { // TODO: If endless (level 0), save hiscore with scenemanager
+            if (self.enemiesEscaped >= self.numToLose) {                
+                if (self.currentGameLevel < 1) { // If endless (level 0), save hiscore with scenemanager
+                    self.sceneManager.setEndlessHiScore(endlessScore: self.score, playerProfile: self.playerProfile)
+                }
+                else { // save profile as is, no update needed
+                    self.sceneManager.saveProgress(profileToSave: self.playerProfile)
+                }
                 self.sceneManager.loadLevelFinishedScene(lvl: self.currentGameLevel, success: false)
             }
         }
@@ -186,6 +205,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case "shotStatus"?:
             let status = canShoot ? "Fire" : "Reloading"
             label.text = "\(status)"
+            break
+        case "scoreLab"?:
+            label.text = "Score: \(score)"
             break
         default:
             break
@@ -323,9 +345,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         sceneManager.gainXP(xpGained: (BASE_XP_PER_KILL * multiplierXP), playerProfile: playerProfile)
         self.updateLabel(self.playerXPToNextLabel)
         self.updateLabel(self.playerLvlLabel)
+        sceneManager.enemyKilled(playerProfile: playerProfile) // increment profile kill count
+        
+        // update score and label if endless
+        if (currentGameLevel < 1) {
+            increaseScore(baseScore: BASE_XP_PER_KILL)
+            self.updateLabel(endlessScore)
+        }
+        
         if (enemiesKilled >= numToWin && currentGameLevel > 0) { // JHAT: Skip check on endless mode (level 0)
+            if (currentGameLevel > playerProfile.highestLevelCompleted) {
+                // if level complete is higher than profile progress, update and save
+                sceneManager.setHighestLevelComplete(lvlComplete: currentGameLevel, playerProfile: playerProfile)
+            }
+            else { // save profile as is, no update needed
+                sceneManager.saveProgress(profileToSave: playerProfile)
+            }
+            
             // TODO: if last level, show GameOver screen instead
-            sceneManager.setHighestLevelComplete(lvlComplete: currentGameLevel, playerProfile: playerProfile)
             sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true)
         }
         run(SKAction.playSoundFileNamed("8-bit-explosion.wav", waitForCompletion: false))
@@ -392,9 +429,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func allowShooting() {
+    func showHint() { // returns specific hint per level to display to user
+        var hintToShow = ""
+        switch currentGameLevel {
+        case 0:
+            hintToShow = "Good Luck Pilot!"
+            break
+        case 1:
+            hintToShow = "Tap ahead to shoot"
+            break
+        case 2:
+            hintToShow = "Tilt the device to move"
+            break
+        case 3: //TODO: Add more level specific hints
+            break
+        case 4:
+            break
+        case 5:
+            break
+        default:
+            break
+        }
+        addChild(createPixeledLabel(pos: CGPoint(x: self.frame.width/3, y: player.position.y + 150), fontSize: 30, text: hintToShow, name: "hint"))
+        _ = Timer.scheduledTimer(timeInterval: 7.0, target: self, selector: #selector(hideHint), userInfo: nil, repeats: false)
+    }
+    
+    func hideHint() { // used to hide level hints
+        let hint = childNode(withName: "hint")
+        hint?.removeFromParent()
+    }
+    
+    func allowShooting() { // used to re-enable shooting
         canShoot = true
         updateLabel(shotStatus)
+    }
+    
+    func increaseScore(baseScore: Int) { // used to keep track of endless score
+        score += (baseScore * multiplierXP)
     }
     
     func calculateDeltaTime(currentTime: TimeInterval){
@@ -432,8 +503,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //Mark Game Loop
     override func update(_ currentTime: TimeInterval){
-        calculateDeltaTime(currentTime: currentTime)
-        movePlayer(dt: CGFloat(dt))
+        if (currentGameLevel != 1) {
+            calculateDeltaTime(currentTime: currentTime)
+            movePlayer(dt: CGFloat(dt))
+        }
     }
 }
 

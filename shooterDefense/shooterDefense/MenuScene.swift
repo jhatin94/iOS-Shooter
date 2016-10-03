@@ -175,7 +175,7 @@ class MenuScene: SKScene {
     func drawLevelSelect() {
         // get player progress from Model to determine which levels are unlocked
         let maxLevelToDisplay = playerProfile.highestLevelCompleted + 1
-        let endlessUnlocked = playerProfile.xpMultiplier > 1 || playerProfile.highestLevelCompleted > 5 // TODO: Change if max level is not 5
+        let endlessUnlocked = playerProfile.xpMultiplier > 1 || maxLevelToDisplay > 5 // TODO: Change if max level is not 5
         
         // set background color
         backgroundColor = SKColor.black
@@ -241,7 +241,9 @@ class MenuScene: SKScene {
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 48, text: "XP Multiplier: x\(playerProfile.xpMultiplier)", name: "multiplier"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 48, text: "Highest Endless Score: \(playerProfile.endlessHiScore)", name: "endlessScorert"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 48, text: "Highest Endless Score: \(playerProfile.endlessHiScore)", name: "endlessScore"))
+        
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 400), fontSize: 48, text: "Enemies Killed: \(playerProfile.totalKills)", name: "kills"))
         
         // return to main menu
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "statsToMain"))
