@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SpriteKit
 
 func getScreenAspectRatioPortrait()->CGFloat{
     // bounds.width is in points (device independent), rather than pixels (device dependent)
@@ -57,6 +58,42 @@ func randomCGPointInRect(_ rect:CGRect,margin:CGFloat)->CGPoint{
     let y = CGFloat.random(min: rect.minY + margin, max: rect.maxY - margin)
     return CGPoint(x:x,y:y)
 }
+
+// JHAT: Make label creation much easier
+func createPixeledLabel(pos: CGPoint, fontSize: CGFloat, text: String, name: String) -> SKLabelNode {
+    let label = SKLabelNode(fontNamed: "Pixeled")
+    label.position = pos
+    label.fontSize = fontSize
+    label.text = text
+    label.name = name
+    label.fontColor = SKColor.white
+    return label
+}
+
+func createCustomLabel(fontString: String, pos: CGPoint, fontSize: CGFloat, text: String, name: String, color: SKColor) -> SKLabelNode {
+    let label = SKLabelNode(fontNamed: fontString)
+    label.position = pos
+    label.fontSize = fontSize
+    label.text = text
+    label.name = name
+    label.fontColor = color
+    return label
+}
+
+func updateLabelProperties(labelToModify: SKLabelNode, pos: CGPoint, vAl: SKLabelVerticalAlignmentMode, hAl: SKLabelHorizontalAlignmentMode, text: String, fontSize: CGFloat, name: String) -> SKLabelNode {
+    labelToModify.name = name
+    labelToModify.position = pos
+    labelToModify.verticalAlignmentMode = vAl
+    labelToModify.horizontalAlignmentMode = hAl
+    labelToModify.text = text
+    labelToModify.fontSize = fontSize
+    labelToModify.color = SKColor.white
+    if (labelToModify.fontName != "Pixeled") {
+        labelToModify.fontName = "Pixeled"
+    }
+    return labelToModify
+}
+
 
 extension CGPoint{
     public static func randomUnitVector()->CGPoint{

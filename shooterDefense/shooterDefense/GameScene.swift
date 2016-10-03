@@ -123,56 +123,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.contactDelegate = self
         
         // create labels
-        destroyedLabel.name = "desLab"
-        destroyedLabel.position = CGPoint(x: 5, y: self.frame.height-5)
-        destroyedLabel.verticalAlignmentMode = .top
-        destroyedLabel.horizontalAlignmentMode = .left
-        destroyedLabel.text = "Enemies: \((numToWin-enemiesKilled))"
-        destroyedLabel.fontColor = SKColor.white
-        destroyedLabel.fontSize = 30
-        destroyedLabel.fontName = "Pixeled"
-        self.addChild(destroyedLabel)
+        self.addChild(updateLabelProperties(labelToModify: destroyedLabel, pos: CGPoint(x: 5, y: self.frame.height-5), vAl: .top, hAl: .left, text: "Enemies: \((numToWin-enemiesKilled))", fontSize: 30, name: "desLab"))
         
-        escapedLabel.name = "esLab"
-        escapedLabel.position = CGPoint(x: self.frame.width - 5, y: self.frame.height - 5)
-        escapedLabel.verticalAlignmentMode = .top
-        escapedLabel.horizontalAlignmentMode = .right
-        escapedLabel.text = "Escaped: \(enemiesEscaped)"
-        escapedLabel.fontColor = SKColor.white
-        escapedLabel.fontSize = 30
-        escapedLabel.fontName = "Pixeled"
-        self.addChild(escapedLabel)
+        self.addChild(updateLabelProperties(labelToModify: escapedLabel, pos: CGPoint(x: self.frame.width - 5, y: self.frame.height - 5), vAl: .top, hAl: .right, text: "Escaped: \(enemiesEscaped)", fontSize: 30, name: "esLab"))
         
         // xp levels
-        playerLvlLabel.name = "lvlLab"
-        playerLvlLabel.position = CGPoint(x: 5, y: self.frame.height - 50)
-        playerLvlLabel.verticalAlignmentMode = .top
-        playerLvlLabel.horizontalAlignmentMode = .left
-        playerLvlLabel.text = "XP Level: \(playerProfile.playerLevel)"
-        playerLvlLabel.fontColor = SKColor.white
-        playerLvlLabel.fontSize = 30
-        playerLvlLabel.fontName = "Pixeled"
-        self.addChild(playerLvlLabel)
+        self.addChild(updateLabelProperties(labelToModify: playerLvlLabel, pos: CGPoint(x: 5, y: self.frame.height - 50), vAl: .top, hAl: .left, text: "XP Level: \(playerProfile.playerLevel)", fontSize: 30, name: "lvlLab"))
         
-        playerXPToNextLabel.name = "xpLab"
-        playerXPToNextLabel.position = CGPoint(x: self.frame.width - 5, y: self.frame.height - 50)
-        playerXPToNextLabel.verticalAlignmentMode = .top
-        playerXPToNextLabel.horizontalAlignmentMode = .right
-        playerXPToNextLabel.text = "XP To Next Level: \(playerProfile.xpToNext)"
-        playerXPToNextLabel.fontColor = SKColor.white
-        playerXPToNextLabel.fontSize = 30
-        playerXPToNextLabel.fontName = "Pixeled"
-        self.addChild(playerXPToNextLabel)
+        self.addChild(updateLabelProperties(labelToModify: playerXPToNextLabel, pos: CGPoint(x: self.frame.width - 5, y: self.frame.height - 50), vAl: .top, hAl: .right, text: "XP To Next Level: \(playerProfile.xpToNext)", fontSize: 30, name: "xpLab"))
         
-        shotStatus.name = "shotStatus"
-        shotStatus.position = CGPoint(x: self.frame.width - 50, y: 75)
-        shotStatus.verticalAlignmentMode = .bottom
-        shotStatus.horizontalAlignmentMode = .right
-        shotStatus.text = "Fire"
-        shotStatus.fontColor = SKColor.white
-        shotStatus.fontSize = 30
-        shotStatus.fontName = "Pixeled"
-        self.addChild(shotStatus)
+        self.addChild(updateLabelProperties(labelToModify: shotStatus, pos: CGPoint(x: self.frame.width - 50, y: 75), vAl: .bottom, hAl: .right, text: "Fire", fontSize: 30, name: "shotStatus"))
         
         // add BGM
         let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
@@ -392,20 +352,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             numToWin = 25
             let x3 = size.width / 4
             let x4 = size.width * 3 / 4
-            let x5 = size.width * 1 / 4
-            let x6 = size.width * 2 / 4
-            return [CGPoint(x: x3, y: ySpawn), CGPoint(x: x4, y: ySpawn), CGPoint(x: x5, y: ySpawn), CGPoint(x: x6, y: ySpawn)]
+            let x5 = size.width / 2
+            return [CGPoint(x: x3, y: ySpawn), CGPoint(x: x4, y: ySpawn), CGPoint(x: x5, y: ySpawn)]
         case 4:
             numToWin = 25
             let x7 = size.width / 8
-            let x8 = size.width * 1 / 8
-            let x9 = size.width * 2 / 8
-            let x10 = size.width * 3 / 8
-            let x11 = size.width * 4 / 8
-            let x12 = size.width * 5 / 8
-            let x13 = size.width * 6 / 8
-            let x14 = size.width * 7 / 8
-            return [CGPoint(x: x7, y: ySpawn), CGPoint(x: x8, y: ySpawn), CGPoint(x: x9, y: ySpawn), CGPoint(x: x10, y: ySpawn),CGPoint(x: x11, y: ySpawn), CGPoint(x: x12, y: ySpawn),CGPoint(x: x13, y: ySpawn), CGPoint(x: x14, y: ySpawn)]
+            let x8 = size.width * 2 / 8
+            let x9 = size.width * 3 / 8
+            let x10 = size.width * 4 / 8
+            let x11 = size.width * 5 / 8
+            let x12 = size.width * 6 / 8
+            let x13 = size.width * 7 / 8
+            return [CGPoint(x: x7, y: ySpawn), CGPoint(x: x8, y: ySpawn), CGPoint(x: x9, y: ySpawn), CGPoint(x: x10, y: ySpawn),CGPoint(x: x11, y: ySpawn), CGPoint(x: x12, y: ySpawn),CGPoint(x: x13, y: ySpawn)]
         default:
             return [CGPoint(x: 0, y: 0)]
         }

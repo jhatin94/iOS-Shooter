@@ -18,7 +18,7 @@ class PlayerProfile {
     // TODO: Implement kills and tracking -- don't reset!
     
     init(playerLevel:Int, playerXP:Int, xpToNextLvl:Int, highestLevelCompleted:Int, endlessHiScore:Int, xpMulti:Int) {
-        self.playerLevel = 20
+        self.playerLevel = playerLevel
         self.playerXP = playerXP
         self.xpToNext = xpToNextLvl
         self.highestLevelCompleted = highestLevelCompleted

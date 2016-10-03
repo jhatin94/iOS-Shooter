@@ -110,6 +110,12 @@ class MenuScene: SKScene {
         case "level4"?:
             sceneManager.loadGameScene(lvl: 4)
             break
+        case "level5"?:
+            sceneManager.loadGameScene(lvl: 5)
+            break
+        case "level0"?:
+            sceneManager.loadGameScene(lvl: 0)
+            break
         default:
             break
         }
@@ -125,129 +131,45 @@ class MenuScene: SKScene {
         addChild(backgroundMenu)
         
         // JHAT: create and add main menu title label
-        let titleLabel = SKLabelNode(fontNamed: "Pixeled")
-        titleLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 500)
-        titleLabel.fontSize = 108
-        titleLabel.text = "Galaxia"
-        titleLabel.name = "title"
-        titleLabel.fontColor = SKColor.white
-        addChild(titleLabel)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 108, text: "Galaxia", name: "title"))
         
         // JHAT: story menu option
-        let storyOption = SKLabelNode(fontNamed: "Pixeled")
-        storyOption.position = CGPoint(x: size.width/2, y: size.height/2 + 200)
-        storyOption.fontSize = 65
-        storyOption.text = "Briefing"
-        storyOption.name = "story"
-        storyOption.fontColor = SKColor.white
-        addChild(storyOption)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 65, text: "Briefing", name: "story"))
         
         // JHAT: instructions menu option
-        let instructionsOption = SKLabelNode(fontNamed: "Pixeled")
-        instructionsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 200 )
-        instructionsOption.fontSize = 65
-        instructionsOption.text = "How To Play"
-        instructionsOption.name = "instructions"
-        instructionsOption.fontColor = SKColor.white
-        addChild(instructionsOption)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 65, text: "How To Play", name: "instructions"))
         
         // JHAT: settings menu option
-        let settingsOption = SKLabelNode(fontNamed: "Pixeled")
-        settingsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 600)
-        settingsOption.fontSize = 65
-        settingsOption.text = "Settings"
-        settingsOption.name = "settings"
-        settingsOption.fontColor = SKColor.white
-        addChild(settingsOption)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 600), fontSize: 65, text: "Settings", name: "settings"))
         
         // JHAT: stats menu option
-        let statsOption = SKLabelNode(fontNamed: "Pixeled")
-        statsOption.position = CGPoint(x: size.width/2, y: size.height/2 - 400)
-        statsOption.fontSize = 65
-        statsOption.text = "Stats"
-        statsOption.name = "stats"
-        statsOption.fontColor = SKColor.white
-        addChild(statsOption)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 400), fontSize: 65, text: "Stats", name: "stats"))
         
         // JHAT: Transition to level select
-        let gameOption = SKLabelNode(fontNamed: "Pixeled")
-        gameOption.position = CGPoint(x: size.width/2, y: size.height/2)
-        gameOption.fontSize = 65
-        gameOption.text = "Play"
-        gameOption.name = "levelSelect"
-        gameOption.fontColor = SKColor.white
-        addChild(gameOption)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 65, text: "Play", name: "levelSelect"))
     }
     
     func drawStoryMenu() {
         // set background color
         backgroundColor = SKColor.black
         
-        let storyLabel = SKLabelNode(fontNamed: "Pixeled")
-        storyLabel.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
-        storyLabel.fontSize = 60
-        storyLabel.text = "The Story So Far..."
-        storyLabel.name = "storyTitle"
-        storyLabel.fontColor = SKColor.white
-        addChild(storyLabel)
+        // story text labels
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 60, text: "The Story So Far...", name: "storyTitle0"))
         
-        let storyLabel1 = SKLabelNode(fontNamed: "Pixeled")
-        storyLabel1.position = CGPoint(x: size.width/2, y: size.height/2 + 300)
-        storyLabel1.fontSize = 40
-        storyLabel1.text = "The Year is 2400.."
-        storyLabel1.name = "storyTitle"
-        storyLabel1.fontColor = SKColor.white
-        addChild(storyLabel1)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 300), fontSize: 40, text: "The Year is 2400..", name: "storyTitle1"))
         
-        let storyLabel2 = SKLabelNode(fontNamed: "Pixeled")
-        storyLabel2.position = CGPoint(x: size.width/2, y: size.height/2 + 100)
-        storyLabel2.fontSize = 40
-        storyLabel2.text = "Humanity is being invaded by "
-        storyLabel2.name = "storyTitle"
-        storyLabel2.fontColor = SKColor.white
-        addChild(storyLabel2)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 100), fontSize: 40, text: "Humanity is being invaded by ", name: "storyTitle2"))
         
-        let storyLabel3 = SKLabelNode(fontNamed: "Pixeled")
-        storyLabel3.position = CGPoint(x: size.width/2, y: size.height/2)
-        storyLabel3.fontSize = 40
-        storyLabel3.text = "an unidentified alien race. "
-        storyLabel3.name = "storyTitle"
-        storyLabel3.fontColor = SKColor.white
-        addChild(storyLabel3)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 40, text: "an unidentified alien race. ", name: "storyTitle3"))
         
-        let storyLabel4 = SKLabelNode(fontNamed: "Pixeled")
-        storyLabel4.position = CGPoint(x: size.width/2, y: size.height/2 - 100)
-        storyLabel4.fontSize = 40
-        storyLabel4.text = "   As humanitys best pilot, its"
-        storyLabel4.name = "storyTitle"
-        storyLabel4.fontColor = SKColor.white
-        addChild(storyLabel4)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "   As humanitys best pilot, its", name: "storyTitle4"))
         
-        let storyLabel5 = SKLabelNode(fontNamed: "Pixeled")
-        storyLabel5.position = CGPoint(x: size.width/2, y: size.height/2 - 200)
-        storyLabel5.fontSize = 40
-        storyLabel5.text = "your duty to defend Earth."
-        storyLabel5.name = "storyTitle"
-        storyLabel5.fontColor = SKColor.white
-        addChild(storyLabel5)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 40, text: "your duty to defend Earth.", name: "storyTitle5"))
         
-        let storyLabel6 = SKLabelNode(fontNamed: "Pixeled")
-        storyLabel6.position = CGPoint(x: size.width/2, y: size.height/2 - 400)
-        storyLabel6.fontSize = 40
-        storyLabel6.text = "Give them hell Pilot"
-        storyLabel6.name = "storyTitle"
-        storyLabel6.fontColor = SKColor.white
-        addChild(storyLabel6)
-        
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 400), fontSize: 40, text: "Give them hell Pilot", name: "storyTitle6"))
        
         // return to main menu
-        let toMainFromStory = SKLabelNode(fontNamed: "Pixeled")
-        toMainFromStory.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
-        toMainFromStory.fontColor = SKColor.white
-        toMainFromStory.fontSize = 32
-        toMainFromStory.text = "Return To Main Menu"
-        toMainFromStory.name = "storyToMain"
-        addChild(toMainFromStory)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "storyToMain"))
     }
     
     func drawLevelSelect() {
@@ -259,229 +181,96 @@ class MenuScene: SKScene {
         backgroundColor = SKColor.black
         
         // title label
-        let levelSelectTitle = SKLabelNode(fontNamed: "Pixeled")
-        levelSelectTitle.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
-        levelSelectTitle.fontSize = 72
-        levelSelectTitle.text = "Level Select"
-        levelSelectTitle.name = "levelSelectTitle"
-        levelSelectTitle.fontColor = SKColor.white
-        addChild(levelSelectTitle)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 72, text: "Level Select", name: "levelSelectTitle"))
         
         // return to main menu
-        let toMainFromLevelSelect = SKLabelNode(fontNamed: "Pixeled")
-        toMainFromLevelSelect.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
-        toMainFromLevelSelect.fontColor = SKColor.white
-        toMainFromLevelSelect.fontSize = 32
-        toMainFromLevelSelect.text = "Return To Main Menu"
-        toMainFromLevelSelect.name = "levelSelectToMain"
-        addChild(toMainFromLevelSelect)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "levelSelectToMain"))
         
         // first level always unlocked
-        let level01 = SKLabelNode(fontNamed: "Pixeled")
-        level01.position = CGPoint(x: size.width/2, y: size.height/2 + 400)
-        level01.fontSize = 60
-        level01.text = "Level 1"
-        level01.name = "level1"
-        level01.fontColor = SKColor.white
-        addChild(level01)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 400), fontSize: 60, text: "Level 1", name: "level1"))
         
         if (maxLevelToDisplay > 1) {// show level 2 label if unlocked
-            let level02 = SKLabelNode(fontNamed: "Pixeled")
-            level02.position = CGPoint(x: size.width/2, y: size.height/2 + 200)
-            level02.fontSize = 60
-            level02.text = "Level 2"
-            level02.name = "level2"
-            level02.fontColor = SKColor.white
-            addChild(level02)
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 60, text: "Level 2", name: "level2"))
         }
         if (maxLevelToDisplay > 2) {
-            // TODO: show level 3 and setup touch event to have scenemanager load GameScene(3)
-            let level03 = SKLabelNode(fontNamed: "Pixeled")
-            level03.position = CGPoint(x: size.width/2, y: size.height/2)
-            level03.fontSize = 60
-            level03.text = "Level 3"
-            level03.name = "level3"
-            level03.fontColor = SKColor.white
-            addChild(level03)
+            // show level 3
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 60, text: "Level 3", name: "level3"))
         }
         if (maxLevelToDisplay > 3) {
-            // TODO: show level 3 and setup touch event to have scenemanager load GameScene(3)
-            let level04 = SKLabelNode(fontNamed: "Pixeled")
-            level04.position = CGPoint(x: size.width/2, y: size.height/2 - 200)
-            level04.fontSize = 60
-            level04.text = "Level 4"
-            level04.name = "level4"
-            level04.fontColor = SKColor.white
-            addChild(level04)
+            // show level 4
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 60, text: "Level 4", name: "level4"))
+        }
+        if (maxLevelToDisplay > 4) {
+            // show level 5
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 400), fontSize: 60, text: "Level 5", name: "level5"))
         }
         
+        // check if endless is unlocked
         if (endlessUnlocked) {
-            // TODO: show endless and setup touch event to have scenemanager load GameScene(0)
+            // show endless
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 700), fontSize: 60, text: "Endless Mode", name: "level0"))
         }
     }
     
     func drawSettingsMenu() {
         backgroundColor = SKColor.black
         
-        let settingsTitle = SKLabelNode(fontNamed: "Pixeled")
-        settingsTitle.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
-        settingsTitle.fontSize = 72
-        settingsTitle.text = "Settings"
-        settingsTitle.name = "settingsTitle"
-        settingsTitle.fontColor = SKColor.white
-        addChild(settingsTitle)
+        // title of page
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 72, text: "Settings", name: "settingsTitle"))
         
-        // let player reset after level 21
+        // let player reset at level 21 -- point where all abilities are maxed
         if (playerProfile.playerLevel > 20) {
-            let resetProfile = SKLabelNode(fontNamed: "Pixeled")
-            resetProfile.position = CGPoint(x: size.width/2, y: size.height/2)
-            resetProfile.fontSize = 60
-            resetProfile.text = "Reset Profile"
-            resetProfile.name = "resetBtn"
-            resetProfile.fontColor = SKColor.white
-            addChild(resetProfile)
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 60, text: "Reset Profile", name: "resetBtn"))
             
-            let resetDescr = SKLabelNode(fontNamed: "Pixeled")
-            resetDescr.position = CGPoint(x: resetProfile.position.x, y: resetProfile.position.y - 50)
-            resetDescr.fontSize = 16
-            resetDescr.text = "Keeps Endless Mode + Score and adds an XP Boost"
-            resetDescr.name = "resetDescription"
-            resetDescr.fontColor = SKColor.white
-            addChild(resetDescr)
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 50), fontSize: 16, text: "Keeps Endless Mode + Score and adds an XP Boost", name: "resetDescription"))
         }
         
         // return to main menu
-        let toMainFromSettings = SKLabelNode(fontNamed: "Pixeled")
-        toMainFromSettings.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
-        toMainFromSettings.fontColor = SKColor.white
-        toMainFromSettings.fontSize = 32
-        toMainFromSettings.text = "Return To Main Menu"
-        toMainFromSettings.name = "settingsToMain"
-        addChild(toMainFromSettings)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "settingsToMain"))
     }
     
     func drawStatsMenu() {
         backgroundColor = SKColor.black
         
-        let statsTitle = SKLabelNode(fontNamed: "Pixeled")
-        statsTitle.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
-        statsTitle.fontSize = 72
-        statsTitle.text = "Statistics"
-        statsTitle.name = "statsTitle"
-        statsTitle.fontColor = SKColor.white
-        addChild(statsTitle)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 72, text: "Statistics", name: "statsTitle"))
         
         // show playerXP, level, endless score, multiplier, kills
-        let totalXP = SKLabelNode(fontNamed: "Pixeled")
-        totalXP.position = CGPoint(x: size.width/2, y: size.height/2 + 400)
-        totalXP.fontSize = 48
-        totalXP.text = "XP Earned: \(playerProfile.playerXP)"
-        totalXP.name = "xpEarned"
-        totalXP.fontColor = SKColor.white
-        addChild(totalXP)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 400), fontSize: 48, text: "XP Earned: \(playerProfile.playerXP)", name: "xpEarned"))
         
-        let currentLevel = SKLabelNode(fontNamed: "Pixeled")
-        currentLevel.position = CGPoint(x: size.width/2, y: size.height/2 + 200)
-        currentLevel.fontSize = 48
-        currentLevel.text = "Level: \(playerProfile.playerLevel)"
-        currentLevel.name = "currentLvl"
-        currentLevel.fontColor = SKColor.white
-        addChild(currentLevel)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 48, text: "Level: \(playerProfile.playerLevel)", name: "currentLvl"))
         
-        let xpMult = SKLabelNode(fontNamed: "Pixeled")
-        xpMult.position = CGPoint(x: size.width/2, y: size.height/2)
-        xpMult.fontSize = 48
-        xpMult.text = "XP Multiplier: x\(playerProfile.xpMultiplier)"
-        xpMult.name = "multiplier"
-        xpMult.fontColor = SKColor.white
-        addChild(xpMult)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 48, text: "XP Multiplier: x\(playerProfile.xpMultiplier)", name: "multiplier"))
         
-        let endlessScore = SKLabelNode(fontNamed: "Pixeled")
-        endlessScore.position = CGPoint(x: size.width/2, y: size.height/2 - 200)
-        endlessScore.fontSize = 36
-        endlessScore.text = "Highest Endless Score: \(playerProfile.endlessHiScore)"
-        endlessScore.name = "endlessScorert"
-        endlessScore.fontColor = SKColor.white
-        addChild(endlessScore)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 48, text: "Highest Endless Score: \(playerProfile.endlessHiScore)", name: "endlessScorert"))
         
         // return to main menu
-        let toMainFromStats = SKLabelNode(fontNamed: "Pixeled")
-        toMainFromStats.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
-        toMainFromStats.fontColor = SKColor.white
-        toMainFromStats.fontSize = 32
-        toMainFromStats.text = "Return To Main Menu"
-        toMainFromStats.name = "statsToMain"
-        addChild(toMainFromStats)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "statsToMain"))
     }
     
     func drawInstrMenu() {
         backgroundColor = SKColor.black
         
-        let instrTitle = SKLabelNode(fontNamed: "Pixeled")
-        instrTitle.position = CGPoint(x: size.width/2, y: size.height/2 + 600)
-        instrTitle.fontSize = 72
-        instrTitle.text = "How To Play"
-        instrTitle.name = "intructionsTitle"
-        instrTitle.fontColor = SKColor.white
-        addChild(instrTitle)
+        // page title
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 72, text: "How To Play", name: "intructionsTitle"))
         
-        let instrPar = SKLabelNode(fontNamed: "Pixeled")
-        instrPar.position = CGPoint(x: size.width/2, y: size.height/2 + 300)
-        instrPar.fontSize = 40
-        instrPar.text = "Tap to Shoot"
-        instrPar.name = "instructions1"
-        instrPar.fontColor = SKColor.white
-        addChild(instrPar)
+        // instructions text
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 400), fontSize: 40, text: "Tap to Shoot", name: "instructions1"))
         
-        let instrPar2 = SKLabelNode(fontNamed: "Pixeled")
-        instrPar2.position = CGPoint(x: size.width/2, y: size.height/2 + 200)
-        instrPar2.fontSize = 40
-        instrPar2.text = "Tilt Phone to Move Ship"
-        instrPar2.name = "instructions2"
-        instrPar2.fontColor = SKColor.white
-        addChild(instrPar2)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 300), fontSize: 40, text: "Tilt Phone to Move Ship", name: "instructions2"))
         
-        let instrPar3 = SKLabelNode(fontNamed: "Pixeled")
-        instrPar3.position = CGPoint(x: size.width/2, y: size.height/2 )
-        instrPar3.fontSize = 40
-        instrPar3.text = "Destroy all Pesky Aliens "
-        instrPar3.name = "instructions2"
-        instrPar3.fontColor = SKColor.white
-        addChild(instrPar3)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 100), fontSize: 40, text: "Destroy all Pesky Aliens ", name: "instructions3"))
         
-        let instrPar4 = SKLabelNode(fontNamed: "Pixeled")
-        instrPar4.position = CGPoint(x: size.width/2, y: size.height/2 - 100)
-        instrPar4.fontSize = 40
-        instrPar4.text = "to advance to the Next Level"
-        instrPar4.name = "instructions2"
-        instrPar4.fontColor = SKColor.white
-        addChild(instrPar4)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 40, text: "to advance to the Next Level", name: "instructions4"))
         
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 40, text: " Dont Let the Aliens get", name: "instructions5"))
         
-        let instrPar5 = SKLabelNode(fontNamed: "Pixeled")
-        instrPar5.position = CGPoint(x: size.width/2, y: size.height/2 - 300)
-        instrPar5.fontSize = 40
-        instrPar5.text = " Dont Let the Aliens get"
-        instrPar5.name = "instructions2"
-        instrPar5.fontColor = SKColor.white
-        addChild(instrPar5)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 300), fontSize: 40, text: "past you and Destroy Earth", name: "instructions6"))
         
-        let instrPar6 = SKLabelNode(fontNamed: "Pixeled")
-        instrPar6.position = CGPoint(x: size.width/2, y: size.height/2 - 400)
-        instrPar6.fontSize = 40
-        instrPar6.text = "past you and Destroy Earth"
-        instrPar6.name = "instructions2"
-        instrPar6.fontColor = SKColor.white
-        addChild(instrPar6)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 500), fontSize: 40, text: " The more enemies you kill", name: "instructions7"))
         
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 600), fontSize: 40, text: "The better your ship gets", name: "instructions8"))
         
         // return to main menu
-        let toMainFromInstr = SKLabelNode(fontNamed: "Pixeled")
-        toMainFromInstr.position = CGPoint(x: size.width/2, y: size.height/2 - 900)
-        toMainFromInstr.fontColor = SKColor.white
-        toMainFromInstr.fontSize = 32
-        toMainFromInstr.text = "Return To Main Menu"
-        toMainFromInstr.name = "instToMain"
-        addChild(toMainFromInstr)
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "instToMain"))
     }
 }
