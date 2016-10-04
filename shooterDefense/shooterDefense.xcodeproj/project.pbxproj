@@ -202,7 +202,7 @@
 				TargetAttributes = {
 					20EE8BBD1D8717C200C85288 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 9Z9L4R4J82;
+						DevelopmentTeam = KT6L3A8T5R;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -387,7 +387,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 9Z9L4R4J82;
+				DEVELOPMENT_TEAM = KT6L3A8T5R;
 				INFOPLIST_FILE = shooterDefense/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
@@ -401,7 +401,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 9Z9L4R4J82;
+				DEVELOPMENT_TEAM = KT6L3A8T5R;
 				INFOPLIST_FILE = shooterDefense/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;

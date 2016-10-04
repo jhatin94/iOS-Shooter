@@ -18,6 +18,7 @@ class GameViewController: UIViewController {
     var skView: SKView!
     let defaults = UserDefaults.standard
     var playerProfile: PlayerProfile?
+    var isPhone: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +30,8 @@ class GameViewController: UIViewController {
         
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
+        
+        isPhone = isDevicePhone()
         
         // load data for player profile
         loadPlayerProfile()
@@ -51,7 +54,7 @@ class GameViewController: UIViewController {
     func loadGameScene(lvl:Int) { // JHAT: displays game state         clearMenuSceneFromMemory()
         clearLevelFinishedSceneFromMemory()
         clearMenuSceneFromMemory()
-        gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!)
+        gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!, isDevicePhone: isPhone!)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         if (lvl != 1) {
             MotionMonitor.sharedMotionMonitor.startUpdates()
@@ -116,6 +119,10 @@ class GameViewController: UIViewController {
         
         // make current profile new one
         playerProfile = newProfile
+    }
+    
+    func isDevicePhone() -> Bool {
+        return UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone
     }
     
     // MARK: XP functions

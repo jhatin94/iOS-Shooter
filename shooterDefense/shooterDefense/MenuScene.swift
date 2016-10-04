@@ -16,7 +16,7 @@ class MenuScene: SKScene {
     enum MenuType {
         case main
         case story
-        case settings
+        case reset
         case instructions
         case stats
         case levelSelect
@@ -38,8 +38,8 @@ class MenuScene: SKScene {
         case MenuType.story:
             drawStoryMenu()
             break
-        case MenuType.settings:
-            drawSettingsMenu()
+        case MenuType.reset:
+            drawResetMenu()
             break
         case MenuType.instructions:
             drawInstrMenu()
@@ -73,8 +73,8 @@ class MenuScene: SKScene {
         case "stats"?:
             sceneManager.loadMenu(menuToLoad: MenuType.stats)
             break
-        case "settings"?:
-            sceneManager.loadMenu(menuToLoad: MenuType.settings)
+        case "reset"?:
+            sceneManager.loadMenu(menuToLoad: MenuType.reset)
             break
         case "instructions"?:
             sceneManager.loadMenu(menuToLoad: MenuType.instructions)
@@ -85,7 +85,7 @@ class MenuScene: SKScene {
         case "statsToMain"?: // stats clickable nodes
             sceneManager.loadMenu(menuToLoad: MenuType.main)
             break
-        case "settingsToMain"?: // settings clickable nodes
+        case "resetToMain"?: // reset clickable nodes
             sceneManager.loadMenu(menuToLoad: MenuType.main)
             break
         case "resetBtn"?:
@@ -139,11 +139,13 @@ class MenuScene: SKScene {
         // JHAT: instructions menu option
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 65, text: "How To Play", name: "instructions"))
         
-        // JHAT: settings menu option
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 600), fontSize: 65, text: "Settings", name: "settings"))
-        
         // JHAT: stats menu option
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 400), fontSize: 65, text: "Stats", name: "stats"))
+        
+        // JHAT: reset menu option
+        if (playerProfile.playerLevel >= 20) {
+            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 600), fontSize: 65, text: "Reset Profile", name: "reset"))
+        }
         
         // JHAT: Transition to level select
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 65, text: "Play", name: "levelSelect"))
@@ -213,21 +215,30 @@ class MenuScene: SKScene {
         }
     }
     
-    func drawSettingsMenu() {
+    func drawResetMenu() {
         backgroundColor = SKColor.black
         
         // title of page
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 72, text: "Settings", name: "settingsTitle"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 72, text: "Reset?", name: "resetTitle"))
         
-        // let player reset at level 21 -- point where all abilities are maxed
-        if (playerProfile.playerLevel > 20) {
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 60, text: "Reset Profile", name: "resetBtn"))
-            
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 50), fontSize: 16, text: "Keeps Endless Mode + Score and adds an XP Boost", name: "resetDescription"))
-        }
+        // description of resetting
+         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 400), fontSize: 48, text: "Congratulations Pilot!", name: "resetDescription"))
+        
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 250), fontSize: 36, text: "Your ship has the best abilities", name: "resetDescription2"))
+        
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 150), fontSize: 30, text: "Looking to get a higher Endless Score?", name: "resetDescription3"))
+        
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 25), fontSize: 30, text: "You can reset your profile back to level 1", name: "resetDescription4"))
+        
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 30, text: "Your XP and Score will be multiplied", name: "resetDescription5"))
+        
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 250), fontSize: 36, text: "Earn higher scores now!", name: "resetDescription6"))
+        
+        // let player reset at level 20 -- point where all abilities are maxed
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 500), fontSize: 60, text: "Reset Profile", name: "resetBtn"))
         
         // return to main menu
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "settingsToMain"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "resetToMain"))
     }
     
     func drawStatsMenu() {
@@ -265,9 +276,9 @@ class MenuScene: SKScene {
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 40, text: "to advance to the Next Level", name: "instructions4"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 40, text: " Dont Let the Aliens get", name: "instructions5"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 40, text: " If Five Aliens get by you", name: "instructions5"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 300), fontSize: 40, text: "past you and Destroy Earth", name: "instructions6"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 300), fontSize: 40, text: "Earth will fall", name: "instructions6"))
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 500), fontSize: 40, text: " The more enemies you kill", name: "instructions7"))
         

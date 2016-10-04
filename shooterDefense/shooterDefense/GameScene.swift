@@ -52,6 +52,7 @@ struct PhysicsCategory {
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     let sceneManager: GameViewController
+    var isPhone: Bool = false
     var currentGameLevel: Int
     let player = SKSpriteNode(imageNamed: "ship")
     var enemiesKilled = 0
@@ -84,8 +85,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let marginH = CGFloat(12.0)
     let shipMaxSpeedPerSecond = CGFloat(800.0)
     
-    init(size:CGSize, level:Int, sceneManager:GameViewController, playerProgress:PlayerProfile) {
+    init(size:CGSize, level:Int, sceneManager:GameViewController, playerProgress:PlayerProfile, isDevicePhone: Bool) {
         self.sceneManager = sceneManager
+        self.isPhone = isDevicePhone
         self.currentGameLevel = level
         self.playerProfile = playerProgress
         self.multiplierXP = playerProgress.xpMultiplier
@@ -222,6 +224,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func addEnemy() {
         // create sprite
         let enemy = SKSpriteNode(imageNamed: "enemy")
+        if (isPhone) {
+            enemy.setScale(2)
+        }
         
         // apply physics body to the sprite
         enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
