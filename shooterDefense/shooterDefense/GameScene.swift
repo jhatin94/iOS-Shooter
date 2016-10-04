@@ -115,6 +115,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         earthImg.zPosition = -1
         addChild(earthImg)
         
+        let motherImg = SKSpriteNode(imageNamed: "mothership.png")
+        motherImg.position = CGPoint(x: frame.size.width / 2, y: frame.size.height-100)
+        motherImg.zPosition = -1
+        addChild(motherImg)
+        
         player.position = CGPoint(x:playableRect.midX + size.width/2, y:playableRect.midY+200)
         player.name = "ship"
         player.setScale(2)

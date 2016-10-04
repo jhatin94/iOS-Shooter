@@ -147,6 +147,7 @@ class MenuScene: SKScene {
         
         // JHAT: Transition to level select
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 65, text: "Play", name: "levelSelect"))
+        
     }
     
     func drawStoryMenu() {
