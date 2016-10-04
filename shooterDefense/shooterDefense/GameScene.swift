@@ -50,9 +50,10 @@ struct PhysicsCategory {
     static let Projectile: UInt32 = 0b10      // 2
 }
 
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate {
     let sceneManager: GameViewController
     var isPhone: Bool = false
+    var isGamePaused: Bool = false
     var currentGameLevel: Int
     let player = SKSpriteNode(imageNamed: "ship")
     var enemiesKilled = 0
@@ -61,6 +62,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var enemiesEscaped = 0
     var score = 0
     var canShoot = true
+    var superActive = true
     let playerProfile: PlayerProfile
     
     let destroyedLabel = SKLabelNode(fontNamed: "Pixeled")
@@ -69,6 +71,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let playerXPToNextLabel = SKLabelNode(fontNamed: "Pixeled")
     let shotStatus = SKLabelNode(fontNamed: "Pixeled")
     let endlessScore = SKLabelNode(fontNamed: "Pixeled")
+    var pauseTitle = SKLabelNode(fontNamed: "Pixeled")
+    var returnToMain = SKLabelNode(fontNamed: "Pixeled")
+    let superStatus = SKLabelNode(fontNamed: "Pixeled")
     var enemySpawns: [CGPoint] = []
     var loseAction: SKAction
     var finishActionMove: SKAction
@@ -106,21 +111,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         /* Setup your scene here */
         backgroundColor = SKColor.black
+        initGestures()
         
         let backgroundMenu = SKSpriteNode(imageNamed: "background")
         backgroundMenu.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
         backgroundMenu.zPosition = -2
-        addChild(backgroundMenu)
+        self.addChild(backgroundMenu)
         
         let earthImg = SKSpriteNode(imageNamed: "earth.png")
         earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
         earthImg.zPosition = -1
-        addChild(earthImg)
+        self.addChild(earthImg)
         
         let motherImg = SKSpriteNode(imageNamed: "mothership.png")
         motherImg.position = CGPoint(x: frame.size.width / 2, y: frame.size.height-100)
         motherImg.zPosition = -1
-        addChild(motherImg)
+        self.addChild(motherImg)
         
         player.position = CGPoint(x:playableRect.midX + size.width/2, y:playableRect.midY+200)
         player.name = "ship"
@@ -131,7 +137,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.gravity = CGVector(dx: 0, dy: 0) // no gravity
         physicsWorld.contactDelegate = self
         
-        // create labels
+        // update labels
         self.addChild(updateLabelProperties(labelToModify: destroyedLabel, pos: CGPoint(x: 5, y: self.frame.height-5), vAl: .top, hAl: .left, text: "Enemies: \((numToWin-enemiesKilled))", fontSize: 30, name: "desLab"))
         
         self.addChild(updateLabelProperties(labelToModify: escapedLabel, pos: CGPoint(x: self.frame.width - 5, y: self.frame.height - 5), vAl: .top, hAl: .right, text: "Escaped: \(enemiesEscaped)", fontSize: 30, name: "esLab"))
@@ -143,10 +149,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(updateLabelProperties(labelToModify: shotStatus, pos: CGPoint(x: self.frame.width - 50, y: 75), vAl: .bottom, hAl: .right, text: "Fire", fontSize: 30, name: "shotStatus"))
         
+        self.addChild(updateLabelProperties(labelToModify: superStatus, pos: CGPoint(x: 50, y: 75), vAl: .bottom, hAl: .left, text: "Super Ready", fontSize: 30, name: "supStatus"))
+        
         // update endless label if in endless
         if (currentGameLevel < 1) {
             self.addChild(updateLabelProperties(labelToModify: endlessScore, pos: CGPoint(x: self.frame.width/2, y: 50), vAl: .bottom, hAl: .center, text: "Score: \(score)", fontSize: 30, name: "scoreLab"))
         }
+        
+        // create pause labels -- TODO: Get labels to appear/disappear on pause
+        //pauseTitle = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
+        //addChild(pauseTitle)
+        
+        //returnToMain = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 - 100), fontSize: 36, text: "Return to Main Menu", name: "pausedToMain")
+        //addChild(returnToMain)
         
         // TODO: add BGM
         //let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
@@ -163,7 +178,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.loseAction = SKAction.run() {
             self.enemiesEscaped += 1
             self.updateLabel(self.escapedLabel)
-            if (self.enemiesEscaped >= self.numToLose) {                
+            if (self.enemiesEscaped >= self.numToLose) {
                 if (self.currentGameLevel < 1) { // If endless (level 0), save hiscore with scenemanager
                     self.sceneManager.setEndlessHiScore(endlessScore: self.score, playerProfile: self.playerProfile)
                 }
@@ -184,7 +199,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 SKAction.run(addEnemy),
                 SKAction.wait(forDuration: 1.0 * levelSpawnTimeScale)
                 ])
-            ))
+        ))
     }
     
     func random() -> CGFloat {
@@ -213,6 +228,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let status = canShoot ? "Fire" : "Reloading"
             label.text = "\(status)"
             break
+        case "supStatus"?:
+            let supStatus = superActive ? "Super Ready" : "Recharging"
+            label.text = "\(supStatus)"
+            break
         case "scoreLab"?:
             label.text = "Score: \(score)"
             break
@@ -224,6 +243,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func addEnemy() {
         // create sprite
         let enemy = SKSpriteNode(imageNamed: "enemy")
+        enemy.name = "enemy"
         if (isPhone) {
             enemy.setScale(2)
         }
@@ -252,6 +272,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         enemy.run(SKAction.sequence(getPath(currentGameLevel, spawn: enemy.position, movementScale: actualDuration)))
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // Choose a touch to work with if game is paused
+        if (isGamePaused) {
+            guard let touch = touches.first else { return };
+            let touchLocation = touch.location(in: self)
+            let node = self.atPoint(touchLocation)
+            
+            if (node.name == "pausedToMain") {
+                togglePause()
+                sceneManager.loadMenu(menuToLoad: MenuScene.MenuType.main)
+            }
+        }
+    }
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Choose a touch to work with
         guard let touch = touches.first else { return };
@@ -260,9 +294,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // set up initial location of projectile
         let projectile = SKSpriteNode(imageNamed: "bullet")
+        projectile.name = "bullet"
         projectile.position = player.position
         
-        // apply physics body to prjectile sprite
+        // apply physics body to projectile sprite
         projectile.physicsBody = SKPhysicsBody(circleOfRadius: projectile.size.width / 2)
         projectile.physicsBody?.isDynamic = true
         projectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
@@ -297,11 +332,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
-        // add particle emitter to projectiles -- TODO: implement emitter somewhere!
-        //let emitter = SKEmitterNode(fileNamed: "trail")!
-        //emitter.position = CGPointMake(player.position.x - 5, player.position.y)
-        //addChild(emitter)
-        
         // trigger sound effect
         run(SKAction.playSoundFileNamed("8-bit-shot.wav", waitForCompletion: false))
         
@@ -322,7 +352,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let actionMove = SKAction.move(to: target, duration: TimeInterval(bulletSpeed))
         let actionMoveDone = SKAction.removeFromParent()
         projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
-        //emitter.runAction(SKAction.sequence([actionMove, actionMoveDone]))
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -339,13 +368,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        guard firstBody.node != nil && secondBody.node != nil else { 
+        guard firstBody.node != nil && secondBody.node != nil else {
             return
         }
         
         // check if projectile and enemy collided
         if ((firstBody.categoryBitMask & PhysicsCategory.Enemy != 0) && (secondBody.categoryBitMask & PhysicsCategory.Projectile != 0)) {
-            projectileDidCollideWithEnemy(firstBody.node as! SKSpriteNode, enemy: secondBody.node as! SKSpriteNode)
+            let body1 = firstBody.node as! SKSpriteNode
+            var body2 = secondBody.node as? SKSpriteNode
+            if (body2 == nil) { // JHAT: check if above cast failed, if so emitter collision
+                body2 = body1 // pass in enemy twice
+            }
+            projectileDidCollideWithEnemy(body1, enemy: body2!)
         }
     }
     
@@ -377,7 +411,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true, score: score)
         }
         run(SKAction.playSoundFileNamed("8-bit-explosion.wav", waitForCompletion: false))
-        projectile.removeFromParent()
+        if ((projectile.name == "enemy" && enemy.name != "enemy") || (projectile.name != "enemy" && enemy.name == "enemy")) { // if enemy was passed in twice only remove it once
+           projectile.removeFromParent()
+        }
         enemy.removeFromParent()
     }
     
@@ -449,7 +485,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let actionMove6 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
             return [actionMove6, loseAction, finishActionMove]
         default:
-                return []
+            return []
         }
     }
     
@@ -466,6 +502,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             hintToShow = "Tilt the device to move"
             break
         case 3: //TODO: Add more level specific hints
+            hintToShow = "Triple tap to fire super"
             break
         case 4:
             break
@@ -488,6 +525,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         updateLabel(shotStatus)
     }
     
+    func allowSuper() { // used to enable super ability
+        superActive = true
+        updateLabel(superStatus)
+    }
+    
     func increaseScore(baseScore: Int) { // used to keep track of endless score
         score += (baseScore * multiplierXP)
     }
@@ -501,6 +543,66 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         lastUpdateTime = currentTime
     }
     
+    func fireSuper() {
+        if (superActive) {
+            superActive = false
+            updateLabel(superStatus)
+            
+            // fire super
+            let emitter = SKEmitterNode(fileNamed: "trail")!
+            emitter.name = "super"
+            emitter.position = CGPoint(x: player.position.x - 5, y: player.position.y)
+            emitter.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 1000, height: 20)) // emitter dimensions
+            emitter.physicsBody?.isDynamic = true
+            emitter.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
+            emitter.physicsBody?.contactTestBitMask = PhysicsCategory.Enemy
+            emitter.physicsBody?.collisionBitMask = PhysicsCategory.None
+            emitter.physicsBody?.usesPreciseCollisionDetection = true
+            addChild(emitter)
+            
+            let fireRate = 61.0 - (TimeInterval(playerProfile.playerLevel * 2)) // set cooldown
+            _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowSuper), userInfo: nil, repeats: false)
+            
+            // set actions and run
+            let actionMove = SKAction.move(to: CGPoint(x: player.position.x, y: self.frame.height + 200), duration: 2.0)
+            let actionMoveDone = SKAction.removeFromParent()
+            emitter.run(SKAction.sequence([actionMove, actionMoveDone]))
+        }
+    }
+    
+    // create gesture functions
+    func initGestures() {
+        // setup pause double touch tap
+        let pauseTap = UITapGestureRecognizer(target: self, action: #selector(togglePause))
+        pauseTap.numberOfTapsRequired = 2
+        pauseTap.numberOfTouchesRequired = 2
+        pauseTap.delegate = self
+        view!.addGestureRecognizer(pauseTap)
+        
+        // setup super triple tap
+        let superTap = UITapGestureRecognizer(target: self, action: #selector(fireSuper))
+        superTap.numberOfTapsRequired = 3
+        superTap.numberOfTouchesRequired = 1
+        superTap.delegate = self
+        view!.addGestureRecognizer(superTap)
+    }
+    
+    // pause function
+    func togglePause() {
+        isGamePaused = !isGamePaused
+        if (isGamePaused) {
+            physicsWorld.speed = 0.0
+            self.view?.isPaused = true
+            MotionMonitor.sharedMotionMonitor.stopUpdates()
+        }
+        else {
+            self.view?.isPaused = false
+            physicsWorld.speed = 1.0
+            MotionMonitor.sharedMotionMonitor.startUpdates()
+        }
+    }
+    
+    // movement from device tilt
     func movePlayer(dt:CGFloat){
         let gravityVector = MotionMonitor.sharedMotionMonitor.gravityVectorNormalized
         var xVelocity = gravityVector.dx
@@ -517,7 +619,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             playerSprite.position.x += xVelocity * shipMaxSpeedPerSecond * dt
             
             if (playerSprite.constraints == nil) {
-                let xRange = SKRange(lowerLimit:100,upperLimit:size.width - (100)) // TODO: test limits
+                let xRange = SKRange(lowerLimit:100,upperLimit:size.width - (100))
                 let yRange = SKRange(lowerLimit:0,upperLimit:size.height)
                 //sprite.constraints = [SKConstraint.positionX(xRange,Y:yRange)] // iOS 9
                 playerSprite.constraints = [SKConstraint.positionX(xRange,y:yRange)]
@@ -527,10 +629,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //Mark Game Loop
     override func update(_ currentTime: TimeInterval){
-        if (currentGameLevel != 1) {
+        if (currentGameLevel != 1 && !isGamePaused) {
             calculateDeltaTime(currentTime: currentTime)
             movePlayer(dt: CGFloat(dt))
         }
     }
 }
-

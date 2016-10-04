@@ -272,17 +272,19 @@ class MenuScene: SKScene {
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 300), fontSize: 40, text: "Tilt Phone to Move Ship", name: "instructions2"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 100), fontSize: 40, text: "Destroy all Pesky Aliens ", name: "instructions3"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 40, text: "Two finger double tap to pause", name: "instructions3"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 40, text: "to advance to the Next Level", name: "instructions4"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 50), fontSize: 40, text: "Destroy all Pesky Aliens ", name: "instructions4"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 40, text: " If Five Aliens get by you", name: "instructions5"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 50), fontSize: 40, text: "to advance to the Next Level", name: "instructions5"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 300), fontSize: 40, text: "Earth will fall", name: "instructions6"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 150), fontSize: 40, text: " If Five Aliens get by you", name: "instructions6"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 500), fontSize: 40, text: " The more enemies you kill", name: "instructions7"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 250), fontSize: 40, text: "Earth will fall", name: "instructions7"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 600), fontSize: 40, text: "The better your ship gets", name: "instructions8"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 450), fontSize: 40, text: " The more enemies you kill", name: "instructions8"))
+        
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 550), fontSize: 40, text: "The better your ship gets", name: "instructions9"))
         
         // return to main menu
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "instToMain"))
