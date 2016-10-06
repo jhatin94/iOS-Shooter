@@ -164,9 +164,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         //addChild(returnToMain)
         
         // TODO: add BGM
-        //let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
-        //backgroundMusic.autoplayLooped = true
-        //addChild(backgroundMusic)
+        let backgroundMusic = SKAudioNode(fileNamed: "8-bit.mp3")
+        backgroundMusic.autoplayLooped = true
+        addChild(backgroundMusic)
         
         // JHAT: Display tutorial pop-up based on level
         if (playerProfile.highestLevelCompleted < currentGameLevel || currentGameLevel == 0) {
