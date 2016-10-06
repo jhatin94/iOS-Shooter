@@ -67,6 +67,7 @@ func createPixeledLabel(pos: CGPoint, fontSize: CGFloat, text: String, name: Str
     label.text = text
     label.name = name
     label.fontColor = SKColor.white
+    label.zPosition = 5
     return label
 }
 
@@ -76,6 +77,7 @@ func createCustomLabel(fontString: String, pos: CGPoint, fontSize: CGFloat, text
     label.fontSize = fontSize
     label.text = text
     label.name = name
+    label.zPosition = 5
     label.fontColor = color
     return label
 }
@@ -88,6 +90,7 @@ func updateLabelProperties(labelToModify: SKLabelNode, pos: CGPoint, vAl: SKLabe
     labelToModify.text = text
     labelToModify.fontSize = fontSize
     labelToModify.color = SKColor.white
+    labelToModify.zPosition = 5
     if (labelToModify.fontName != "Pixeled") {
         labelToModify.fontName = "Pixeled"
     }

@@ -51,7 +51,7 @@ class GameViewController: UIViewController {
         skView.presentScene(menuScene!, transition: reveal)
     }
     
-    func loadGameScene(lvl:Int) { // JHAT: displays game state         clearMenuSceneFromMemory()
+    func loadGameScene(lvl:Int) { // JHAT: displays game state
         clearLevelFinishedSceneFromMemory()
         clearMenuSceneFromMemory()
         gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!, isDevicePhone: isPhone!)
@@ -155,6 +155,8 @@ class GameViewController: UIViewController {
         }
     }
     
+    
+    // MARK - profile modifiers
     func enemyKilled(playerProfile: PlayerProfile) {
         playerProfile.totalKills += 1
     }

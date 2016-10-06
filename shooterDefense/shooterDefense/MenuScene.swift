@@ -272,7 +272,7 @@ class MenuScene: SKScene {
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 300), fontSize: 40, text: "Tilt Phone to Move Ship", name: "instructions2"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 40, text: "Two finger double tap to pause", name: "instructions3"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 40, text: "Tap with three fingers to pause", name: "instructions3"))
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 50), fontSize: 40, text: "Destroy all Pesky Aliens ", name: "instructions4"))
         

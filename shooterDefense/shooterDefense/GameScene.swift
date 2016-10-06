@@ -130,6 +130,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         
         player.position = CGPoint(x:playableRect.midX + size.width/2, y:playableRect.midY+200)
         player.name = "ship"
+        player.zPosition = 1
         player.setScale(2)
         self.addChild(player)
         
@@ -156,14 +157,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             self.addChild(updateLabelProperties(labelToModify: endlessScore, pos: CGPoint(x: self.frame.width/2, y: 50), vAl: .bottom, hAl: .center, text: "Score: \(score)", fontSize: 30, name: "scoreLab"))
         }
         
-        // create pause labels -- TODO: Get labels to appear/disappear on pause
-        //pauseTitle = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
-        //addChild(pauseTitle)
+        // pause create labels
+        pauseTitle = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
         
-        //returnToMain = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 - 100), fontSize: 36, text: "Return to Main Menu", name: "pausedToMain")
-        //addChild(returnToMain)
+        returnToMain = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 - 100), fontSize: 36, text: "Return to Main Menu", name: "pausedToMain")
         
-        // TODO: add BGM
+        // Add BGM to scene
         let backgroundMusic = SKAudioNode(fileNamed: "8-bit.mp3")
         backgroundMusic.autoplayLooped = true
         addChild(backgroundMusic)
@@ -245,7 +244,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         let enemy = SKSpriteNode(imageNamed: "enemy")
         enemy.name = "enemy"
         if (isPhone) {
-            enemy.setScale(2)
+            enemy.setScale(1.5)
         }
         
         // apply physics body to the sprite
@@ -258,6 +257,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         // set enemy position to spawn based on level
         let spawnPoint:Int = Int(random(min: 0, max: CGFloat(enemySpawns.count)))
         enemy.position = enemySpawns[spawnPoint]
+        enemy.zPosition = 0
         
         // add enemy to the scene
         addChild(enemy)
@@ -287,71 +287,74 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // Choose a touch to work with
-        guard let touch = touches.first else { return };
-        
-        let touchLocation = touch.location(in: self)
-        
-        // set up initial location of projectile
-        let projectile = SKSpriteNode(imageNamed: "bullet")
-        projectile.name = "bullet"
-        projectile.position = player.position
-        
-        // apply physics body to projectile sprite
-        projectile.physicsBody = SKPhysicsBody(circleOfRadius: projectile.size.width / 2)
-        projectile.physicsBody?.isDynamic = true
-        projectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
-        projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Enemy
-        projectile.physicsBody?.collisionBitMask = PhysicsCategory.None
-        projectile.physicsBody?.usesPreciseCollisionDetection = true
-        
-        // determine offset of location of projectile
-        let offset = touchLocation - projectile.position;
-        
-        // do not allow down shooting
-        if (offset.y < 0) { return }
-        
-        // JHAT: calculate touch angle
-        let outerAngle = atan(offset.y/offset.x) * CGFloat(180 / M_PI)
-        let innerAngle = outerAngle > 0 ? 90 - outerAngle : -90 - outerAngle
-        
-        // JHAT: determine if touch is within fire range (Field of View)
-        let currentFOV: CGFloat = CGFloat(playerProfile.playerLevel * 5)
-        if (abs(innerAngle) > currentFOV) {
-            return
+        if (!isGamePaused) { // don't allow firing while paused
+            // Choose a touch to work with
+            guard let touch = touches.first else { return };
+            
+            let touchLocation = touch.location(in: self)
+            
+            // set up initial location of projectile
+            let projectile = SKSpriteNode(imageNamed: "bullet")
+            projectile.name = "bullet"
+            projectile.position = player.position
+            projectile.zPosition = 0
+            
+            // apply physics body to projectile sprite
+            projectile.physicsBody = SKPhysicsBody(circleOfRadius: projectile.size.width / 2)
+            projectile.physicsBody?.isDynamic = true
+            projectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
+            projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Enemy
+            projectile.physicsBody?.collisionBitMask = PhysicsCategory.None
+            projectile.physicsBody?.usesPreciseCollisionDetection = true
+            
+            // determine offset of location of projectile
+            let offset = touchLocation - projectile.position;
+            
+            // do not allow down shooting
+            if (offset.y < 0) { return }
+            
+            // JHAT: calculate touch angle
+            let outerAngle = atan(offset.y/offset.x) * CGFloat(180 / M_PI)
+            let innerAngle = outerAngle > 0 ? 90 - outerAngle : -90 - outerAngle
+            
+            // JHAT: determine if touch is within fire range (Field of View)
+            let currentFOV: CGFloat = CGFloat(playerProfile.playerLevel * 5)
+            if (abs(innerAngle) > currentFOV) {
+                return
+            }
+            
+            // if chost is valid, compare against fire rate timer
+            if (canShoot) {
+                canShoot = false
+                updateLabel(shotStatus)
+                let fireRate = 2.15 - (TimeInterval(playerProfile.playerLevel) * 0.15)
+                _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowShooting), userInfo: nil, repeats: false)
+            }
+            else {
+                return
+            }
+            
+            // trigger sound effect
+            run(SKAction.playSoundFileNamed("8-bit-shot.wav", waitForCompletion: false))
+            
+            // add projectile
+            addChild(projectile)
+            
+            // get the direction to shoot it
+            let direction = offset.normalized();
+            
+            // have distance be off screen, eventually. Distance increases with player level
+            let range = direction * CGFloat(playerProfile.playerLevel * 100)
+            
+            // add range to current position
+            let target = range + projectile.position;
+            
+            // create the actions
+            let bulletSpeed = (playerProfile.playerLevel * 100) > 1000 ? 2.0 : 1.0 // scale bullet speed based on range
+            let actionMove = SKAction.move(to: target, duration: TimeInterval(bulletSpeed))
+            let actionMoveDone = SKAction.removeFromParent()
+            projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
         }
-        
-        // if chost is valid, compare against fire rate timer
-        if (canShoot) {
-            canShoot = false
-            updateLabel(shotStatus)
-            let fireRate = 2.15 - (TimeInterval(playerProfile.playerLevel) * 0.15)
-            _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowShooting), userInfo: nil, repeats: false)
-        }
-        else {
-            return
-        }
-        
-        // trigger sound effect
-        run(SKAction.playSoundFileNamed("8-bit-shot.wav", waitForCompletion: false))
-        
-        // add projectile
-        addChild(projectile)
-        
-        // get the direction to shoot it
-        let direction = offset.normalized();
-        
-        // have distance be off screen, eventually. Distance increases with player level
-        let range = direction * CGFloat(playerProfile.playerLevel * 100)
-        
-        // add range to current position
-        let target = range + projectile.position;
-        
-        // create the actions
-        let bulletSpeed = (playerProfile.playerLevel * 100) > 1000 ? 2.0 : 1.0 // scale bullet speed based on range
-        let actionMove = SKAction.move(to: target, duration: TimeInterval(bulletSpeed))
-        let actionMoveDone = SKAction.removeFromParent()
-        projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -502,7 +505,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             hintToShow = "Tilt the device to move"
             break
         case 3: //TODO: Add more level specific hints
-            hintToShow = "Triple tap to fire super"
+            hintToShow = "Two finger tap to fire super"
             break
         case 4:
             break
@@ -544,14 +547,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     }
     
     func fireSuper() {
-        if (superActive) {
+        if (superActive && !isGamePaused) {
             superActive = false
             updateLabel(superStatus)
             
             // fire super
             let emitter = SKEmitterNode(fileNamed: "trail")!
             emitter.name = "super"
-            emitter.position = CGPoint(x: player.position.x - 5, y: player.position.y)
+            emitter.zPosition = 0
+            emitter.position = CGPoint(x: self.frame.width / 2, y: player.position.y)
             emitter.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 1000, height: 20)) // emitter dimensions
             emitter.physicsBody?.isDynamic = true
             emitter.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
@@ -560,11 +564,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             emitter.physicsBody?.usesPreciseCollisionDetection = true
             addChild(emitter)
             
-            let fireRate = 61.0 - (TimeInterval(playerProfile.playerLevel * 2)) // set cooldown
+            let fireRate = 62.0 - (TimeInterval(playerProfile.playerLevel * 2)) // set cooldown
             _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowSuper), userInfo: nil, repeats: false)
             
             // set actions and run
-            let actionMove = SKAction.move(to: CGPoint(x: player.position.x, y: self.frame.height + 200), duration: 2.0)
+            let actionMove = SKAction.move(to: CGPoint(x: self.frame.width / 2, y: self.frame.height + 200), duration: 2.0)
             let actionMoveDone = SKAction.removeFromParent()
             emitter.run(SKAction.sequence([actionMove, actionMoveDone]))
         }
@@ -572,17 +576,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     
     // create gesture functions
     func initGestures() {
-        // setup pause double touch tap
+        // setup pause three finger touch
         let pauseTap = UITapGestureRecognizer(target: self, action: #selector(togglePause))
-        pauseTap.numberOfTapsRequired = 2
-        pauseTap.numberOfTouchesRequired = 2
+        pauseTap.numberOfTapsRequired = 1
+        pauseTap.numberOfTouchesRequired = 3
         pauseTap.delegate = self
         view!.addGestureRecognizer(pauseTap)
         
-        // setup super triple tap
+        // setup super two finger touch
         let superTap = UITapGestureRecognizer(target: self, action: #selector(fireSuper))
-        superTap.numberOfTapsRequired = 3
-        superTap.numberOfTouchesRequired = 1
+        superTap.numberOfTapsRequired = 1
+        superTap.numberOfTouchesRequired = 2
         superTap.delegate = self
         view!.addGestureRecognizer(superTap)
     }
@@ -590,15 +594,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     // pause function
     func togglePause() {
         isGamePaused = !isGamePaused
-        if (isGamePaused) {
-            physicsWorld.speed = 0.0
-            self.view?.isPaused = true
-            MotionMonitor.sharedMotionMonitor.stopUpdates()
-        }
-        else {
+        showHidePauseLabels(show: isGamePaused)
+    }
+    
+    // toggle pause menu
+    func showHidePauseLabels(show: Bool) {
+        if (!show) { // if hiding, remove old appended labels
+            pauseTitle.removeFromParent()
+            returnToMain.removeFromParent()
+            
+            // pause gameScene and motion updates
             self.view?.isPaused = false
             physicsWorld.speed = 1.0
             MotionMonitor.sharedMotionMonitor.startUpdates()
+        }
+        // if showing, add to scene
+        else {
+            addChild(pauseTitle)
+            addChild(returnToMain)
         }
     }
     
@@ -632,6 +645,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         if (currentGameLevel != 1 && !isGamePaused) {
             calculateDeltaTime(currentTime: currentTime)
             movePlayer(dt: CGFloat(dt))
+        }
+        
+        if (isGamePaused) {
+            physicsWorld.speed = 0.0
+            self.view?.isPaused = true
+            MotionMonitor.sharedMotionMonitor.stopUpdates()
         }
     }
 }
