@@ -574,6 +574,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let actionMove = SKAction.move(to: CGPoint(x: self.frame.width / 2, y: self.frame.height + 200), duration: 2.0)
             let actionMoveDone = SKAction.removeFromParent()
             emitter.run(SKAction.sequence([actionMove, actionMoveDone]))
+            run(SKAction.playSoundFileNamed("superNoise.mp3", waitForCompletion: false))
         }
     }
     

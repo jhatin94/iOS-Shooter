@@ -42,9 +42,11 @@ class LevelFinishedScene: SKScene {
             // create try again or continue label
             if (won) {
                 addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Next Level", name: "nextLevel"))
+                run(SKAction.playSoundFileNamed("winNoise.mp3", waitForCompletion: false))
             }
             else {
                 addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Try Again", name: "replayLevel"))
+                run(SKAction.playSoundFileNamed("loseNoise.mp3", waitForCompletion: false))
             }
         }
         // Handle Endless (0) and end of story (5) cases
@@ -56,6 +58,7 @@ class LevelFinishedScene: SKScene {
             
             // create try endless label
             addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Try Endless Mode", name: "endlessLevel"))
+            run(SKAction.playSoundFileNamed("winNoise.mp3", waitForCompletion: false))
         }
         else if (levelFinished < 1) {
             addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: "Earth has fallen!", name: "endlessOver"))
@@ -69,6 +72,7 @@ class LevelFinishedScene: SKScene {
             addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 60, text: "High Score: \(playerProfile.endlessHiScore)", name: "endlessHiScore"))
             
             addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 40, text: "Try Again", name: "replayEndless"))
+            run(SKAction.playSoundFileNamed("loseNoise.mp3", waitForCompletion: false))
         }        
         
         // return to main menu text -- always on screen
