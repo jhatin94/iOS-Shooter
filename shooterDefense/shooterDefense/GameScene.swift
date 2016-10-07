@@ -51,6 +51,7 @@ struct PhysicsCategory {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate {
+    var earthImg = SKSpriteNode(imageNamed: "earth.png")
     let sceneManager: GameViewController
     var isPhone: Bool = false
     var isGamePaused: Bool = false
@@ -118,7 +119,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         backgroundMenu.zPosition = -2
         self.addChild(backgroundMenu)
         
-        let earthImg = SKSpriteNode(imageNamed: "earth.png")
+        earthImg = SKSpriteNode(imageNamed: "earth.png")
         earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
         earthImg.zPosition = -1
         self.addChild(earthImg)
@@ -156,6 +157,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         if (currentGameLevel < 1) {
             self.addChild(updateLabelProperties(labelToModify: endlessScore, pos: CGPoint(x: self.frame.width/2, y: 50), vAl: .bottom, hAl: .center, text: "Score: \(score)", fontSize: 30, name: "scoreLab"))
         }
+        
+        
         
         // pause create labels
         pauseTitle = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
@@ -652,5 +655,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             self.view?.isPaused = true
             MotionMonitor.sharedMotionMonitor.stopUpdates()
         }
+        
+        //add earth
+        if (enemiesEscaped == 1){
+            earthImg.removeFromParent()
+            earthImg = SKSpriteNode(imageNamed: "earth2.png")
+            earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
+            earthImg.zPosition = -1
+            self.addChild(earthImg)
+        }
+        if (enemiesEscaped == 2){
+            earthImg.removeFromParent()
+            earthImg = SKSpriteNode(imageNamed: "earth3.png")
+            earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
+            earthImg.zPosition = -1
+            self.addChild(earthImg)
+        }
+        if (enemiesEscaped == 4){
+            earthImg.removeFromParent()
+            earthImg = SKSpriteNode(imageNamed: "earth4.png")
+            earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
+            earthImg.zPosition = -1
+            self.addChild(earthImg)
+        }
+       
+
     }
 }
