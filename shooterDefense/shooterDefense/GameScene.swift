@@ -574,7 +574,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let actionMove = SKAction.move(to: CGPoint(x: self.frame.width / 2, y: self.frame.height + 200), duration: 2.0)
             let actionMoveDone = SKAction.removeFromParent()
             emitter.run(SKAction.sequence([actionMove, actionMoveDone]))
-            run(SKAction.playSoundFileNamed("superNoise.mp3", waitForCompletion: false))
+            run(SKAction.playSoundFileNamed("superSound.mp3", waitForCompletion: false))
         }
     }
     
@@ -672,14 +672,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             earthImg.zPosition = -1
             self.addChild(earthImg)
         }
-        if (enemiesEscaped == 4){
+        if (enemiesEscaped == 3){
             earthImg.removeFromParent()
             earthImg = SKSpriteNode(imageNamed: "earth4.png")
             earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
             earthImg.zPosition = -1
             self.addChild(earthImg)
         }
-       
+        if (enemiesEscaped == 4){
+            earthImg.removeFromParent()
+            earthImg = SKSpriteNode(imageNamed: "earth5.png")
+            earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
+            earthImg.zPosition = -1
+            self.addChild(earthImg)
+        }
+
 
     }
 }
