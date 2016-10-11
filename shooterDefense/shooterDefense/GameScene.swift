@@ -79,6 +79,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     var loseAction: SKAction
     var finishActionMove: SKAction
     var ySpawn: CGFloat
+    var ySpawn2: CGFloat
     let ENEMY_HEIGHT_WIDTH: CGFloat = 42.0
     let BASE_XP_PER_KILL = 2
     var multiplierXP: Int
@@ -100,6 +101,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         self.loseAction = SKAction.run {}
         self.finishActionMove = SKAction.run {}
         self.ySpawn = size.height + ENEMY_HEIGHT_WIDTH // all enemies will spawn at same yPos
+        self.ySpawn2 = size.height + ENEMY_HEIGHT_WIDTH - 300 // all enemies will spawn at same yPos
         super.init(size: size)
         enemySpawns = getSpawnPoints(level)
     }
@@ -459,8 +461,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         case 5:
             numToWin = 50
             // TODO: Create final spawns
-            let xSpawn1 = size.width / 2
-            return [CGPoint(x: xSpawn1, y: ySpawn)]
+            let x7 = size.width / 8
+            let x8 = size.width * 2 / 8
+            let x9 = size.width * 3 / 8
+            let x10 = size.width * 4 / 8
+            let x11 = size.width * 5 / 8
+            let x12 = size.width * 6 / 8
+            let x13 = size.width * 7 / 8
+            let x14 = size.width + 100
+            let x15 = size.width - size.width - 100
+            return [CGPoint(x: x7, y: ySpawn), CGPoint(x: x8, y: ySpawn), CGPoint(x: x9, y: ySpawn), CGPoint(x: x10, y: ySpawn),CGPoint(x: x11, y: ySpawn), CGPoint(x: x12, y: ySpawn),CGPoint(x: x13, y: ySpawn), CGPoint(x: x14, y: ySpawn2), CGPoint(x: x15, y: ySpawn2)]
         default:
             return [CGPoint(x: 0, y: 0)]
         }
@@ -487,9 +497,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let actionMove5 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
             return [actionMove5, loseAction, finishActionMove]
         case 5:
-            // TODO: create final paths
-            let actionMove6 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
-            return [actionMove6, loseAction, finishActionMove]
+            let actionMove1 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2 + (500)), duration: TimeInterval(movementScale))
+            let actionMove2 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove1, actionMove2, loseAction, finishActionMove]
         default:
             return []
         }

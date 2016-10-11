@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "shooterDefense/GameScene.swift"
-            timestampString = "496429102.147681"
+            timestampString = "497892879.017632"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
             landmarkName = "GameScene"
             landmarkType = "3">
          </BreakpointContent>
