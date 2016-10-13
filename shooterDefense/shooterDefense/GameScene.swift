@@ -101,7 +101,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         self.loseAction = SKAction.run {}
         self.finishActionMove = SKAction.run {}
         self.ySpawn = size.height + ENEMY_HEIGHT_WIDTH // all enemies will spawn at same yPos
-        self.ySpawn2 = size.height + ENEMY_HEIGHT_WIDTH - 300 // all enemies will spawn at same yPos
+        self.ySpawn2 = size.height + ENEMY_HEIGHT_WIDTH - 300 // all side enemies will spawn at same yPos
         super.init(size: size)
         enemySpawns = getSpawnPoints(level)
     }
@@ -160,8 +160,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             self.addChild(updateLabelProperties(labelToModify: endlessScore, pos: CGPoint(x: self.frame.width/2, y: 50), vAl: .bottom, hAl: .center, text: "Score: \(score)", fontSize: 30, name: "scoreLab"))
         }
         
-        
-        
         // pause create labels
         pauseTitle = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
         
@@ -182,6 +180,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         self.loseAction = SKAction.run() {
             self.enemiesEscaped += 1
             self.updateLabel(self.escapedLabel)
+            self.earthHit()
             if (self.enemiesEscaped >= self.numToLose) {
                 if (self.currentGameLevel < 1) { // If endless (level 0), save hiscore with scenemanager
                     self.sceneManager.setEndlessHiScore(endlessScore: self.score, playerProfile: self.playerProfile)
@@ -426,83 +425,130 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     }
     
     // Utility functions
-    func getSpawnPoints(_ level: Int) -> [CGPoint] {
+    func getSpawnPoints(_ level: Int) -> [CGPoint] { // vars x + level num + spawn num
         switch(level) { // JHAT: return spawn based on level
         case 0: // endless mode spawns
+            var spawns = getSpawnPoints(1)
+            
+            // merge all spawns into one collection
+            spawns.append(contentsOf: getSpawnPoints(2))
+            spawns.append(contentsOf: getSpawnPoints(3))
+            spawns.append(contentsOf: getSpawnPoints(4))
+            spawns.append(contentsOf: getSpawnPoints(5))
             numToWin = 9999
-            // TODO: Add more spawns
-            let xSpawn = size.width / 2
-            return [CGPoint(x: xSpawn, y: ySpawn)]
+            
+            return spawns
         case 1: // determine where to spawn the enemy on the X and Y axis
             numToWin = 5
-            let actualX = size.width / 2
-            return [CGPoint(x: actualX, y: ySpawn)]
+            let x11 = size.width / 2
+            return [CGPoint(x: x11, y: ySpawn)]
         case 2:
             numToWin = 15
-            let x1 = size.width / 4
-            let x2 = size.width * 3 / 4
-            return [CGPoint(x: x1, y: ySpawn), CGPoint(x: x2, y: ySpawn)]
+            let x21 = size.width / 4
+            let x22 = size.width * 3 / 4
+            return [CGPoint(x: x21, y: ySpawn), CGPoint(x: x22, y: ySpawn)]
         case 3:
             numToWin = 25
-            let x3 = size.width / 4
-            let x4 = size.width * 3 / 4
-            let x5 = size.width / 2
-            return [CGPoint(x: x3, y: ySpawn), CGPoint(x: x4, y: ySpawn), CGPoint(x: x5, y: ySpawn)]
+            let x31 = size.width / 4
+            let x32 = size.width * 3 / 4
+            let x33 = size.width / 2
+            return [CGPoint(x: x31, y: ySpawn), CGPoint(x: x32, y: ySpawn), CGPoint(x: x33, y: ySpawn)]
         case 4:
             numToWin = 35
-            let x7 = size.width / 8
-            let x8 = size.width * 2 / 8
-            let x9 = size.width * 3 / 8
-            let x10 = size.width * 4 / 8
-            let x11 = size.width * 5 / 8
-            let x12 = size.width * 6 / 8
-            let x13 = size.width * 7 / 8
-            return [CGPoint(x: x7, y: ySpawn), CGPoint(x: x8, y: ySpawn), CGPoint(x: x9, y: ySpawn), CGPoint(x: x10, y: ySpawn),CGPoint(x: x11, y: ySpawn), CGPoint(x: x12, y: ySpawn),CGPoint(x: x13, y: ySpawn)]
+            let x41 = size.width / 8
+            let x42 = size.width * 2 / 8
+            let x43 = size.width * 3 / 8
+            let x44 = size.width * 4 / 8
+            let x45 = size.width * 5 / 8
+            let x46 = size.width * 6 / 8
+            let x47 = size.width * 7 / 8
+            return [CGPoint(x: x41, y: ySpawn), CGPoint(x: x42, y: ySpawn), CGPoint(x: x43, y: ySpawn), CGPoint(x: x44, y: ySpawn),CGPoint(x: x45, y: ySpawn), CGPoint(x: x46, y: ySpawn),CGPoint(x: x47, y: ySpawn)]
         case 5:
             numToWin = 50
-            // TODO: Create final spawns
-            let x7 = size.width / 8
-            let x8 = size.width * 2 / 8
-            let x9 = size.width * 3 / 8
-            let x10 = size.width * 4 / 8
-            let x11 = size.width * 5 / 8
-            let x12 = size.width * 6 / 8
-            let x13 = size.width * 7 / 8
-            let x14 = size.width + 100
-            let x15 = size.width - size.width - 100
-            return [CGPoint(x: x7, y: ySpawn), CGPoint(x: x8, y: ySpawn), CGPoint(x: x9, y: ySpawn), CGPoint(x: x10, y: ySpawn),CGPoint(x: x11, y: ySpawn), CGPoint(x: x12, y: ySpawn),CGPoint(x: x13, y: ySpawn), CGPoint(x: x14, y: ySpawn2), CGPoint(x: x15, y: ySpawn2)]
+            let x51 = size.width / 6
+            let x52 = size.width * 2 / 6
+            let x53 = size.width * 3 / 6
+            let x54 = size.width * 4 / 6
+            let x55 = size.width * 5 / 6
+            let x56 = size.width + 100 // off screen for ySpawn 2
+            let x57 = CGFloat(-100.0)
+            return [CGPoint(x: x51, y: ySpawn), CGPoint(x: x52, y: ySpawn), CGPoint(x: x53, y: ySpawn), CGPoint(x: x54, y: ySpawn),CGPoint(x: x55, y: ySpawn), CGPoint(x: x56, y: ySpawn2), CGPoint(x: x57, y: ySpawn2)]
         default:
             return [CGPoint(x: 0, y: 0)]
         }
     }
     
-    func getPath(_ level: Int, spawn: CGPoint, movementScale: CGFloat) -> [SKAction] {
+    func getPath(_ level: Int, spawn: CGPoint, movementScale: CGFloat) -> [SKAction] { // move vars actionMove + level num + path num
         switch (level) { // JHAT: return array defining path for specific level
         case 0: // endless mode paths
-            // TODO: add more paths
-            let actionMove0 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
-            return [actionMove0, loseAction, finishActionMove]
+            
+            // determine which paths to return from other levels based on spawn
+            if (spawn.x < 0 || spawn.x > size.width) { // off screen spawn needs level 5 path
+                return getPath(5, spawn: spawn, movementScale: movementScale)
+            }
+            else { // randomly choose path from other levels
+                let pathLevel:Int = Int(random(min: 1, max: 6))
+                return getPath(pathLevel, spawn: spawn, movementScale: movementScale)
+            }
         case 1:
-            let actionMove = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
-            return [actionMove, loseAction, finishActionMove]
+            let actionMove11 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove11, loseAction, finishActionMove]
         case 2:
-            let actionMove1 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2), duration: TimeInterval(movementScale))
-            let actionMove2 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
-            return [actionMove1, actionMove2, loseAction, finishActionMove]
+            let actionMove21 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2), duration: TimeInterval(movementScale/2))
+            let actionMove22 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale/2))
+            return [actionMove21, actionMove22, loseAction, finishActionMove]
         case 3:
-            let actionMove3 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2), duration: TimeInterval(movementScale))
-            let actionMove4 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
-            return [actionMove3, actionMove4, loseAction, finishActionMove]
+            let actionMove31 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2), duration: TimeInterval(movementScale/2))
+            let actionMove32 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale/2))
+            return [actionMove31, actionMove32, loseAction, finishActionMove]
         case 4:
-            let actionMove5 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
-            return [actionMove5, loseAction, finishActionMove]
+            let actionMove41 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
+            return [actionMove41, loseAction, finishActionMove]
         case 5:
-            let actionMove1 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height/2 + (500)), duration: TimeInterval(movementScale))
-            let actionMove2 = SKAction.move(to: CGPoint(x: size.width/2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale))
-            return [actionMove1, actionMove2, loseAction, finishActionMove]
+            // separate between side enemies and top enemies
+            if (spawn.x < 0 || spawn.x > size.width) { // side
+                let actionMove51s = SKAction.move(to: CGPoint(x: size.width / 2, y: size.height/2 - 200), duration: TimeInterval(movementScale))
+                let actionMove52s = SKAction.move(to: CGPoint(x: spawn.x < 0 ? 100 : size.width - 100 , y: size.height/2 - 500), duration: TimeInterval(movementScale/2))
+                let actionMove53s = SKAction.move(to: CGPoint(x: size.width / 2, y: -ENEMY_HEIGHT_WIDTH / 2), duration: TimeInterval(movementScale/2))
+                return [actionMove51s, actionMove52s, actionMove53s, loseAction, finishActionMove]
+            }
+            else { // top
+                let actionMove51 = SKAction.move(to: CGPoint(x: spawn.x + 100, y: (size.height * 3)/4), duration: TimeInterval(movementScale/4))
+                let actionMove52 = SKAction.move(to: CGPoint(x: spawn.x - 100, y: size.height/2), duration: TimeInterval(movementScale/4))
+                let actionMove53 = SKAction.move(to: CGPoint(x: size.width/2, y: size.height / 4), duration: TimeInterval(movementScale/4))
+                let actionMove54 = SKAction.move(to: CGPoint(x: player.position.x, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale/4))
+                return [actionMove51, actionMove52, actionMove53, actionMove54, loseAction, finishActionMove]
+            }
         default:
             return []
         }
+    }
+    
+    func earthHit() {
+        earthImg.removeFromParent() // remove current graphic
+        
+        // update earth graphic
+        switch (enemiesEscaped) {
+        case 1:
+            earthImg = SKSpriteNode(imageNamed: "earth2.png")
+            break
+        case 2:
+            earthImg = SKSpriteNode(imageNamed: "earth3.png")
+            break
+        case 3:
+            earthImg = SKSpriteNode(imageNamed: "earth4.png")
+            break
+        case 4:
+            earthImg = SKSpriteNode(imageNamed: "earth5.png")
+            break
+        default:
+            break
+        }
+        
+        // add new graphic
+        earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
+        earthImg.zPosition = -1
+        self.addChild(earthImg)
     }
     
     func showHint() { // returns specific hint per level to display to user
@@ -517,12 +563,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         case 2:
             hintToShow = "Tilt the device to move"
             break
-        case 3: //TODO: Add more level specific hints
+        case 3:
             hintToShow = "Two finger tap to fire super"
             break
         case 4:
+            hintToShow = "Some enemies are stronger"
             break
         case 5:
+            hintToShow = "Enemies can move sideways"
             break
         default:
             break
@@ -666,37 +714,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             self.view?.isPaused = true
             MotionMonitor.sharedMotionMonitor.stopUpdates()
         }
-        
-        //add earth
-        if (enemiesEscaped == 1){
-            earthImg.removeFromParent()
-            earthImg = SKSpriteNode(imageNamed: "earth2.png")
-            earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
-            earthImg.zPosition = -1
-            self.addChild(earthImg)
-        }
-        if (enemiesEscaped == 2){
-            earthImg.removeFromParent()
-            earthImg = SKSpriteNode(imageNamed: "earth3.png")
-            earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
-            earthImg.zPosition = -1
-            self.addChild(earthImg)
-        }
-        if (enemiesEscaped == 3){
-            earthImg.removeFromParent()
-            earthImg = SKSpriteNode(imageNamed: "earth4.png")
-            earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
-            earthImg.zPosition = -1
-            self.addChild(earthImg)
-        }
-        if (enemiesEscaped == 4){
-            earthImg.removeFromParent()
-            earthImg = SKSpriteNode(imageNamed: "earth5.png")
-            earthImg.position = CGPoint(x: frame.size.width / 2, y: 100)
-            earthImg.zPosition = -1
-            self.addChild(earthImg)
-        }
-
-
     }
 }

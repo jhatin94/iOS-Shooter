@@ -147,6 +147,9 @@ class MenuScene: SKScene {
             addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 600), fontSize: 65, text: "Reset Profile", name: "reset"))
         }
         
+        // developer names
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 800), fontSize: 40, text: "Devs: Hasbrouck & Hatin", name: "signature"))
+        
         // JHAT: Transition to level select
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 65, text: "Play", name: "levelSelect"))
         
@@ -159,7 +162,7 @@ class MenuScene: SKScene {
         // story text labels
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 60, text: "The Story So Far...", name: "storyTitle0"))
         
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 300), fontSize: 40, text: "The Year is 2400..", name: "storyTitle1"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 300), fontSize: 40, text: "The Year is 2400...", name: "storyTitle1"))
         
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 100), fontSize: 40, text: "Humanity is being invaded by ", name: "storyTitle2"))
         
