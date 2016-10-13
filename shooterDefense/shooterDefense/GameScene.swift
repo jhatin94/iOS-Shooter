@@ -80,7 +80,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     var finishActionMove: SKAction
     var ySpawn: CGFloat
     var ySpawn2: CGFloat
-    let ENEMY_HEIGHT_WIDTH: CGFloat = 42.0
+    var ENEMY_HEIGHT_WIDTH: CGFloat = 42.0 // 42 is default small enemy
     let BASE_XP_PER_KILL = 2
     var multiplierXP: Int
     
@@ -244,12 +244,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     }
     
     func addEnemy() {
-        // create sprite
-        let enemy = SKSpriteNode(imageNamed: "enemy")
+        let enemy: SKSpriteNode = getEnemyType() // get sprite and health
         enemy.name = "enemy"
-        if (isPhone) {
-            enemy.setScale(1.5)
-        }
         
         // apply physics body to the sprite
         enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
@@ -269,7 +265,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         // determine speed of the enemy -- scales up with player level
         var speedScale:CGFloat = 1.05 - CGFloat(playerProfile.playerLevel) * 0.05
         speedScale = speedScale < 0 ? 0 : speedScale
-        let actualDuration = random(min: CGFloat(2.0 + (4.0 * speedScale)), max: CGFloat(4.0 + (4.0 * speedScale)))
+        let health = enemy.userData?.value(forKey: "health") as! Int
+        let actualDuration = random(min: CGFloat((2.0 + (4.0 * speedScale)) * CGFloat(health * health)), max: CGFloat((4.0 + (4.0 * speedScale)) * CGFloat(health * health)))
         
         // create the actions
         // Determine level and create preset path based on spawn point above (separate function)
@@ -383,48 +380,103 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         if ((firstBody.categoryBitMask & PhysicsCategory.Enemy != 0) && (secondBody.categoryBitMask & PhysicsCategory.Projectile != 0)) {
             let body1 = firstBody.node as! SKSpriteNode
             var body2 = secondBody.node as? SKSpriteNode
+            var projWasSuper = false
             if (body2 == nil) { // JHAT: check if above cast failed, if so emitter collision
                 body2 = body1 // pass in enemy twice
+                projWasSuper = true
             }
-            projectileDidCollideWithEnemy(body1, enemy: body2!)
+            projectileDidCollideWithEnemy(body1, projectile: body2!, superColl: projWasSuper)
         }
     }
     
-    func projectileDidCollideWithEnemy(_ projectile: SKSpriteNode, enemy: SKSpriteNode) {
-        enemiesKilled += 1
-        numToWin = currentGameLevel < 1 && enemiesKilled % numToWin == 0 ? numToWin + 9999 : numToWin //JHAT: Handle case if player 'clears' endless mode
-        self.updateLabel(self.destroyedLabel)
-        sceneManager.gainXP(xpGained: (BASE_XP_PER_KILL * multiplierXP), playerProfile: playerProfile)
-        self.updateLabel(self.playerXPToNextLabel)
-        self.updateLabel(self.playerLvlLabel)
-        sceneManager.enemyKilled(playerProfile: playerProfile) // increment profile kill count
-        
-        // update score and label if endless
-        if (currentGameLevel < 1) {
-            increaseScore(baseScore: BASE_XP_PER_KILL)
-            self.updateLabel(endlessScore)
-        }
-        
-        if (enemiesKilled >= numToWin && currentGameLevel > 0) { // JHAT: Skip check on endless mode (level 0)
-            if (currentGameLevel > playerProfile.highestLevelCompleted) {
-                // if level complete is higher than profile progress, update and save
-                sceneManager.setHighestLevelComplete(lvlComplete: currentGameLevel, playerProfile: playerProfile)
-            }
-            else { // save profile as is, no update needed
-                sceneManager.saveProgress(profileToSave: playerProfile)
+    func projectileDidCollideWithEnemy(_ enemy: SKSpriteNode, projectile: SKSpriteNode, superColl: Bool) {
+        var health = enemy.userData?.value(forKey: "health") as! Int
+        health -= 1
+        enemy.userData?.setValue(health, forKey: "health")
+        if (health < 1 || superColl) {
+            enemiesKilled += 1
+            numToWin = currentGameLevel < 1 && enemiesKilled % numToWin == 0 ? numToWin + 9999 : numToWin //JHAT: Handle case if player 'clears' endless mode
+            self.updateLabel(self.destroyedLabel)
+            sceneManager.gainXP(xpGained: (BASE_XP_PER_KILL * multiplierXP), playerProfile: playerProfile)
+            self.updateLabel(self.playerXPToNextLabel)
+            self.updateLabel(self.playerLvlLabel)
+            sceneManager.enemyKilled(playerProfile: playerProfile) // increment profile kill count
+            
+            // update score and label if endless
+            if (currentGameLevel < 1) {
+                increaseScore(baseScore: BASE_XP_PER_KILL)
+                self.updateLabel(endlessScore)
             }
             
-            // if last level GameOver screen is shown
-            sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true, score: score)
+            if (enemiesKilled >= numToWin && currentGameLevel > 0) { // JHAT: Skip check on endless mode (level 0)
+                if (currentGameLevel > playerProfile.highestLevelCompleted) {
+                    // if level complete is higher than profile progress, update and save
+                    sceneManager.setHighestLevelComplete(lvlComplete: currentGameLevel, playerProfile: playerProfile)
+                }
+                else { // save profile as is, no update needed
+                    sceneManager.saveProgress(profileToSave: playerProfile)
+                }
+                
+                // if last level GameOver screen is shown
+                sceneManager.loadLevelFinishedScene(lvl: currentGameLevel, success: true, score: score)
+            }
+            if ((enemy.name == "enemy" && projectile.name != "enemy") || (enemy.name != "enemy" && projectile.name == "enemy")) { // if enemy was passed in twice only remove it once
+                enemy.removeFromParent()
+            }
         }
         run(SKAction.playSoundFileNamed("8-bit-explosion.wav", waitForCompletion: false))
-        if ((projectile.name == "enemy" && enemy.name != "enemy") || (projectile.name != "enemy" && enemy.name == "enemy")) { // if enemy was passed in twice only remove it once
-           projectile.removeFromParent()
-        }
-        enemy.removeFromParent()
+        projectile.removeFromParent()
     }
     
     // Utility functions
+    func getEnemyType() -> SKSpriteNode{
+        // create sprite
+        if (currentGameLevel < 1 || currentGameLevel > 3) { // get random enemy type
+            let enemyType = Int(random(min: 1, max: 4))
+            switch (enemyType) {
+            case 1:
+                let enemy1 = SKSpriteNode(imageNamed: "enemy")
+                enemy1.userData = NSMutableDictionary()
+                enemy1.userData?.setValue(1, forKey: "health")
+                if (isPhone) {
+                    enemy1.setScale(1.5)
+                    ENEMY_HEIGHT_WIDTH *= 1.5;
+                }
+                return enemy1
+            case 2:
+                let enemy2 = SKSpriteNode(imageNamed: "enemy2")
+                enemy2.userData = NSMutableDictionary()
+                enemy2.userData?.setValue(2, forKey: "health")
+                return enemy2
+            case 3:
+                let enemy3 = SKSpriteNode(imageNamed: "enemy3")
+                enemy3.userData = NSMutableDictionary()
+                enemy3.userData?.setValue(3, forKey: "health")
+                return enemy3
+            default:
+                let enemy = SKSpriteNode(imageNamed: "enemy")
+                enemy.userData = NSMutableDictionary()
+                enemy.userData?.setValue(1, forKey: "health")
+                if (isPhone) {
+                    enemy.setScale(1.5)
+                    ENEMY_HEIGHT_WIDTH *= 1.5;
+                }
+                return enemy
+            }
+        }
+        else { // basic levels, with simple enemy
+            let enemy = SKSpriteNode(imageNamed: "enemy")
+            enemy.userData = NSMutableDictionary()
+            enemy.userData?.setValue(1, forKey: "health")
+            enemy.name = "enemy"
+            if (isPhone) {
+                enemy.setScale(1.5)
+                ENEMY_HEIGHT_WIDTH *= 1.5;
+            }
+            return enemy
+        }
+    }
+    
     func getSpawnPoints(_ level: Int) -> [CGPoint] { // vars x + level num + spawn num
         switch(level) { // JHAT: return spawn based on level
         case 0: // endless mode spawns
