@@ -121,7 +121,7 @@ class MenuScene: SKScene {
         }
     }
     
-    // JHAT: methods to draw each MenuType
+    // MARK: methods to draw each MenuType
     func drawMainMenu() {
         // set background color and image
         backgroundColor = SKColor.black
@@ -181,7 +181,7 @@ class MenuScene: SKScene {
     func drawLevelSelect() {
         // get player progress from Model to determine which levels are unlocked
         let maxLevelToDisplay = playerProfile.highestLevelCompleted + 1
-        let endlessUnlocked = playerProfile.xpMultiplier > 1 || maxLevelToDisplay > 5 // TODO: Change if max level is not 5
+        let endlessUnlocked = playerProfile.xpMultiplier > 1 || maxLevelToDisplay > 5
         
         // set background color
         backgroundColor = SKColor.black

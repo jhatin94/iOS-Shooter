@@ -8,6 +8,7 @@
 
 import SpriteKit
 
+// MARK: extensions and overrides
 // override operators
 func + (left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x + right.x, y: left.y + right.y)
@@ -92,6 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     let marginH = CGFloat(12.0)
     let shipMaxSpeedPerSecond = CGFloat(800.0)
     
+    // MARK: INIT
     init(size:CGSize, level:Int, sceneManager:GameViewController, playerProgress:PlayerProfile, isDevicePhone: Bool) {
         self.sceneManager = sceneManager
         self.isPhone = isDevicePhone
@@ -273,6 +275,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         enemy.run(SKAction.sequence(getPath(currentGameLevel, spawn: enemy.position, movementScale: actualDuration)))
     }
     
+    // MARK: Touch overrides
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Choose a touch to work with if game is paused
         if (isGamePaused) {
@@ -396,8 +399,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         if (health < 1 || superColl) {
             enemiesKilled += 1
             numToWin = currentGameLevel < 1 && enemiesKilled % numToWin == 0 ? numToWin + 9999 : numToWin //JHAT: Handle case if player 'clears' endless mode
+            let strength = enemy.userData?.value(forKey: "strength") as! Int
             self.updateLabel(self.destroyedLabel)
-            sceneManager.gainXP(xpGained: (BASE_XP_PER_KILL * multiplierXP), playerProfile: playerProfile)
+            sceneManager.gainXP(xpGained: ((BASE_XP_PER_KILL * strength) * multiplierXP), playerProfile: playerProfile)
             self.updateLabel(self.playerXPToNextLabel)
             self.updateLabel(self.playerLvlLabel)
             sceneManager.enemyKilled(playerProfile: playerProfile) // increment profile kill count
@@ -428,7 +432,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         projectile.removeFromParent()
     }
     
-    // Utility functions
+    // MARK: Utility functions
     func getEnemyType() -> SKSpriteNode{
         // create sprite
         if (currentGameLevel < 1 || currentGameLevel > 3) { // get random enemy type
@@ -438,6 +442,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
                 let enemy1 = SKSpriteNode(imageNamed: "enemy")
                 enemy1.userData = NSMutableDictionary()
                 enemy1.userData?.setValue(1, forKey: "health")
+                enemy1.userData?.setValue(1, forKey: "strength")
                 if (isPhone) {
                     enemy1.setScale(1.5)
                     ENEMY_HEIGHT_WIDTH *= 1.5;
@@ -447,16 +452,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
                 let enemy2 = SKSpriteNode(imageNamed: "enemy2")
                 enemy2.userData = NSMutableDictionary()
                 enemy2.userData?.setValue(2, forKey: "health")
+                enemy2.userData?.setValue(2, forKey: "strength")
                 return enemy2
             case 3:
                 let enemy3 = SKSpriteNode(imageNamed: "enemy3")
                 enemy3.userData = NSMutableDictionary()
                 enemy3.userData?.setValue(3, forKey: "health")
+                enemy3.userData?.setValue(3, forKey: "strength")
                 return enemy3
             default:
                 let enemy = SKSpriteNode(imageNamed: "enemy")
                 enemy.userData = NSMutableDictionary()
                 enemy.userData?.setValue(1, forKey: "health")
+                enemy.userData?.setValue(1, forKey: "strength")
                 if (isPhone) {
                     enemy.setScale(1.5)
                     ENEMY_HEIGHT_WIDTH *= 1.5;
@@ -468,6 +476,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let enemy = SKSpriteNode(imageNamed: "enemy")
             enemy.userData = NSMutableDictionary()
             enemy.userData?.setValue(1, forKey: "health")
+            enemy.userData?.setValue(1, forKey: "strength")
             enemy.name = "enemy"
             if (isPhone) {
                 enemy.setScale(1.5)
@@ -659,6 +668,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         lastUpdateTime = currentTime
     }
     
+    // MARK: Gesture functions
     func fireSuper() {
         if (superActive && !isGamePaused) {
             superActive = false
@@ -729,7 +739,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         }
     }
     
-    // movement from device tilt
+    // MARK: movement from device tilt
     func movePlayer(dt:CGFloat){
         let gravityVector = MotionMonitor.sharedMotionMonitor.gravityVectorNormalized
         var xVelocity = gravityVector.dx
@@ -754,7 +764,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         }
     }
     
-    //Mark Game Loop
+    // MARK: Game Loop
     override func update(_ currentTime: TimeInterval){
         if (currentGameLevel != 1 && !isGamePaused) {
             calculateDeltaTime(currentTime: currentTime)

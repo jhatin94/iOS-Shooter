@@ -59,6 +59,7 @@ func randomCGPointInRect(_ rect:CGRect,margin:CGFloat)->CGPoint{
     return CGPoint(x:x,y:y)
 }
 
+// MARK: Label methods
 // JHAT: Make label creation much easier
 func createPixeledLabel(pos: CGPoint, fontSize: CGFloat, text: String, name: String) -> SKLabelNode {
     let label = SKLabelNode(fontNamed: "Pixeled")
