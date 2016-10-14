@@ -148,7 +148,7 @@ class MenuScene: SKScene {
         }
         
         // developer names
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 800), fontSize: 40, text: "Devs: Hasbrouck & Hatin", name: "signature"))
+        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 800), fontSize: 40, text: "Devs: Hasbrouck and Hatin", name: "signature"))
         
         // JHAT: Transition to level select
         addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 65, text: "Play", name: "levelSelect"))
