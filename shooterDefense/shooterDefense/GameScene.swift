@@ -84,6 +84,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     var ENEMY_HEIGHT_WIDTH: CGFloat = 42.0 // 42 is default small enemy
     let BASE_XP_PER_KILL = 2
     var multiplierXP: Int
+    let currentTheme: String
     
     // movement variables
     var playableRect = CGRect.zero
@@ -100,7 +101,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         self.currentGameLevel = level
         self.playerProfile = playerProgress
         self.multiplierXP = playerProgress.xpMultiplier
-        self.player = SKSpriteNode(imageNamed: "ship" + playerProfile.currentTheme)
+        self.currentTheme = playerProgress.currentTheme
+        self.player = SKSpriteNode(imageNamed: "ship" + self.currentTheme)
         self.loseAction = SKAction.run {}
         self.finishActionMove = SKAction.run {}
         self.ySpawn = size.height + ENEMY_HEIGHT_WIDTH // all enemies will spawn at same yPos
@@ -145,28 +147,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         physicsWorld.contactDelegate = self
         
         // update labels
-        self.addChild(updateLabelProperties(labelToModify: destroyedLabel, pos: CGPoint(x: 5, y: self.frame.height-5), vAl: .top, hAl: .left, text: "Enemies: \((numToWin-enemiesKilled))", fontSize: 30, name: "desLab"))
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: destroyedLabel, pos: CGPoint(x: 5, y: self.frame.height-5), vAl: .top, hAl: .left, text: "Enemies: \((numToWin-enemiesKilled))", fontSize: 30, name: "desLab"))
         
-        self.addChild(updateLabelProperties(labelToModify: escapedLabel, pos: CGPoint(x: self.frame.width - 5, y: self.frame.height - 5), vAl: .top, hAl: .right, text: "Escaped: \(enemiesEscaped)", fontSize: 30, name: "esLab"))
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: escapedLabel, pos: CGPoint(x: self.frame.width - 5, y: self.frame.height - 5), vAl: .top, hAl: .right, text: "Escaped: \(enemiesEscaped)", fontSize: 30, name: "esLab"))
         
         // xp levels
-        self.addChild(updateLabelProperties(labelToModify: playerLvlLabel, pos: CGPoint(x: 5, y: self.frame.height - 50), vAl: .top, hAl: .left, text: "XP Level: \(playerProfile.playerLevel)", fontSize: 30, name: "lvlLab"))
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: playerLvlLabel, pos: CGPoint(x: 5, y: self.frame.height - 50), vAl: .top, hAl: .left, text: "XP Level: \(playerProfile.playerLevel)", fontSize: 30, name: "lvlLab"))
         
-        self.addChild(updateLabelProperties(labelToModify: playerXPToNextLabel, pos: CGPoint(x: self.frame.width - 5, y: self.frame.height - 50), vAl: .top, hAl: .right, text: "XP To Next Level: \(playerProfile.xpToNext)", fontSize: 30, name: "xpLab"))
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: playerXPToNextLabel, pos: CGPoint(x: self.frame.width - 5, y: self.frame.height - 50), vAl: .top, hAl: .right, text: "XP To Next Level: \(playerProfile.xpToNext)", fontSize: 30, name: "xpLab"))
         
-        self.addChild(updateLabelProperties(labelToModify: shotStatus, pos: CGPoint(x: self.frame.width - 50, y: 75), vAl: .bottom, hAl: .right, text: "Fire", fontSize: 30, name: "shotStatus"))
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: shotStatus, pos: CGPoint(x: self.frame.width - 50, y: 75), vAl: .bottom, hAl: .right, text: "Fire", fontSize: 30, name: "shotStatus"))
         
-        self.addChild(updateLabelProperties(labelToModify: superStatus, pos: CGPoint(x: 50, y: 75), vAl: .bottom, hAl: .left, text: "Super Ready", fontSize: 30, name: "supStatus"))
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: superStatus, pos: CGPoint(x: 50, y: 75), vAl: .bottom, hAl: .left, text: "Super Ready", fontSize: 30, name: "supStatus"))
         
         // update endless label if in endless
         if (currentGameLevel < 1) {
-            self.addChild(updateLabelProperties(labelToModify: endlessScore, pos: CGPoint(x: self.frame.width/2, y: 50), vAl: .bottom, hAl: .center, text: "Score: \(score)", fontSize: 30, name: "scoreLab"))
+            self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: endlessScore, pos: CGPoint(x: self.frame.width/2, y: 50), vAl: .bottom, hAl: .center, text: "Score: \(score)", fontSize: 30, name: "scoreLab"))
         }
         
         // pause create labels
-        pauseTitle = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
+        pauseTitle = createThemedLabel(theme: currentTheme, pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
         
-        returnToMain = createPixeledLabel(pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 - 100), fontSize: 36, text: "Return to Main Menu", name: "pausedToMain")
+        returnToMain = createThemedLabel(theme: currentTheme, pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 - 100), fontSize: 36, text: "Return to Main Menu", name: "pausedToMain")
         
         // Add BGM to scene
         let backgroundMusic = SKAudioNode(fileNamed: "8-bit.mp3")
@@ -637,7 +639,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         default:
             break
         }
-        addChild(createPixeledLabel(pos: CGPoint(x: self.frame.width/3, y: player.position.y + 150), fontSize: 30, text: hintToShow, name: "hint"))
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: self.frame.width/3, y: player.position.y + 150), fontSize: 30, text: hintToShow, name: "hint"))
         _ = Timer.scheduledTimer(timeInterval: 7.0, target: self, selector: #selector(hideHint), userInfo: nil, repeats: false)
     }
     

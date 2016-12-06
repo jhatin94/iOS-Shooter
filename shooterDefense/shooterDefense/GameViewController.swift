@@ -114,8 +114,24 @@ class GameViewController: UIViewController {
     // function to allow player to reset rank, but keep endless mode and score + earn an xp multiplier
     func resetProfile(profileToReset: PlayerProfile) {
         
+        // determine new theme
+        var nextTheme = "Space"
+        switch (profileToReset.xpMultiplier) {
+        case 1:
+            nextTheme = "Plane"
+            break
+        case 2:
+            nextTheme = "Water"
+            break
+        case 3:
+            nextTheme = "Digitial"
+            break
+        default:
+            nextTheme = profileToReset.currentTheme
+        }
+        
         // clear everything except endlessHiScore and increment multiplier
-        let newProfile = PlayerProfile(playerLevel: 1, playerXP: 0, xpToNextLvl: xpToNextLevel(1), highestLevelCompleted: 0, endlessHiScore: profileToReset.endlessHiScore, xpMulti: profileToReset.xpMultiplier + 1, kills: profileToReset.totalKills, theme: "Space")
+        let newProfile = PlayerProfile(playerLevel: 1, playerXP: 0, xpToNextLvl: xpToNextLevel(1), highestLevelCompleted: 0, endlessHiScore: profileToReset.endlessHiScore, xpMulti: profileToReset.xpMultiplier + 1, kills: profileToReset.totalKills, theme: nextTheme)
         
         // save new profile over old one
         saveProgress(profileToSave: newProfile)

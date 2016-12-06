@@ -14,11 +14,14 @@ class LevelFinishedScene: SKScene {
     var levelFinished: Int
     let playerData: PlayerProfile
     let endlessScore: Int
+    let currentTheme: String
+    
     init(size: CGSize, won:Bool, level: Int, sceneManager: GameViewController, playerProfile: PlayerProfile, score: Int) {
         self.sceneManager = sceneManager
         self.levelFinished = level
         self.playerData = playerProfile
         self.endlessScore = score
+        self.currentTheme = playerProfile.currentTheme
         super.init(size: size)
         
         // set background color & background iamge
@@ -35,48 +38,48 @@ class LevelFinishedScene: SKScene {
             let lvlText = "Level \(levelFinished)"
             
             // create message labels
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: message, name: "levelResult"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: message, name: "levelResult"))
             
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 400), fontSize: 60, text: lvlText, name: "levelNum"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 400), fontSize: 60, text: lvlText, name: "levelNum"))
             
             // create try again or continue label
             if (won) {
-                addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Next Level", name: "nextLevel"))
+                addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Next Level", name: "nextLevel"))
                 run(SKAction.playSoundFileNamed("winSound.mp3", waitForCompletion: false))
             }
             else {
-                addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Try Again", name: "replayLevel"))
+                addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Try Again", name: "replayLevel"))
                 run(SKAction.playSoundFileNamed("loseSound.mp3", waitForCompletion: false))
             }
         }
         // Handle Endless (0) and end of story (5) cases
         else if (levelFinished > 4 && won) { // successful end of level 5 (max)
             // create message labels
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: "Congratulations!", name: "congrats"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: "Congratulations!", name: "congrats"))
             
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 350), fontSize: 50, text: "You finished all levels!", name: "storyComplete"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 350), fontSize: 50, text: "You finished all levels!", name: "storyComplete"))
             
             // create try endless label
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Try Endless Mode", name: "endlessLevel"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 40, text: "Try Endless Mode", name: "endlessLevel"))
             run(SKAction.playSoundFileNamed("winSound.mp3", waitForCompletion: false))
         }
         else if (levelFinished < 1) {
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: "Earth has fallen!", name: "endlessOver"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: "Earth has fallen!", name: "endlessOver"))
             
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 350), fontSize: 60, text: "Final Score: \(endlessScore)", name: "endlessScore"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 350), fontSize: 60, text: "Final Score: \(endlessScore)", name: "endlessScore"))
             
             if (endlessScore == playerProfile.endlessHiScore && endlessScore > 0) { // if player breaks record, congratulate them
-                addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 + 150), fontSize: 50, text: "New Record, Great Work!", name: "newHiscore"))
+                addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 150), fontSize: 50, text: "New Record, Great Work!", name: "newHiscore"))
             }
             
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 60, text: "High Score: \(playerProfile.endlessHiScore)", name: "endlessHiScore"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 60, text: "High Score: \(playerProfile.endlessHiScore)", name: "endlessHiScore"))
             
-            addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 40, text: "Try Again", name: "replayEndless"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 40, text: "Try Again", name: "replayEndless"))
             run(SKAction.playSoundFileNamed("loseSound.mp3", waitForCompletion: false))
         }        
         
         // return to main menu text -- always on screen
-        addChild(createPixeledLabel(pos: CGPoint(x: size.width/2, y: size.height/2 - 300), fontSize: 40, text: "Return to Main Menu", name: "endLevelToMain"))
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 300), fontSize: 40, text: "Return to Main Menu", name: "endLevelToMain"))
     }
     
     // override touches began for options

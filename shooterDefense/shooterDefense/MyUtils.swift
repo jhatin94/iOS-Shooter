@@ -83,7 +83,21 @@ func createCustomLabel(fontString: String, pos: CGPoint, fontSize: CGFloat, text
     return label
 }
 
-func updateLabelProperties(labelToModify: SKLabelNode, pos: CGPoint, vAl: SKLabelVerticalAlignmentMode, hAl: SKLabelHorizontalAlignmentMode, text: String, fontSize: CGFloat, name: String) -> SKLabelNode {
+func createThemedLabel(theme: String, pos: CGPoint, fontSize: CGFloat, text: String, name: String) -> SKLabelNode {
+    // determine font
+    let fontString = getFontString(theme: theme)
+    
+    let label = SKLabelNode(fontNamed: fontString)
+    label.position = pos
+    label.fontSize = fontSize
+    label.text = text
+    label.name = name
+    label.zPosition = 5
+    label.fontColor = SKColor.white
+    return label
+}
+
+func updateLabelProperties(theme: String, labelToModify: SKLabelNode, pos: CGPoint, vAl: SKLabelVerticalAlignmentMode, hAl: SKLabelHorizontalAlignmentMode, text: String, fontSize: CGFloat, name: String) -> SKLabelNode {
     labelToModify.name = name
     labelToModify.position = pos
     labelToModify.verticalAlignmentMode = vAl
@@ -92,12 +106,34 @@ func updateLabelProperties(labelToModify: SKLabelNode, pos: CGPoint, vAl: SKLabe
     labelToModify.fontSize = fontSize
     labelToModify.color = SKColor.white
     labelToModify.zPosition = 5
-    if (labelToModify.fontName != "Pixeled") {
-        labelToModify.fontName = "Pixeled"
+    
+    let fontString = getFontString(theme: theme)
+    
+    if (labelToModify.fontName != fontString) {
+        labelToModify.fontName = fontString
     }
     return labelToModify
 }
 
+func getFontString(theme: String) -> String {
+    var fontString = ""
+    switch (theme) {
+    case "Space":
+        fallthrough
+    case "Digitial":
+        fontString = "Pixeled"
+        break
+    case "Water":
+        fontString = "TheGoldsmithVintage"
+        break
+    case "Plane":
+        fontString = "AirAmericana"
+        break
+    default:
+        fontString = "Pixeled"
+    }
+    return fontString
+}
 
 extension CGPoint{
     public static func randomUnitVector()->CGPoint{

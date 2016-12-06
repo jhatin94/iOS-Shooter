@@ -57,6 +57,8 @@
 		20EE8BEC1D8718F400C85288 /* trail.sks in Resources */ = {isa = PBXBuildFile; fileRef = 20EE8BE11D8718F400C85288 /* trail.sks */; };
 		3F572D911D91DEAA00BA4099 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F572D901D91DEAA00BA4099 /* MenuScene.swift */; };
 		3F68CD911D932384008C7EC8 /* PlayerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F68CD901D932384008C7EC8 /* PlayerProfile.swift */; };
+		3F99C3351DF7530E007DED09 /* Water.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 131640541DF71BE000548C33 /* Water.ttf */; };
+		3F99C3361DF75313007DED09 /* Plane.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 131640551DF71BF300548C33 /* Plane.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -209,8 +211,8 @@
 				13BF3A921DAD34A900F36208 /* earth4.png */,
 				13BF3A941DAD34B000F36208 /* earth5.png */,
 				136F5FED1DA690220033DF78 /* 8-bit.mp3 */,
-				20EE8BE01D8718F400C85288 /* spark.png */,
 				13BF3AA01DAD3A9E00F36208 /* backgroundSpace.png */,
+				20EE8BE01D8718F400C85288 /* spark.png */,
 				1334ABD01D908B02009A6D22 /* enemySpace.png */,
 				1334ABCE1D908AFC009A6D22 /* shipSpace.png */,
 			);
@@ -275,7 +277,7 @@
 				TargetAttributes = {
 					20EE8BBD1D8717C200C85288 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 9Z9L4R4J82;
+						DevelopmentTeam = KT6L3A8T5R;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -324,10 +326,12 @@
 				130D4E4C1DF724980024921F /* enemyDigitial2.png in Resources */,
 				13BF3A911DAD34A300F36208 /* earth3.png in Resources */,
 				130D4E4A1DF724980024921F /* backgroundDigitial.png in Resources */,
+				3F99C3361DF75313007DED09 /* Plane.ttf in Resources */,
 				1348166D1DF604DC0046B01B /* enemyWater3.png in Resources */,
 				20EE8BEB1D8718F400C85288 /* spark.png in Resources */,
 				1334ABD11D908B02009A6D22 /* enemySpace.png in Resources */,
 				1348166A1DF604DC0046B01B /* enemyPlane.png in Resources */,
+				3F99C3351DF7530E007DED09 /* Water.ttf in Resources */,
 				13BF3A951DAD34B000F36208 /* earth5.png in Resources */,
 				134816711DF604DC0046B01B /* shipPlane.png in Resources */,
 				13BF3A931DAD34A900F36208 /* earth4.png in Resources */,
@@ -483,7 +487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 9Z9L4R4J82;
+				DEVELOPMENT_TEAM = KT6L3A8T5R;
 				INFOPLIST_FILE = shooterDefense/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
@@ -497,7 +501,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 9Z9L4R4J82;
+				DEVELOPMENT_TEAM = KT6L3A8T5R;
 				INFOPLIST_FILE = shooterDefense/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
