@@ -57,7 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     var isPhone: Bool = false
     var isGamePaused: Bool = false
     var currentGameLevel: Int
-    let player = SKSpriteNode(imageNamed: "ship")
+    let player: SKSpriteNode
     var enemiesKilled = 0
     var numToWin = 0
     let numToLose = 5
@@ -100,6 +100,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         self.currentGameLevel = level
         self.playerProfile = playerProgress
         self.multiplierXP = playerProgress.xpMultiplier
+        self.player = SKSpriteNode(imageNamed: "ship" + playerProfile.currentTheme)
         self.loseAction = SKAction.run {}
         self.finishActionMove = SKAction.run {}
         self.ySpawn = size.height + ENEMY_HEIGHT_WIDTH // all enemies will spawn at same yPos
@@ -118,7 +119,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         backgroundColor = SKColor.black
         initGestures()
         
-        let backgroundMenu = SKSpriteNode(imageNamed: "background")
+        let backgroundMenu = SKSpriteNode(imageNamed: "background" + playerProfile.currentTheme)
         backgroundMenu.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
         backgroundMenu.zPosition = -2
         self.addChild(backgroundMenu)
@@ -439,7 +440,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let enemyType = Int(random(min: 1, max: 4))
             switch (enemyType) {
             case 1:
-                let enemy1 = SKSpriteNode(imageNamed: "enemy")
+                let enemy1 = SKSpriteNode(imageNamed: "enemy" + playerProfile.currentTheme)
                 enemy1.userData = NSMutableDictionary()
                 enemy1.userData?.setValue(1, forKey: "health")
                 enemy1.userData?.setValue(1, forKey: "strength")
@@ -449,19 +450,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
                 }
                 return enemy1
             case 2:
-                let enemy2 = SKSpriteNode(imageNamed: "enemy2")
+                let enemy2 = SKSpriteNode(imageNamed: "enemy" + playerProfile.currentTheme + "2")
                 enemy2.userData = NSMutableDictionary()
                 enemy2.userData?.setValue(2, forKey: "health")
                 enemy2.userData?.setValue(2, forKey: "strength")
                 return enemy2
             case 3:
-                let enemy3 = SKSpriteNode(imageNamed: "enemy3")
+                let enemy3 = SKSpriteNode(imageNamed: "enemy" + playerProfile.currentTheme + "3")
                 enemy3.userData = NSMutableDictionary()
                 enemy3.userData?.setValue(3, forKey: "health")
                 enemy3.userData?.setValue(3, forKey: "strength")
                 return enemy3
             default:
-                let enemy = SKSpriteNode(imageNamed: "enemy")
+                let enemy = SKSpriteNode(imageNamed: "enemy" + playerProfile.currentTheme)
                 enemy.userData = NSMutableDictionary()
                 enemy.userData?.setValue(1, forKey: "health")
                 enemy.userData?.setValue(1, forKey: "strength")
@@ -473,7 +474,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             }
         }
         else { // basic levels, with simple enemy
-            let enemy = SKSpriteNode(imageNamed: "enemy")
+            let enemy = SKSpriteNode(imageNamed: "enemy" + playerProfile.currentTheme)
             enemy.userData = NSMutableDictionary()
             enemy.userData?.setValue(1, forKey: "health")
             enemy.userData?.setValue(1, forKey: "strength")

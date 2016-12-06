@@ -125,7 +125,8 @@ class MenuScene: SKScene {
     func drawMainMenu() {
         // set background color and image
         backgroundColor = SKColor.black
-        let backgroundMenu = SKSpriteNode(imageNamed: "background")
+        let bgFile = "background" + playerProfile.currentTheme;
+        let backgroundMenu = SKSpriteNode(imageNamed: bgFile)
         backgroundMenu.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)

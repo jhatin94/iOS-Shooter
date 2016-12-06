@@ -80,6 +80,7 @@ class GameViewController: UIViewController {
         let endlessScore = defaults.object(forKey: "endlessHiScore")
         let multiplier = defaults.object(forKey: "xpMulti")
         let kills = defaults.object(forKey: "killTotal")
+        let theme = defaults.string(forKey: "theme")
         
         // run appropriate calculations to get accurate data
         let playerLevel = level != nil ? (level! as AnyObject).intValue : 1
@@ -90,8 +91,9 @@ class GameViewController: UIViewController {
         let totalKills = kills != nil ? (kills! as AnyObject).intValue : 0
         let remainder = playerXP! - xpToCurrentLevel(playerLevel!) // JHAT: Swift can't handle doing this on one line
         let xpToNext = xpToNextLevel(playerLevel!) - remainder // JHAT: accurately determine player progession
+        let currentTheme = theme != nil ? theme : "Space"
         
-        playerProfile = PlayerProfile(playerLevel: playerLevel!, playerXP: playerXP!, xpToNextLvl: xpToNext, highestLevelCompleted: highestFinishedLvl!, endlessHiScore: endlessModeScore!, xpMulti: xpMultiplier!, kills: totalKills!)
+        playerProfile = PlayerProfile(playerLevel: playerLevel!, playerXP: playerXP!, xpToNextLvl: xpToNext, highestLevelCompleted: highestFinishedLvl!, endlessHiScore: endlessModeScore!, xpMulti: xpMultiplier!, kills: totalKills!, theme: currentTheme!)
     }
     
     // save progress when profile is modified and when user quits or puts app in background
@@ -102,6 +104,7 @@ class GameViewController: UIViewController {
         defaults.set(profileToSave.endlessHiScore, forKey: "endlessHiScore")
         defaults.set(profileToSave.xpMultiplier, forKey: "xpMulti")
         defaults.set(profileToSave.totalKills, forKey: "killTotal")
+        defaults.set(profileToSave.currentTheme, forKey: "theme")
     }
     
     func saveProfile() { // JHAT: parameterless save function for lifecycle saving
@@ -112,7 +115,7 @@ class GameViewController: UIViewController {
     func resetProfile(profileToReset: PlayerProfile) {
         
         // clear everything except endlessHiScore and increment multiplier
-        let newProfile = PlayerProfile(playerLevel: 1, playerXP: 0, xpToNextLvl: xpToNextLevel(1), highestLevelCompleted: 0, endlessHiScore: profileToReset.endlessHiScore, xpMulti: profileToReset.xpMultiplier + 1, kills: profileToReset.totalKills)
+        let newProfile = PlayerProfile(playerLevel: 1, playerXP: 0, xpToNextLvl: xpToNextLevel(1), highestLevelCompleted: 0, endlessHiScore: profileToReset.endlessHiScore, xpMulti: profileToReset.xpMultiplier + 1, kills: profileToReset.totalKills, theme: "Space")
         
         // save new profile over old one
         saveProgress(profileToSave: newProfile)
@@ -177,6 +180,12 @@ class GameViewController: UIViewController {
         saveProgress(profileToSave: playerProfile)
     }
     
+    func setCurrentTheme(newTheme: String, playerProfile: PlayerProfile) {
+        if (newTheme != playerProfile.currentTheme) {
+            playerProfile.currentTheme = newTheme
+            saveProgress(profileToSave: playerProfile)
+        }
+    }
     
     // MARK: memory functions
     private func clearGameSceneFromMemory() {

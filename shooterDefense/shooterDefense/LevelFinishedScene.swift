@@ -23,7 +23,7 @@ class LevelFinishedScene: SKScene {
         
         // set background color & background iamge
         backgroundColor = SKColor.black
-        let backgroundMenu = SKSpriteNode(imageNamed: "background")
+        let backgroundMenu = SKSpriteNode(imageNamed: "background" + playerProfile.currentTheme)
         backgroundMenu.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)
