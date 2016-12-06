@@ -63,6 +63,8 @@
 		130AF1B11D989EB700D50F45 /* 8-bit-shot.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8-bit-shot.wav"; sourceTree = "<group>"; };
 		130AF1B31D989F7A00D50F45 /* 8-bit-explosion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "8-bit-explosion.wav"; sourceTree = "<group>"; };
 		130C2BE41DA4060700952F89 /* mothership.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mothership.png; sourceTree = "<group>"; };
+		131640541DF71BE000548C33 /* Water.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Water.ttf; sourceTree = "<group>"; };
+		131640551DF71BF300548C33 /* Plane.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Plane.ttf; sourceTree = "<group>"; };
 		1334ABCE1D908AFC009A6D22 /* shipSpace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shipSpace.png; sourceTree = "<group>"; };
 		1334ABD01D908B02009A6D22 /* enemySpace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemySpace.png; sourceTree = "<group>"; };
 		1334ABD21D908B07009A6D22 /* bullet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bullet.png; sourceTree = "<group>"; };
@@ -190,6 +192,8 @@
 				134816621DF604DC0046B01B /* shipPlane.png */,
 				134816631DF604DC0046B01B /* shipWater.png */,
 				13A0B7841D918DBC00B134D2 /* Pixeled.ttf */,
+				131640541DF71BE000548C33 /* Water.ttf */,
+				131640551DF71BF300548C33 /* Plane.ttf */,
 				136E592F1DA05AB7009581C8 /* enemySpace2.png */,
 				136E59301DA05AB7009581C8 /* enemySpace3.png */,
 				130AF1B11D989EB700D50F45 /* 8-bit-shot.wav */,
