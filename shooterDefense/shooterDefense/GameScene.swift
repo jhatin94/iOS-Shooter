@@ -63,6 +63,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     let numToLose = 5
     var enemiesEscaped = 0
     var score = 0
+    var currentFOV: CGFloat = 0.0
     var canShoot = true
     var superActive = true
     let playerProfile: PlayerProfile
@@ -73,6 +74,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     let playerXPToNextLabel = SKLabelNode(fontNamed: "Pixeled")
     let shotStatus = SKLabelNode(fontNamed: "Pixeled")
     let endlessScore = SKLabelNode(fontNamed: "Pixeled")
+    let fovLabel = SKLabelNode(fontNamed: "Pixeled")
     var pauseTitle = SKLabelNode(fontNamed: "Pixeled")
     var returnToMain = SKLabelNode(fontNamed: "Pixeled")
     let superStatus = SKLabelNode(fontNamed: "Pixeled")
@@ -85,6 +87,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     let BASE_XP_PER_KILL = 2
     var multiplierXP: Int
     let currentTheme: String
+    var xpLabels: [SKLabelNode] = []
     
     // movement variables
     var playableRect = CGRect.zero
@@ -102,6 +105,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         self.playerProfile = playerProgress
         self.multiplierXP = playerProgress.xpMultiplier
         self.currentTheme = playerProgress.currentTheme
+        self.currentFOV = CGFloat(playerProgress.playerLevel * 5)
         self.player = SKSpriteNode(imageNamed: "ship" + self.currentTheme)
         self.loseAction = SKAction.run {}
         self.finishActionMove = SKAction.run {}
@@ -165,6 +169,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: endlessScore, pos: CGPoint(x: self.frame.width/2, y: 50), vAl: .bottom, hAl: .center, text: "Score: \(score)", fontSize: 30, name: "scoreLab"))
         }
         
+        // fov label
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: fovLabel, pos: CGPoint(x: self.frame.width/2, y: 100), vAl: .bottom, hAl: .center, text: "FOV: \(currentFOV * 2)°", fontSize: 20, name: "fovLab"))
+        
         // pause create labels
         pauseTitle = createThemedLabel(theme: currentTheme, pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
         
@@ -184,6 +191,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         // all enemies will trigger the same lose and done actions
         self.loseAction = SKAction.run() {
             self.enemiesEscaped += 1
+            self.showCriticalMessage() // show message if first or last enemy
             self.updateLabel(self.escapedLabel)
             self.earthHit()
             if (self.enemiesEscaped >= self.numToLose) {
@@ -242,6 +250,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             break
         case "scoreLab"?:
             label.text = "Score: \(score)"
+            break
+        case "fovLab"?:
+            label.text = "FOV \(CGFloat(playerProfile.playerLevel * 10))°"
             break
         default:
             break
@@ -325,7 +336,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let innerAngle = outerAngle > 0 ? 90 - outerAngle : -90 - outerAngle
             
             // JHAT: determine if touch is within fire range (Field of View)
-            let currentFOV: CGFloat = CGFloat(playerProfile.playerLevel * 5)
+            let newFOV = CGFloat(playerProfile.playerLevel * 5)
+            if (currentFOV != newFOV && (newFOV * 2) <= 360) {
+                currentFOV = newFOV
+            }
             if (abs(innerAngle) > currentFOV) {
                 return
             }
@@ -404,9 +418,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             numToWin = currentGameLevel < 1 && enemiesKilled % numToWin == 0 ? numToWin + 9999 : numToWin //JHAT: Handle case if player 'clears' endless mode
             let strength = enemy.userData?.value(forKey: "strength") as! Int
             self.updateLabel(self.destroyedLabel)
-            sceneManager.gainXP(xpGained: ((BASE_XP_PER_KILL * strength) * multiplierXP), playerProfile: playerProfile)
+            let xpEarned = ((BASE_XP_PER_KILL * strength) * multiplierXP)
+            sceneManager.gainXP(xpGained: xpEarned, playerProfile: playerProfile)
+            self.displayXP(pos: enemy.position, xp: xpEarned)
             self.updateLabel(self.playerXPToNextLabel)
             self.updateLabel(self.playerLvlLabel)
+            self.updateLabel(self.fovLabel)
             sceneManager.enemyKilled(playerProfile: playerProfile) // increment profile kill count
             
             // update score and label if endless
@@ -648,6 +665,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         hint?.removeFromParent()
     }
     
+    func showCriticalMessage() {
+        var addedMessage = false
+        if (enemiesEscaped == 1 && currentGameLevel == 1) {
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: self.frame.width * 2/3, y: player.position.y + 150), fontSize: 30, text: "Don't let anymore by!", name: "crit"))
+            addedMessage = true
+        }
+        else if (enemiesEscaped == 4) {
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: self.frame.width * 2/3, y: player.position.y + 100), fontSize: 30, text: "Critical Damage!", name: "crit"))
+            addedMessage = true
+        }
+        if (addedMessage) {
+            _ = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(hideCritMsg), userInfo: nil, repeats: false)
+        }
+    }
+    
+    func hideCritMsg() { // used to hide level hints
+        let alarm = childNode(withName: "crit")
+        alarm?.removeFromParent()
+    }
+    
+    func displayXP(pos: CGPoint, xp: Int) {
+        let xpLabel = createThemedLabel(theme: currentTheme, pos: pos, fontSize: 16, text: "\(xp) XP", name: "xpLab")
+        addChild(xpLabel)
+        xpLabels.append(xpLabel)
+        _ = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(hideXPLabel), userInfo: nil, repeats: false)
+    }
+    
+    func hideXPLabel() {
+        let labelToRemove = xpLabels.remove(at: 0)
+        labelToRemove.removeFromParent()
+    }
+    
     func allowShooting() { // used to re-enable shooting
         canShoot = true
         updateLabel(shotStatus)
@@ -690,7 +739,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             emitter.physicsBody?.usesPreciseCollisionDetection = true
             addChild(emitter)
             
-            let fireRate = 62.0 - (TimeInterval(playerProfile.playerLevel * 2)) // set cooldown
+            var fireRate = 62.0 - (TimeInterval(playerProfile.playerLevel * 2)) // set cooldown
+            fireRate = fireRate < 15 ? 15 : fireRate
             _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowSuper), userInfo: nil, repeats: false)
             
             // set actions and run
