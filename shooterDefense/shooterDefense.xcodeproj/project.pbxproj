@@ -14,7 +14,10 @@
 		130D4E4B1DF724980024921F /* enemyDigitial.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D4E461DF724980024921F /* enemyDigitial.png */; };
 		130D4E4C1DF724980024921F /* enemyDigitial2.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D4E471DF724980024921F /* enemyDigitial2.png */; };
 		130D4E4D1DF724980024921F /* enemyDigitial3.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D4E481DF724980024921F /* enemyDigitial3.png */; };
-		130D4E4E1DF724980024921F /* shipDigitial.png in Resources */ = {isa = PBXBuildFile; fileRef = 130D4E491DF724980024921F /* shipDigitial.png */; };
+		131A78761DF85470005A3558 /* shipDigitial.png in Resources */ = {isa = PBXBuildFile; fileRef = 131A78731DF85470005A3558 /* shipDigitial.png */; };
+		131A78771DF85470005A3558 /* shipPlane.png in Resources */ = {isa = PBXBuildFile; fileRef = 131A78741DF85470005A3558 /* shipPlane.png */; };
+		131A78781DF85470005A3558 /* shipWater.png in Resources */ = {isa = PBXBuildFile; fileRef = 131A78751DF85470005A3558 /* shipWater.png */; };
+		131A787A1DF854C7005A3558 /* enemyWater.png in Resources */ = {isa = PBXBuildFile; fileRef = 131A78791DF854C7005A3558 /* enemyWater.png */; };
 		1334ABCF1D908AFC009A6D22 /* shipSpace.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABCE1D908AFC009A6D22 /* shipSpace.png */; };
 		1334ABD11D908B02009A6D22 /* enemySpace.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABD01D908B02009A6D22 /* enemySpace.png */; };
 		1334ABD31D908B07009A6D22 /* bullet.png in Resources */ = {isa = PBXBuildFile; fileRef = 1334ABD21D908B07009A6D22 /* bullet.png */; };
@@ -28,10 +31,7 @@
 		1348166B1DF604DC0046B01B /* enemyPlane2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1348165C1DF604DC0046B01B /* enemyPlane2.png */; };
 		1348166C1DF604DC0046B01B /* enemyPlane3.png in Resources */ = {isa = PBXBuildFile; fileRef = 1348165D1DF604DC0046B01B /* enemyPlane3.png */; };
 		1348166D1DF604DC0046B01B /* enemyWater3.png in Resources */ = {isa = PBXBuildFile; fileRef = 1348165E1DF604DC0046B01B /* enemyWater3.png */; };
-		1348166E1DF604DC0046B01B /* enemyWater.png in Resources */ = {isa = PBXBuildFile; fileRef = 1348165F1DF604DC0046B01B /* enemyWater.png */; };
 		1348166F1DF604DC0046B01B /* enemyWater2.png in Resources */ = {isa = PBXBuildFile; fileRef = 134816601DF604DC0046B01B /* enemyWater2.png */; };
-		134816711DF604DC0046B01B /* shipPlane.png in Resources */ = {isa = PBXBuildFile; fileRef = 134816621DF604DC0046B01B /* shipPlane.png */; };
-		134816721DF604DC0046B01B /* shipWater.png in Resources */ = {isa = PBXBuildFile; fileRef = 134816631DF604DC0046B01B /* shipWater.png */; };
 		136E59311DA05AB7009581C8 /* enemySpace2.png in Resources */ = {isa = PBXBuildFile; fileRef = 136E592F1DA05AB7009581C8 /* enemySpace2.png */; };
 		136E59321DA05AB7009581C8 /* enemySpace3.png in Resources */ = {isa = PBXBuildFile; fileRef = 136E59301DA05AB7009581C8 /* enemySpace3.png */; };
 		136F5FEE1DA690220033DF78 /* 8-bit.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 136F5FED1DA690220033DF78 /* 8-bit.mp3 */; };
@@ -69,9 +69,12 @@
 		130D4E461DF724980024921F /* enemyDigitial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyDigitial.png; sourceTree = "<group>"; };
 		130D4E471DF724980024921F /* enemyDigitial2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyDigitial2.png; sourceTree = "<group>"; };
 		130D4E481DF724980024921F /* enemyDigitial3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyDigitial3.png; sourceTree = "<group>"; };
-		130D4E491DF724980024921F /* shipDigitial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shipDigitial.png; sourceTree = "<group>"; };
 		131640541DF71BE000548C33 /* Water.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Water.ttf; sourceTree = "<group>"; };
 		131640551DF71BF300548C33 /* Plane.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Plane.ttf; sourceTree = "<group>"; };
+		131A78731DF85470005A3558 /* shipDigitial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shipDigitial.png; sourceTree = "<group>"; };
+		131A78741DF85470005A3558 /* shipPlane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shipPlane.png; sourceTree = "<group>"; };
+		131A78751DF85470005A3558 /* shipWater.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shipWater.png; sourceTree = "<group>"; };
+		131A78791DF854C7005A3558 /* enemyWater.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyWater.png; sourceTree = "<group>"; };
 		1334ABCE1D908AFC009A6D22 /* shipSpace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shipSpace.png; sourceTree = "<group>"; };
 		1334ABD01D908B02009A6D22 /* enemySpace.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemySpace.png; sourceTree = "<group>"; };
 		1334ABD21D908B07009A6D22 /* bullet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bullet.png; sourceTree = "<group>"; };
@@ -85,10 +88,7 @@
 		1348165C1DF604DC0046B01B /* enemyPlane2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyPlane2.png; sourceTree = "<group>"; };
 		1348165D1DF604DC0046B01B /* enemyPlane3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyPlane3.png; sourceTree = "<group>"; };
 		1348165E1DF604DC0046B01B /* enemyWater3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyWater3.png; sourceTree = "<group>"; };
-		1348165F1DF604DC0046B01B /* enemyWater.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyWater.png; sourceTree = "<group>"; };
 		134816601DF604DC0046B01B /* enemyWater2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyWater2.png; sourceTree = "<group>"; };
-		134816621DF604DC0046B01B /* shipPlane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shipPlane.png; sourceTree = "<group>"; };
-		134816631DF604DC0046B01B /* shipWater.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shipWater.png; sourceTree = "<group>"; };
 		136E592F1DA05AB7009581C8 /* enemySpace2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemySpace2.png; sourceTree = "<group>"; };
 		136E59301DA05AB7009581C8 /* enemySpace3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemySpace3.png; sourceTree = "<group>"; };
 		136F5FED1DA690220033DF78 /* 8-bit.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "8-bit.mp3"; sourceTree = "<group>"; };
@@ -184,15 +184,15 @@
 				1348165C1DF604DC0046B01B /* enemyPlane2.png */,
 				1348165D1DF604DC0046B01B /* enemyPlane3.png */,
 				1348165E1DF604DC0046B01B /* enemyWater3.png */,
-				1348165F1DF604DC0046B01B /* enemyWater.png */,
+				131A78731DF85470005A3558 /* shipDigitial.png */,
+				131A78741DF85470005A3558 /* shipPlane.png */,
+				131A78751DF85470005A3558 /* shipWater.png */,
+				131A78791DF854C7005A3558 /* enemyWater.png */,
 				134816601DF604DC0046B01B /* enemyWater2.png */,
-				134816621DF604DC0046B01B /* shipPlane.png */,
-				134816631DF604DC0046B01B /* shipWater.png */,
 				130D4E451DF724980024921F /* backgroundDigitial.png */,
 				130D4E461DF724980024921F /* enemyDigitial.png */,
 				130D4E471DF724980024921F /* enemyDigitial2.png */,
 				130D4E481DF724980024921F /* enemyDigitial3.png */,
-				130D4E491DF724980024921F /* shipDigitial.png */,
 				13A0B7841D918DBC00B134D2 /* Pixeled.ttf */,
 				131640541DF71BE000548C33 /* Water.ttf */,
 				131640551DF71BF300548C33 /* Plane.ttf */,
@@ -277,7 +277,7 @@
 				TargetAttributes = {
 					20EE8BBD1D8717C200C85288 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = KT6L3A8T5R;
+						DevelopmentTeam = 9Z9L4R4J82;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -305,22 +305,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				131A787A1DF854C7005A3558 /* enemyWater.png in Resources */,
 				136E59321DA05AB7009581C8 /* enemySpace3.png in Resources */,
 				1348166B1DF604DC0046B01B /* enemyPlane2.png in Resources */,
 				20EE8BEC1D8718F400C85288 /* trail.sks in Resources */,
 				134816651DF604DC0046B01B /* backgroundPlane.png in Resources */,
 				130AF1B21D989EB700D50F45 /* 8-bit-shot.wav in Resources */,
-				1348166E1DF604DC0046B01B /* enemyWater.png in Resources */,
+				131A78771DF85470005A3558 /* shipPlane.png in Resources */,
 				130D4E4D1DF724980024921F /* enemyDigitial3.png in Resources */,
 				136F5FEE1DA690220033DF78 /* 8-bit.mp3 in Resources */,
-				134816721DF604DC0046B01B /* shipWater.png in Resources */,
 				1334ABD31D908B07009A6D22 /* bullet.png in Resources */,
 				130D4E4B1DF724980024921F /* enemyDigitial.png in Resources */,
 				136E59311DA05AB7009581C8 /* enemySpace2.png in Resources */,
 				20EE8BC41D8717C200C85288 /* GameScene.sks in Resources */,
 				13A0B7851D918DBC00B134D2 /* Pixeled.ttf in Resources */,
-				130D4E4E1DF724980024921F /* shipDigitial.png in Resources */,
 				13BF3A9F1DAD3A0500F36208 /* superSound.mp3 in Resources */,
+				131A78761DF85470005A3558 /* shipDigitial.png in Resources */,
 				13BF3AA51DAD3BFB00F36208 /* loseSound.mp3 in Resources */,
 				13BF3AA31DAD3B0A00F36208 /* winSound.mp3 in Resources */,
 				130D4E4C1DF724980024921F /* enemyDigitial2.png in Resources */,
@@ -333,7 +333,6 @@
 				1348166A1DF604DC0046B01B /* enemyPlane.png in Resources */,
 				3F99C3351DF7530E007DED09 /* Water.ttf in Resources */,
 				13BF3A951DAD34B000F36208 /* earth5.png in Resources */,
-				134816711DF604DC0046B01B /* shipPlane.png in Resources */,
 				13BF3A931DAD34A900F36208 /* earth4.png in Resources */,
 				134816661DF604DC0046B01B /* backgroundWater.png in Resources */,
 				20EE8BD01D8717C700C85288 /* LaunchScreen.storyboard in Resources */,
@@ -347,6 +346,7 @@
 				20EE8BCB1D8717C300C85288 /* Main.storyboard in Resources */,
 				1348166F1DF604DC0046B01B /* enemyWater2.png in Resources */,
 				13BF3AA11DAD3A9E00F36208 /* backgroundSpace.png in Resources */,
+				131A78781DF85470005A3558 /* shipWater.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,7 +487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = KT6L3A8T5R;
+				DEVELOPMENT_TEAM = 9Z9L4R4J82;
 				INFOPLIST_FILE = shooterDefense/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
@@ -501,7 +501,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = KT6L3A8T5R;
+				DEVELOPMENT_TEAM = 9Z9L4R4J82;
 				INFOPLIST_FILE = shooterDefense/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = iOSProject1.shooterDefense;
