@@ -170,7 +170,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         }
         
         // fov label
-        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: fovLabel, pos: CGPoint(x: self.frame.width/2, y: 100), vAl: .bottom, hAl: .center, text: "FOV: \(currentFOV * 2)°", fontSize: 20, name: "fovLab"))
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: fovLabel, pos: CGPoint(x: self.frame.width/2, y: 100), vAl: .bottom, hAl: .center, text: "FOV: \(currentFOV * 2 > 360 ? 360 : currentFOV * 2)°", fontSize: 20, name: "fovLab"))
         
         // pause create labels
         pauseTitle = createThemedLabel(theme: currentTheme, pos: CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 200), fontSize: 48, text: "PAUSED", name: "paused")
@@ -252,7 +252,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             label.text = "Score: \(score)"
             break
         case "fovLab"?:
-            label.text = "FOV \(CGFloat(playerProfile.playerLevel * 10))°"
+            label.text = "FOV \(CGFloat(playerProfile.playerLevel > 36 ? 360 : playerProfile.playerLevel * 10))°"
             break
         default:
             break
@@ -516,6 +516,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             spawns.append(contentsOf: getSpawnPoints(3))
             spawns.append(contentsOf: getSpawnPoints(4))
             spawns.append(contentsOf: getSpawnPoints(5))
+            spawns.append(contentsOf: getSpawnPoints(6))
+            spawns.append(contentsOf: getSpawnPoints(7))
+            spawns.append(contentsOf: getSpawnPoints(8))
+            spawns.append(contentsOf: getSpawnPoints(9))
+            spawns.append(contentsOf: getSpawnPoints(10))
             numToWin = 9999
             
             return spawns
@@ -524,18 +529,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let x11 = size.width / 2
             return [CGPoint(x: x11, y: ySpawn)]
         case 2:
-            numToWin = 15
+            numToWin = 10
             let x21 = size.width / 4
             let x22 = size.width * 3 / 4
             return [CGPoint(x: x21, y: ySpawn), CGPoint(x: x22, y: ySpawn)]
         case 3:
-            numToWin = 25
+            numToWin = 15
             let x31 = size.width / 4
             let x32 = size.width * 3 / 4
             let x33 = size.width / 2
             return [CGPoint(x: x31, y: ySpawn), CGPoint(x: x32, y: ySpawn), CGPoint(x: x33, y: ySpawn)]
         case 4:
-            numToWin = 35
+            numToWin = 25
             let x41 = size.width / 8
             let x42 = size.width * 2 / 8
             let x43 = size.width * 3 / 8
@@ -545,7 +550,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let x47 = size.width * 7 / 8
             return [CGPoint(x: x41, y: ySpawn), CGPoint(x: x42, y: ySpawn), CGPoint(x: x43, y: ySpawn), CGPoint(x: x44, y: ySpawn),CGPoint(x: x45, y: ySpawn), CGPoint(x: x46, y: ySpawn),CGPoint(x: x47, y: ySpawn)]
         case 5:
-            numToWin = 50
+            numToWin = 30
             let x51 = size.width / 6
             let x52 = size.width * 2 / 6
             let x53 = size.width * 3 / 6
@@ -554,6 +559,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             let x56 = size.width + 100 // off screen for ySpawn 2
             let x57 = CGFloat(-100.0)
             return [CGPoint(x: x51, y: ySpawn), CGPoint(x: x52, y: ySpawn), CGPoint(x: x53, y: ySpawn), CGPoint(x: x54, y: ySpawn),CGPoint(x: x55, y: ySpawn), CGPoint(x: x56, y: ySpawn2), CGPoint(x: x57, y: ySpawn2)]
+        case 6:
+            numToWin = 40
+            let x61 = size.width / 2
+            let x62 = size.width - ENEMY_HEIGHT_WIDTH * 3
+            let x63: CGFloat = ENEMY_HEIGHT_WIDTH * 3
+            return [CGPoint(x: x61, y: ySpawn), CGPoint(x: x62, y: ySpawn), CGPoint(x: x63, y: ySpawn)]
+        case 7:
+            numToWin = 50
+            let x71 = size.width * 3 / 8
+            let x72 = size.width * 5 / 8
+            return [CGPoint(x: x71, y: ySpawn), CGPoint(x: x72, y: ySpawn)]
+        case 8:
+            numToWin = 60
+            let x81 = size.width - ENEMY_HEIGHT_WIDTH * 3
+            let x82 = ENEMY_HEIGHT_WIDTH * 3
+            let x83 = size.width / 2
+            return [CGPoint(x: x81, y: ySpawn), CGPoint(x: x82, y: ySpawn), CGPoint(x: x83, y: ySpawn)]
+        case 9:
+            numToWin = 75
+            // offscreen coord to use same path as level 5
+            let x91 = size.width + 150
+            let x92 = size.width / 5
+            let x93 = size.width * 2 / 3
+            return [CGPoint(x: x91, y: ySpawn2), CGPoint(x: x92, y: ySpawn), CGPoint(x: x93, y: ySpawn)]
+        case 10:
+            numToWin = 100
+            // summary of 6-9
+            var spawnsL10 = getSpawnPoints(6)
+            
+            // merge all spawns into one collection
+            spawnsL10.append(contentsOf: getSpawnPoints(7))
+            spawnsL10.append(contentsOf: getSpawnPoints(8))
+            spawnsL10.append(contentsOf: getSpawnPoints(9))
+            return spawnsL10
         default:
             return [CGPoint(x: 0, y: 0)]
         }
@@ -568,7 +607,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
                 return getPath(5, spawn: spawn, movementScale: movementScale)
             }
             else { // randomly choose path from other levels
-                let pathLevel:Int = Int(random(min: 1, max: 6))
+                let pathLevel:Int = Int(random(min: 1, max: 11))
                 return getPath(pathLevel, spawn: spawn, movementScale: movementScale)
             }
         case 1:
@@ -599,6 +638,71 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
                 let actionMove53 = SKAction.move(to: CGPoint(x: size.width/2, y: size.height / 4), duration: TimeInterval(movementScale/4))
                 let actionMove54 = SKAction.move(to: CGPoint(x: player.position.x, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale/4))
                 return [actionMove51, actionMove52, actionMove53, actionMove54, loseAction, finishActionMove]
+            }
+        case 6:
+            if (spawn.x == size.width - (ENEMY_HEIGHT_WIDTH * 3) || spawn.x <= ENEMY_HEIGHT_WIDTH * 3) {
+                let actionMove61s = SKAction.move(to: CGPoint(x: size.width/2, y: size.height * 2 / 5), duration: TimeInterval(movementScale/2))
+                let actionMove62s = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale/2))
+                return [actionMove61s, actionMove62s, loseAction, finishActionMove]
+            }
+            else if (spawn.x - 250 >= ENEMY_HEIGHT_WIDTH * 3 && spawn.x + 250 <= size.width - (ENEMY_HEIGHT_WIDTH * 3)) {
+                let actionMove61 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height * 2 / 3), duration: TimeInterval(movementScale))
+                let actionMove62 = SKAction.move(to: CGPoint(x: spawn.x - 250, y: size.height / 3), duration: TimeInterval(movementScale/3))
+                let actionMove63 = SKAction.move(to: CGPoint(x: spawn.x + 250, y: size.height / 3), duration: TimeInterval(movementScale/3))
+                let actionMove64 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height * 2 / 3), duration: TimeInterval(movementScale/3))
+                let actionMove65 = SKAction.move(to: CGPoint(x: player.position.x, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale))
+                return [actionMove61, actionMove62, actionMove63, actionMove64, actionMove65, loseAction, finishActionMove]
+            }
+            else {
+                return getPath(1, spawn: spawn, movementScale: movementScale) // keep triangle paths on screen
+            }
+        case 7:
+            let straightPath = Int(random(min: 1, max: 11))
+            if (straightPath % 2 == 0) { // straight path
+                let actionMove71s = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale))
+                return [actionMove71s, loseAction, finishActionMove]
+            }
+            else {
+                let actionMove71 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height / 2), duration: TimeInterval(movementScale/2))
+                let actionMove72 = SKAction.move(to: CGPoint(x: spawn.x < size.width / 2 ? ENEMY_HEIGHT_WIDTH : size.width - ENEMY_HEIGHT_WIDTH, y: size.height / 2), duration: TimeInterval(movementScale/2))
+                let actionMove73 = SKAction.move(to: CGPoint(x: size.width / 2, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale))
+                return [actionMove71, actionMove72, actionMove73, loseAction, finishActionMove]
+            }
+        case 8:
+            if (spawn.x == size.width / 2) {
+                let direction = Int(random(min: 1, max: 11))
+                let actionMove81c = SKAction.move(to: CGPoint(x: spawn.x, y: size.height * 3 / 5), duration: TimeInterval(movementScale/2))
+                let actionMove82c = SKAction.move(to: CGPoint(x: direction % 2 == 0 ? size.width - (ENEMY_HEIGHT_WIDTH * 3) : ENEMY_HEIGHT_WIDTH * 3, y: size.height * 3 / 8), duration: TimeInterval(movementScale/2))
+                let actionMove83c = SKAction.move(to: CGPoint(x: direction % 2 == 0 ? spawn.x + 100 : spawn.x - 100, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale))
+                return [actionMove81c, actionMove82c, actionMove83c, loseAction, finishActionMove]
+            }
+            else {
+                let actionMove81 = SKAction.move(to: CGPoint(x: spawn.x < size.width/2 ? size.width - ENEMY_HEIGHT_WIDTH/2 : CGFloat(0.0) + ENEMY_HEIGHT_WIDTH / 2, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale))
+                return [actionMove81, loseAction, finishActionMove]
+            }
+        case 9:
+            if (spawn.x > size.width) {
+                return getPath(5, spawn: spawn, movementScale: movementScale)
+            }
+            else if (spawn.x < size.width / 2) {
+                let actionMove91l = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale))
+                return [actionMove91l, loseAction, finishActionMove]
+            }
+            else {
+                let actionMove91 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height * 7 / 8), duration: TimeInterval(movementScale/2))
+                let actionMove92 = SKAction.move(to: CGPoint(x: ENEMY_HEIGHT_WIDTH * 3, y: size.height * 3 / 5), duration: TimeInterval(movementScale))
+                let actionMove93 = SKAction.move(to: CGPoint(x: spawn.x, y: size.height / 5), duration: TimeInterval(movementScale))
+                let actionMove94 = SKAction.move(to: CGPoint(x: spawn.x, y: -ENEMY_HEIGHT_WIDTH), duration: TimeInterval(movementScale/2))
+                return [actionMove91, actionMove92, actionMove93, actionMove94, loseAction, finishActionMove]
+            }
+        case 10:
+            // determine which paths to return from other levels based on spawn
+            if (spawn.x < 0 || spawn.x > size.width) { // off screen spawn needs level 5 path
+                return getPath(5, spawn: spawn, movementScale: movementScale)
+            }
+            else { // randomly choose path from other levels
+                let pathLevel:Int = Int(random(min: 6, max: 10))
+                return getPath(pathLevel, spawn: spawn, movementScale: movementScale)
             }
         default:
             return []

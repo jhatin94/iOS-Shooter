@@ -31,8 +31,8 @@ class LevelFinishedScene: SKScene {
         backgroundMenu.zPosition = -1
         addChild(backgroundMenu)
         
-        // normal level finished cases -- lvls 1 - 4 win/lose and lvl 5 lose
-        if (levelFinished > 0 && (levelFinished < 5 || !won)) {
+        // normal level finished cases -- lvls 1 - 9 win/lose and lvl 10 lose
+        if (levelFinished > 0 && (levelFinished < 10 || !won)) {
             // Set message based on flag
             let message = won ? "You completed " : "You failed "
             let lvlText = "Level \(levelFinished)"
@@ -52,8 +52,8 @@ class LevelFinishedScene: SKScene {
                 run(SKAction.playSoundFileNamed("loseSound.mp3", waitForCompletion: false))
             }
         }
-        // Handle Endless (0) and end of story (5) cases
-        else if (levelFinished > 4 && won) { // successful end of level 5 (max)
+        // Handle Endless (0) and end of story (10) cases
+        else if (levelFinished > 9 && won) { // successful end of level 10 (max)
             // create message labels
             addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 500), fontSize: 60, text: "Congratulations!", name: "congrats"))
             

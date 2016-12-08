@@ -161,6 +161,21 @@ class MenuScene: SKScene {
         case "level5"?:
             sceneManager.loadGameScene(lvl: 5)
             break
+        case "level6"?:
+            sceneManager.loadGameScene(lvl: 6)
+            break
+        case "level7"?:
+            sceneManager.loadGameScene(lvl: 7)
+            break
+        case "level8"?:
+            sceneManager.loadGameScene(lvl: 8)
+            break
+        case "level9"?:
+            sceneManager.loadGameScene(lvl: 9)
+            break
+        case "level10"?:
+            sceneManager.loadGameScene(lvl: 10)
+            break
         case "level0"?:
             sceneManager.loadGameScene(lvl: 0)
             break
@@ -246,22 +261,42 @@ class MenuScene: SKScene {
         addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "levelSelectToMain"))
         
         // first level always unlocked
-        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 400), fontSize: 60, text: "Level 1", name: "level1"))
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/3, y: size.height/2 + 400), fontSize: 40, text: "Level 1", name: "level1"))
         
         if (maxLevelToDisplay > 1) {// show level 2 label if unlocked
-            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 60, text: "Level 2", name: "level2"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/3, y: size.height/2 + 200), fontSize: 40, text: "Level 2", name: "level2"))
         }
         if (maxLevelToDisplay > 2) {
             // show level 3
-            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2), fontSize: 60, text: "Level 3", name: "level3"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/3, y: size.height/2), fontSize: 40, text: "Level 3", name: "level3"))
         }
         if (maxLevelToDisplay > 3) {
             // show level 4
-            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 200), fontSize: 60, text: "Level 4", name: "level4"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/3, y: size.height/2 - 200), fontSize: 40, text: "Level 4", name: "level4"))
         }
         if (maxLevelToDisplay > 4) {
             // show level 5
-            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 400), fontSize: 60, text: "Level 5", name: "level5"))
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/3, y: size.height/2 - 400), fontSize: 40, text: "Level 5", name: "level5"))
+        }
+        if (maxLevelToDisplay > 5) {
+            // show level 6
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width * 2 / 3, y: size.height/2 + 400), fontSize: 40, text: "Level 6", name: "level6"))
+        }
+        if (maxLevelToDisplay > 6) {
+            // show level 7
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width * 2 / 3, y: size.height/2 + 200), fontSize: 40, text: "Level 7", name: "level7"))
+        }
+        if (maxLevelToDisplay > 7) {
+            // show level 8
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width * 2 / 3, y: size.height/2), fontSize: 40, text: "Level 8", name: "level8"))
+        }
+        if (maxLevelToDisplay > 8) {
+            // show level 9
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width * 2 / 3, y: size.height/2 - 200), fontSize: 40, text: "Level 9", name: "level9"))
+        }
+        if (maxLevelToDisplay > 9) {
+            // show level 10
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width * 2 / 3, y: size.height/2 - 400), fontSize: 40, text: "Level 10", name: "level10"))
         }
         
         // check if endless is unlocked
