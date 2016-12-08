@@ -19,6 +19,7 @@ class GameViewController: UIViewController {
     let defaults = UserDefaults.standard
     var playerProfile: PlayerProfile?
     var isPhone: Bool?
+    var gameMode = MenuScene.GameMode.classic // valid types: classic || oneshot
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +55,7 @@ class GameViewController: UIViewController {
     func loadGameScene(lvl:Int) { // JHAT: displays game state
         clearLevelFinishedSceneFromMemory()
         clearMenuSceneFromMemory()
-        gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!, isDevicePhone: isPhone!)
+        gameScene = GameScene(size: screenSize, level: lvl, sceneManager: self, playerProgress: playerProfile!, isDevicePhone: isPhone!, mode: gameMode)
         let transition:SKTransition = SKTransition.fade(withDuration: 1)
         if (lvl != 1) {
             MotionMonitor.sharedMotionMonitor.startUpdates()
@@ -81,6 +82,7 @@ class GameViewController: UIViewController {
         let multiplier = defaults.object(forKey: "xpMulti")
         let kills = defaults.object(forKey: "killTotal")
         let theme = defaults.string(forKey: "theme")
+        let osLvlsCompd = defaults.object(forKey: "highestOSComp")
         
         // run appropriate calculations to get accurate data
         let playerLevel = level != nil ? (level! as AnyObject).intValue : 1
@@ -92,8 +94,9 @@ class GameViewController: UIViewController {
         let remainder = playerXP! - xpToCurrentLevel(playerLevel!) // JHAT: Swift can't handle doing this on one line
         let xpToNext = xpToNextLevel(playerLevel!) - remainder // JHAT: accurately determine player progession
         let currentTheme = theme != nil ? theme : "Space"
+        let highestOSFinished = osLvlsCompd != nil ? (osLvlsCompd! as AnyObject).intValue : 0
         
-        playerProfile = PlayerProfile(playerLevel: playerLevel!, playerXP: playerXP!, xpToNextLvl: xpToNext, highestLevelCompleted: highestFinishedLvl!, endlessHiScore: endlessModeScore!, xpMulti: xpMultiplier!, kills: totalKills!, theme: currentTheme!)
+        playerProfile = PlayerProfile(playerLevel: playerLevel!, playerXP: playerXP!, xpToNextLvl: xpToNext, highestLevelCompleted: highestFinishedLvl!, endlessHiScore: endlessModeScore!, xpMulti: xpMultiplier!, kills: totalKills!, theme: currentTheme!, highestOneShotComplete: highestOSFinished!)
     }
     
     // save progress when profile is modified and when user quits or puts app in background
@@ -131,7 +134,7 @@ class GameViewController: UIViewController {
         }
         
         // clear everything except endlessHiScore and increment multiplier
-        let newProfile = PlayerProfile(playerLevel: 1, playerXP: 0, xpToNextLvl: xpToNextLevel(1), highestLevelCompleted: 0, endlessHiScore: profileToReset.endlessHiScore, xpMulti: profileToReset.xpMultiplier + 1, kills: profileToReset.totalKills, theme: nextTheme)
+        let newProfile = PlayerProfile(playerLevel: 1, playerXP: 0, xpToNextLvl: xpToNextLevel(1), highestLevelCompleted: 0, endlessHiScore: profileToReset.endlessHiScore, xpMulti: profileToReset.xpMultiplier + 1, kills: profileToReset.totalKills, theme: nextTheme, highestOneShotComplete: 0)
         
         // save new profile over old one
         saveProgress(profileToSave: newProfile)
@@ -174,14 +177,29 @@ class GameViewController: UIViewController {
         }
     }
     
+    // gameMode accessors
+    func getGameMode() -> MenuScene.GameMode {
+        return gameMode
+    }
+    
+    func setGameMode(newMode: MenuScene.GameMode) {
+        if (gameMode != newMode) {
+            gameMode = newMode
+        }
+    }
     
     // MARK - profile modifiers
     func enemyKilled(playerProfile: PlayerProfile) {
         playerProfile.totalKills += 1
     }
     
-    func setHighestLevelComplete(lvlComplete:Int, playerProfile: PlayerProfile) {
-        playerProfile.highestLevelCompleted = lvlComplete
+    func setHighestLevelComplete(lvlComplete:Int, playerProfile: PlayerProfile, mode: MenuScene.GameMode) {
+        if (mode == MenuScene.GameMode.classic) {
+            playerProfile.highestLevelCompleted = lvlComplete
+        }
+        else { // one shot
+            playerProfile.highestOneShotComplete = lvlComplete
+        }
         
         // save profile
         saveProgress(profileToSave: playerProfile)

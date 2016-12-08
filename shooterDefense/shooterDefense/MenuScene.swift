@@ -21,8 +21,14 @@ class MenuScene: SKScene {
         case reset
         case instructions
         case stats
+        case modeSelect
         case levelSelect
         case skins
+    }
+    
+    enum GameMode {
+        case classic
+        case oneshot
     }
     
     init(size: CGSize, menuToDisplay: MenuType, sceneManager:GameViewController, playerProfile: PlayerProfile) {
@@ -50,6 +56,9 @@ class MenuScene: SKScene {
         case MenuType.instructions:
             drawInstrMenu()
             break
+        case MenuType.modeSelect:
+            drawModeSelect()
+            break
         case MenuType.levelSelect:
             drawLevelSelect()
             break
@@ -57,7 +66,6 @@ class MenuScene: SKScene {
             drawSkinsMenu()
             break
         }
-        
     }
     
     // override init for scene
@@ -70,12 +78,11 @@ class MenuScene: SKScene {
         case "Space":
             fallthrough
         case "Digitial":
-            bgColor = SKColor.black
-            break
+            fallthrough
         case "Water":
             fallthrough
         case "Plane":
-            bgColor = SKColor.blue
+            bgColor = SKColor.black
             break
         default:
             bgColor = SKColor.black
@@ -93,8 +100,8 @@ class MenuScene: SKScene {
         case "story"?: // Main menu clickable nodes
             sceneManager.loadMenu(menuToLoad: MenuType.story)
             break
-        case "levelSelect"?:
-            sceneManager.loadMenu(menuToLoad: MenuType.levelSelect)
+        case "modeSelect"?:
+            sceneManager.loadMenu(menuToLoad: MenuType.modeSelect)
             break
         case "stats"?:
             sceneManager.loadMenu(menuToLoad: MenuType.stats)
@@ -146,7 +153,10 @@ class MenuScene: SKScene {
         case "levelSelectToMain"?: // level select clickable nodes
             sceneManager.loadMenu(menuToLoad: MenuType.main)
             break
-        case "level1"?: 
+        case "levelSelectToMode"?:
+            sceneManager.loadMenu(menuToLoad: MenuType.modeSelect)
+            break
+        case "level1"?:
             sceneManager.loadGameScene(lvl: 1)
             break
         case "level2"?:
@@ -176,7 +186,19 @@ class MenuScene: SKScene {
         case "level10"?:
             sceneManager.loadGameScene(lvl: 10)
             break
+        case "modeSelectToMain"?: // mode select clickable nodes
+            sceneManager.loadMenu(menuToLoad: MenuType.main)
+            break
+        case "storyMode"?:
+            sceneManager.setGameMode(newMode: GameMode.classic)
+            sceneManager.loadMenu(menuToLoad: MenuType.levelSelect)
+            break
+        case "oneshotMode"?:
+            sceneManager.setGameMode(newMode: GameMode.oneshot)
+            sceneManager.loadMenu(menuToLoad: MenuType.levelSelect)
+            break
         case "level0"?:
+            sceneManager.setGameMode(newMode: GameMode.classic)
             sceneManager.loadGameScene(lvl: 0)
             break
         default:
@@ -218,8 +240,8 @@ class MenuScene: SKScene {
         // developer names
         addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 800), fontSize: 40, text: "Devs: Hasbrouck and Hatin", name: "signature"))
         
-        // JHAT: Transition to level select
-        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 65, text: "Play", name: "levelSelect"))
+        // JHAT: Transition to mode then level select
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 65, text: "Play", name: "modeSelect"))
         
     }
     
@@ -246,10 +268,35 @@ class MenuScene: SKScene {
         addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "storyToMain"))
     }
     
+    func drawModeSelect() {
+        backgroundColor = bgColor // set background color
+        
+        let endlessUnlocked = playerProfile.xpMultiplier > 1 || (playerProfile.highestLevelCompleted + 1) > 10
+        
+        // add title label
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 72, text: "Mode Select", name: "modeSelectTitle"))
+        
+        // show modes: classic, oneshot, and endless if unlocked
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 200), fontSize: 60, text: "Story Mode", name: "storyMode"))
+        
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 100), fontSize: 60, text: "One Shot Mode", name: "oneshotMode"))
+        
+        // check if endless is unlocked
+        if (endlessUnlocked) {
+            // show endless
+            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 400), fontSize: 60, text: "Endless Mode", name: "level0"))
+        }
+        
+        // return to main menu
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "modeSelectToMain"))
+    }
+    
     func drawLevelSelect() {
+        // determine which mode the levels are in
+        let levelMode = sceneManager.getGameMode()
+        
         // get player progress from Model to determine which levels are unlocked
-        let maxLevelToDisplay = playerProfile.highestLevelCompleted + 1
-        let endlessUnlocked = playerProfile.xpMultiplier > 1 || maxLevelToDisplay > 5
+        let maxLevelToDisplay = levelMode == GameMode.classic ? playerProfile.highestLevelCompleted + 1 : playerProfile.highestOneShotComplete + 1
         
         // set background color
         backgroundColor = bgColor
@@ -258,7 +305,10 @@ class MenuScene: SKScene {
         addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 + 600), fontSize: 72, text: "Level Select", name: "levelSelectTitle"))
         
         // return to main menu
-        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "levelSelectToMain"))
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/4 + 20, y: size.height/2 - 900), fontSize: 32, text: "Return To Main Menu", name: "levelSelectToMain"))
+        
+        // back to mode select
+        addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width - 100, y: size.height/2 - 900), fontSize: 32, text: "Back", name: "levelSelectToMode"))
         
         // first level always unlocked
         addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/3, y: size.height/2 + 400), fontSize: 40, text: "Level 1", name: "level1"))
@@ -297,12 +347,6 @@ class MenuScene: SKScene {
         if (maxLevelToDisplay > 9) {
             // show level 10
             addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width * 2 / 3, y: size.height/2 - 400), fontSize: 40, text: "Level 10", name: "level10"))
-        }
-        
-        // check if endless is unlocked
-        if (endlessUnlocked) {
-            // show endless
-            addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: size.width/2, y: size.height/2 - 700), fontSize: 60, text: "Endless Mode", name: "level0"))
         }
     }
     

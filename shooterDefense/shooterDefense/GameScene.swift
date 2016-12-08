@@ -55,12 +55,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     var earthImg = SKSpriteNode(imageNamed: "earth.png")
     let sceneManager: GameViewController
     var isPhone: Bool = false
+    let currentGameMode: MenuScene.GameMode
     var isGamePaused: Bool = false
     var currentGameLevel: Int
     let player: SKSpriteNode
     var enemiesKilled = 0
     var numToWin = 0
-    let numToLose = 5
+    var numToLose = 5
     var enemiesEscaped = 0
     var score = 0
     var currentFOV: CGFloat = 0.0
@@ -84,7 +85,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     var ySpawn: CGFloat
     var ySpawn2: CGFloat
     var ENEMY_HEIGHT_WIDTH: CGFloat = 42.0 // 42 is default small enemy
-    let BASE_XP_PER_KILL = 2
+    let BASE_XP_PER_KILL = 3
     var multiplierXP: Int
     let currentTheme: String
     var xpLabels: [SKLabelNode] = []
@@ -98,9 +99,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     let shipMaxSpeedPerSecond = CGFloat(800.0)
     
     // MARK: INIT
-    init(size:CGSize, level:Int, sceneManager:GameViewController, playerProgress:PlayerProfile, isDevicePhone: Bool) {
+    init(size:CGSize, level:Int, sceneManager:GameViewController, playerProgress:PlayerProfile, isDevicePhone: Bool, mode: MenuScene.GameMode) {
         self.sceneManager = sceneManager
         self.isPhone = isDevicePhone
+        self.currentGameMode = mode
         self.currentGameLevel = level
         self.playerProfile = playerProgress
         self.multiplierXP = playerProgress.xpMultiplier
@@ -113,6 +115,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         self.ySpawn2 = size.height + ENEMY_HEIGHT_WIDTH - 300 // all side enemies will spawn at same yPos
         super.init(size: size)
         enemySpawns = getSpawnPoints(level)
+        if (currentGameMode == MenuScene.GameMode.oneshot) {
+            numToWin = 1
+        }
     }
     
     // override init for scene
@@ -146,6 +151,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         player.setScale(2)
         self.addChild(player)
         
+        // check mode
+        if (currentGameMode == MenuScene.GameMode.oneshot) {
+            numToLose = 1
+            superActive = false
+        }
+        
         // set up physics world
         physicsWorld.gravity = CGVector(dx: 0, dy: 0) // no gravity
         physicsWorld.contactDelegate = self
@@ -162,7 +173,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         
         self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: shotStatus, pos: CGPoint(x: self.frame.width - 50, y: 75), vAl: .bottom, hAl: .right, text: "Fire", fontSize: 30, name: "shotStatus"))
         
-        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: superStatus, pos: CGPoint(x: 50, y: 75), vAl: .bottom, hAl: .left, text: "Super Ready", fontSize: 30, name: "supStatus"))
+        self.addChild(updateLabelProperties(theme: currentTheme, labelToModify: superStatus, pos: CGPoint(x: 50, y: 75), vAl: .bottom, hAl: .left, text: currentGameMode == MenuScene.GameMode.classic ? "Super Ready" : "Recharging", fontSize: 30, name: "supStatus"))
         
         // update endless label if in endless
         if (currentGameLevel < 1) {
@@ -183,8 +194,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         addChild(backgroundMusic)
         
         // JHAT: Display tutorial pop-up based on level
-        if (playerProfile.highestLevelCompleted < currentGameLevel || currentGameLevel == 0) {
-            // only show hint if not finished level or endless
+        if ((playerProfile.highestLevelCompleted < currentGameLevel || currentGameLevel == 0) && currentGameMode == MenuScene.GameMode.classic) {
+            // only show hint if not finished level or endless (story only)
             showHint()
         }
         
@@ -210,12 +221,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
         var levelSpawnTimeScale = 3.0 - Double(playerProfile.playerLevel / 10)
         levelSpawnTimeScale = levelSpawnTimeScale <= 1 ? 1 : levelSpawnTimeScale
         
-        run(SKAction.repeatForever(
-            SKAction.sequence([
-                SKAction.run(addEnemy),
-                SKAction.wait(forDuration: 1.0 * levelSpawnTimeScale)
-                ])
-        ))
+        if (currentGameMode == MenuScene.GameMode.classic) {
+            run(SKAction.repeatForever(
+                SKAction.sequence([
+                    SKAction.run(addEnemy),
+                    SKAction.wait(forDuration: 1.0 * levelSpawnTimeScale)
+                    ])
+            ))
+        }
+        else {
+            run(SKAction.run(addEnemy))
+        }
     }
     
     func random() -> CGFloat {
@@ -245,7 +261,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             label.text = "\(status)"
             break
         case "supStatus"?:
-            let supStatus = superActive ? "Super Ready" : "Recharging"
+            let supStatus = superActive && currentGameMode != MenuScene.GameMode.oneshot ? "Super Ready" : "Recharging"
             label.text = "\(supStatus)"
             break
         case "scoreLab"?:
@@ -348,8 +364,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             if (canShoot) {
                 canShoot = false
                 updateLabel(shotStatus)
-                let fireRate = 2.15 - (TimeInterval(playerProfile.playerLevel) * 0.15)
-                _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowShooting), userInfo: nil, repeats: false)
+                if (currentGameMode == MenuScene.GameMode.classic) {
+                    let fireRate = 2.15 - (TimeInterval(playerProfile.playerLevel) * 0.15)
+                    _ = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(allowShooting), userInfo: nil, repeats: false)
+                }
             }
             else {
                 return
@@ -433,9 +451,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
             }
             
             if (enemiesKilled >= numToWin && currentGameLevel > 0) { // JHAT: Skip check on endless mode (level 0)
-                if (currentGameLevel > playerProfile.highestLevelCompleted) {
+                if ((currentGameLevel > playerProfile.highestLevelCompleted && currentGameMode == MenuScene.GameMode.classic) || (currentGameLevel > playerProfile.highestOneShotComplete && currentGameMode == MenuScene.GameMode.oneshot)) {
                     // if level complete is higher than profile progress, update and save
-                    sceneManager.setHighestLevelComplete(lvlComplete: currentGameLevel, playerProfile: playerProfile)
+                    sceneManager.setHighestLevelComplete(lvlComplete: currentGameLevel, playerProfile: playerProfile, mode: currentGameMode)
                 }
                 else { // save profile as is, no update needed
                     sceneManager.saveProgress(profileToSave: playerProfile)
@@ -455,7 +473,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     // MARK: Utility functions
     func getEnemyType() -> SKSpriteNode{
         // create sprite
-        if (currentGameLevel < 1 || currentGameLevel > 3) { // get random enemy type
+        if ((currentGameLevel < 1 || currentGameLevel > 3) && currentGameMode == MenuScene.GameMode.classic) { // get random enemy type
             let enemyType = Int(random(min: 1, max: 4))
             switch (enemyType) {
             case 1:
@@ -771,7 +789,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, UIGestureRecognizerDelegate 
     
     func showCriticalMessage() {
         var addedMessage = false
-        if (enemiesEscaped == 1 && currentGameLevel == 1) {
+        if (enemiesEscaped == 1 && currentGameLevel == 1 && currentGameMode == MenuScene.GameMode.classic) {
             addChild(createThemedLabel(theme: currentTheme, pos: CGPoint(x: self.frame.width * 2/3, y: player.position.y + 150), fontSize: 30, text: "Don't let anymore by!", name: "crit"))
             addedMessage = true
         }
